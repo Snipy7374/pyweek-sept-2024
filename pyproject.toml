@@ -1,23 +1,25 @@
-[tool.poetry]
+[project]
 name = "pyweek-sept-2024"
 version = "0.1.0"
 description = ""
-authors = ["Your Name <you@example.com>"]
+authors = []
 license = "MIT"
 readme = "README.md"
+requires-python = ">=3.10,<3.13"
+dependencies = [
+    "arcade",
+]
 
-[tool.poetry.dependencies]
-python = "^3.10"
+
+[tool.uv]
+dev-dependencies = [
+    "ruff >=0.6.5,<0.7",
+    "pyright >=1.1.380,<1.2",
+    "pre-commit >=3.8.0,<3.9"
+]
+
+[tool.uv.sources]
 arcade = { git = "https://github.com/pythonarcade/arcade.git", rev = "895bf57" }
-
-[tool.poetry.group.dev.dependencies]
-ruff = "^0.6.5"
-pyright = "^1.1.380"
-pre-commit = "^3.8.0"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
 
 [tool.black]
 line-length = 100
