@@ -1,0 +1,111 @@
+[tool.poetry]
+name = "pyweek-sept-2024"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.6.5"
+pyright = "^1.1.380"
+pre-commit = "^3.8.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 100
+target-version = ["py310", "py311", "py312"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+ignore = [
+    # star imports
+    "F403",
+
+    # pydocstyle
+    "D203", # incompat with D211
+    "D213", # multiline docstring should start on second line, incompatiable with D212
+    "D400", # first line ends in period, does not work with `|coro|` etc.
+    "D415", # same thing but punctuation in general
+    "D416", # section name should end with a colon, incompatible with D406
+
+    # unknown if this is actually an issue
+    "RUF005", # might not be actually faster
+    "RUF006", # might not be an issue/very extreme cases
+
+    # calling subprocess with dynamic arguments is generally fine, the only way to avoid this is ignoring it
+    "S603",
+
+    # partial executable paths (i.e. "git" instead of "/usr/bin/git") are fine
+    "S607",
+
+    # ignore try-except-pass. Bare excepts are caught with E722
+    "S110",
+
+    # provide specific codes on type: ignore
+    "PGH003",
+
+    # typevar names don't match variance (we don't always want this)
+    "PLC0105",
+
+    # import aliases are fixed by ruff
+    "PLC0414",
+
+    # outer loop variables are overwritten by inner assignment target, these are mostly intentional
+    "PLW2901",
+
+    # ignore imports that could be moved into type-checking blocks
+    # (no real advantage other than possibly avoiding cycles,
+    # but can be dangerous in places where we need to parse signatures)
+    "TCH001",
+    "TCH002",
+    "TCH003",
+
+    "S311",    # insecure RNG usage, we don't use these for security-related things
+    "PLE0237", # pyright seems to catch this already
+
+    # temporary disables, to fix later
+    "D205",   # blank line required between summary and description
+    "D401",   # first line of docstring should be in imperative mood
+    "D417",   # missing argument description in docstring
+    "B904",   # within an except clause raise from error or from none
+    "B026",   # backwards star-arg unpacking
+    "E501",   # line too long
+    "E731",   # assigning lambdas to variables
+    "T201",   # print statements
+]
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+
+[tool.pyright]
+typeCheckingMode = "strict"
+
+# this is one of the diagnostics that aren't enabled by default, even in strict mode
+reportUnnecessaryTypeIgnoreComment = true
+
+reportUnnecessaryIsInstance = false
+reportFunctionMemberAccess = false
+reportMissingTypeStubs = false
+reportUnusedFunction = false
+reportUnusedClass = false
+reportConstantRedefinition = false
+reportIncompatibleMethodOverride = false
+reportIncompatibleVariableOverride = false
+
+# these are largely due to missing type hints
+reportUnknownMemberType = false
+reportUnknownParameterType = false
+reportUnknownArgumentType = false
+reportMissingParameterType = false
+reportUnknownVariableType = false
+reportMissingTypeArgument = false
