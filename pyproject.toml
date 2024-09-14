@@ -8,6 +8,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
+arcade = { git = "https://github.com/pythonarcade/arcade.git", rev = "895bf57" }
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.6.5"
