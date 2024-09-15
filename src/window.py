@@ -8,7 +8,7 @@ class Window(arcade.Window):
         arcade.set_background_color(arcade.color.AMAZON)
 
     def on_draw(self):
-        arcade.draw_text(
+        text = arcade.Text(
             "Welcome to Arcade",
             SCREEN_WIDTH / 2,
             SCREEN_HEIGHT / 2,
@@ -17,3 +17,4 @@ class Window(arcade.Window):
             anchor_x="center",
             anchor_y="center",
         )
+        text.draw()
