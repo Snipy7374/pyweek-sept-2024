@@ -1,4 +1,5 @@
 import arcade
+from constants import ASSETS_DIR
 
 
 def load_spritesheet():
@@ -7,7 +8,7 @@ def load_spritesheet():
 
 class RoguelikeInterior:
     def __init__(self):
-        self.path = "assets/roguelike-interior.png"
+        self.path = ASSETS_DIR / "roguelike-interior.png"
         self.spritesheet = arcade.load_spritesheet(self.path)
         self.tile_size = 16
         self.spacing = 1

@@ -4,21 +4,21 @@ import pyglet
 from arcade.types import Color
 from arcade.experimental import Shadertoy
 from assets import RoguelikeInterior
-from constants import SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE
-
-CHARACTER_SCALING = 4
-TILE_SCALING = 3
-COIN_SCALING = 0.5
-SPRITE_PIXEL_SIZE = 128
-GRID_PIXEL_SIZE = SPRITE_PIXEL_SIZE * TILE_SCALING
-
-PLAYER_MOVEMENT_SPEED = 10
-GRAVITY = 1
-PLAYER_JUMP_SPEED = 20
+from constants import (
+    SCREEN_WIDTH,
+    SCREEN_HEIGHT,
+    SCREEN_TITLE,
+    CHARACTER_SCALING,
+    TILE_SCALING,
+    PLAYER_MOVEMENT_SPEED,
+    GRAVITY,
+    PLAYER_JUMP_SPEED,
+    MAX_LIGHTS,
+)
 
 
 class Window(arcade.Window):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE, resizable=True)
         arcade.set_background_color(arcade.color.AMAZON)
         arcade.SpriteList.DEFAULT_TEXTURE_FILTER = gl.NEAREST, gl.NEAREST
@@ -56,7 +56,7 @@ class Window(arcade.Window):
         # Setup lights
         self.setup_lights()
 
-    def setup_shader(self):
+    def setup_shader(self) -> None:
         window_size = self.get_size()
         self.shadertoy = Shadertoy.create_from_file(window_size, "assets/shadow_shader.glsl")
 
@@ -73,8 +73,11 @@ class Window(arcade.Window):
         self.shadertoy.channel_1 = self.channel1.color_attachments[0]
         self.shadertoy.channel_2 = self.channel2.color_attachments[0]
 
-    def setup_lights(self):
-        for layer_name in ["UnlitLights", "LitLights"]:
+    def setup_lights(self) -> None:
+        for layer_name in (
+            "UnlitLights",
+            "LitLights",
+        ):
             to_remove = []
             for light in self.scene[layer_name]:
                 if "name" not in light.properties:
@@ -92,7 +95,7 @@ class Window(arcade.Window):
             for light in to_remove:
                 light.remove_from_sprite_lists()
 
-    def toggle_light(self, light):
+    def toggle_light(self, light: arcade.Sprite) -> None:
         texture_name = light.properties["texture_name"]
         new_texture_name = self.light_toggle_map[texture_name]
         light.texture = self.spritesheet.get_sprite(new_texture_name)
@@ -104,7 +107,7 @@ class Window(arcade.Window):
             self.scene["LitLights"].remove(light)
             self.scene["UnlitLights"].append(light)
 
-    def set_window_position(self):
+    def set_window_position(self) -> None:
         display = pyglet.display.get_display()
         screens = display.get_screens()
         if len(screens) > 1:
@@ -135,13 +138,13 @@ class Window(arcade.Window):
 
         return arcade.Scene.from_tilemap(tile_map)
 
-    def reset(self):
+    def reset(self) -> None:
         self.scene = self.create_scene()
         self.player_sprite.position = (128, 128)
         self.scene.add_sprite_list("Player")
         self.scene["Player"].append(self.player_sprite)
 
-    def on_draw(self):
+    def on_draw(self) -> None:
         self.clear()
 
         # Draw platforms and the player to channel0
@@ -171,7 +174,6 @@ class Window(arcade.Window):
         self.use()
 
         # Pad the lights list with (0, 0) to match MAX_LIGHTS from the shader
-        MAX_LIGHTS = 100
         lights = lights[:MAX_LIGHTS]
         while len(lights) < MAX_LIGHTS:
             lights.append((0, 0))
@@ -182,9 +184,9 @@ class Window(arcade.Window):
         # Render the shader
         self.shadertoy.render()
 
-    def draw_title(self):
+    def draw_title(self) -> None:
         text = arcade.Text(
-            "Shadow of Doubt",
+            SCREEN_TITLE,
             SCREEN_WIDTH / 2,
             SCREEN_HEIGHT / 2,
             color=arcade.color.WHITE,
@@ -194,7 +196,7 @@ class Window(arcade.Window):
         )
         text.draw()
 
-    def update_player_speed(self):
+    def update_player_speed(self) -> None:
         self.player_sprite.change_x = 0
 
         if self.left_key_down and not self.right_key_down:
@@ -202,7 +204,7 @@ class Window(arcade.Window):
         elif self.right_key_down and not self.left_key_down:
             self.player_sprite.change_x = PLAYER_MOVEMENT_SPEED
 
-    def on_key_press(self, key, modifiers):
+    def on_key_press(self, key: int, modifiers: int) -> None:
         if key == arcade.key.UP or key == arcade.key.W:
             if self.physics_engine.can_jump():
                 self.player_sprite.change_y = PLAYER_JUMP_SPEED
@@ -219,7 +221,7 @@ class Window(arcade.Window):
             for light in lights_hit_list:
                 self.toggle_light(light)
 
-    def on_key_release(self, key, modifiers):
+    def on_key_release(self, key: int, modifiers: int) -> None:
         if key == arcade.key.LEFT or key == arcade.key.A:
             self.left_key_down = False
             self.update_player_speed()
@@ -227,7 +229,7 @@ class Window(arcade.Window):
             self.right_key_down = False
             self.update_player_speed()
 
-    def center_camera_to_player(self):
+    def center_camera_to_player(self) -> None:
         screen_center_x = self.player_sprite.center_x
         screen_center_y = self.player_sprite.center_y
 
@@ -243,11 +245,11 @@ class Window(arcade.Window):
             0.1,
         )
 
-    def on_update(self, delta_time: float):
+    def on_update(self, delta_time: float) -> None:
         self.physics_engine.update()
         self.center_camera_to_player()
 
-    def on_resize(self, width: int, height: int):
+    def on_resize(self, width: int, height: int) -> None:
         super().on_resize(width, height)
         self.camera_sprites.match_screen(and_projection=True)
         self.camera_gui.match_screen(and_projection=True)
