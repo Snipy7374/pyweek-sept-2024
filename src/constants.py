@@ -1,9 +1,9 @@
 from pathlib import Path
 
 
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
-SCREEN_TITLE = ""
+SCREEN_WIDTH = 1920
+SCREEN_HEIGHT = 1080
+SCREEN_TITLE = "Shadow of Doubt"
 # Path to the game's root directory
 _path = Path("src")
 try:
