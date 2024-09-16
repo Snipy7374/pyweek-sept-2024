@@ -2,10 +2,6 @@ import arcade
 from constants import ASSETS_DIR
 
 
-def load_spritesheet():
-    return
-
-
 class RoguelikeInterior:
     def __init__(self):
         self.path = ASSETS_DIR / "roguelike-interior.png"
