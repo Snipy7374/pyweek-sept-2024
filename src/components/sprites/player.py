@@ -20,27 +20,23 @@ class Player(arcade.Sprite):
     _right_pressed = False
     _combo_attack_pressed = False
 
-    def __init__(self, position: tuple[int, int], scale: float = 1):
+    def __init__(self, position: tuple[int, int], scale: float = 1) -> None:
         super().__init__(scale=scale)
-        self.__scale = scale
         self.position = position
         self.spritesheet = MainCharacter(position=position, scale=scale)
-        self.texture = self.spritesheet.get_texture()
+        self.texture = self.spritesheet.get_texture(flipped=not self._facing_right)
 
     def update_animation(self, delta_time: float) -> None:
         self._animation_debounce -= delta_time
         if self._animation_debounce > 0:
             return
         self.spritesheet.update()
-        self.texture = (
-            self.spritesheet.get_texture()
-            if self._facing_right
-            else self.spritesheet.get_texture().flip_horizontally()
-        )
-        self.hit_box = arcade.hitbox.HitBox(
+        self.texture = self.spritesheet.get_texture(flipped=not self._facing_right)
+        self.hit_box = arcade.hitbox.RotatableHitBox(
             self.texture.hit_box_points,
-            position=self.position,
-            scale=(self.__scale, self.__scale),
+            position=self._position,
+            scale=self._scale,
+            angle=self._angle,
         )
         self._animation_debounce = 0.1
 

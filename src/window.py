@@ -55,9 +55,6 @@ class Window(arcade.Window):
         self.camera_sprites = arcade.camera.Camera2D()
         self.camera_gui = arcade.camera.Camera2D()
 
-        self.left_key_down: bool = False
-        self.right_key_down: bool = False
-
         self.reset()
         self.set_window_position()
 

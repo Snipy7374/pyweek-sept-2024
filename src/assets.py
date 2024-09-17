@@ -6,7 +6,7 @@ import arcade
 from constants import ASSETS_DIR
 
 
-class MainCharacterState(enum.Enum):
+class MainCharacterState(enum.IntEnum):
     IDLE = 0
     RUN = 1
     COMBO_ATTACK = 2
@@ -89,17 +89,19 @@ class MainCharacter:
             sheet_width // self.character_width,
             sum(self.animation_frames.values()),
         )
-        self.textures: dict[MainCharacterState, list[arcade.Texture]] = {
+        self.textures: dict[MainCharacterState, list[tuple[arcade.Texture, arcade.Texture]]] = {
             state: self.get_textures(state) for state in MainCharacterState
         }
 
-    def get_textures(self, state: MainCharacterState) -> list[arcade.Texture]:
-        start = sum(self.animation_frames[s] for s in MainCharacterState if s.value < state.value)
+    def get_textures(
+        self, state: MainCharacterState
+    ) -> list[tuple[arcade.Texture, arcade.Texture]]:
+        start = sum(self.animation_frames[s] for s in MainCharacterState if s < state)
         end = start + self.animation_frames[state]
-        return self.texture_grid[start:end]
+        return [(t, t.flip_left_right()) for t in self.texture_grid[start:end]]
 
-    def get_texture(self) -> arcade.Texture:
-        return self.textures[self.current_state][self.current_frame]
+    def get_texture(self, flipped: bool = False) -> arcade.Texture:
+        return self.textures[self.current_state][self.current_frame][flipped]
 
     def update(self) -> None:
         if (
