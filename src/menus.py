@@ -76,7 +76,7 @@ class MainMenuView(arcade.View):
         print("Credits")
 
     def exit_callback(self, _: arcade.gui.UIFlatButton) -> None:
-        print("exit")
+        self.window.close()
 
 
 class OptionsView(arcade.View):

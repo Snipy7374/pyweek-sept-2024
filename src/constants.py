@@ -1,3 +1,4 @@
+import arcade
 import arcade.gui
 from pathlib import Path
 
