@@ -1,6 +1,5 @@
 from pathlib import Path
 
-
 SCREEN_WIDTH = 1920
 SCREEN_HEIGHT = 1080
 SCREEN_TITLE = "Shadow of Doubt"
@@ -19,11 +18,43 @@ except FileNotFoundError as e:
 # the error from above
 ASSETS_DIR = Path("assets").resolve()
 
-CHARACTER_SCALING = 4
+CHARACTER_SCALING = 2.5
+CHARACTER_POSITION = (128, 128)
+
 TILE_SCALING = 3
 
-PLAYER_MOVEMENT_SPEED = 10
-GRAVITY = 1
-PLAYER_JUMP_SPEED = 20
+# PLAYER_MOVEMENT_SPEED = 10
+# # GRAVITY = 1
+# PLAYER_JUMP_SPEED = 20
 
 MAX_LIGHTS = 100
+
+
+# --- Physics forces. Higher number, faster accelerating.
+
+# Gravity
+GRAVITY = 2000
+
+# Damping - Amount of speed lost per second
+DEFAULT_DAMPING = 1.0
+PLAYER_DAMPING = 0.4
+
+# Friction between objects
+PLAYER_FRICTION = 1.0
+WALL_FRICTION = 0.7
+DYNAMIC_ITEM_FRICTION = 0.6
+
+# Mass (defaults to 1)
+PLAYER_MASS = 2.5
+
+# Keep player from going too fast
+PLAYER_MAX_HORIZONTAL_SPEED = 450
+PLAYER_MAX_VERTICAL_SPEED = 1600
+
+# Force applied to move player left/right
+PLAYER_MOVE_FORCE_ON_GROUND = 8000
+PLAYER_MOVE_FORCE_IN_AIR = 900
+PLAYER_JUMP_IMPULSE = 1800
+
+DEAD_ZONE = 0.1
+DISTANCE_TO_CHANGE_TEXTURE = 20
