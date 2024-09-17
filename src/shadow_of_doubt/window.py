@@ -1,4 +1,5 @@
 import arcade
+import arcade.gui
 import arcade.gl as gl
 import pyglet
 from arcade.types import Color
@@ -16,6 +17,74 @@ from shadow_of_doubt.constants import (
     PLAYER_JUMP_SPEED,
     MAX_LIGHTS,
 )
+
+
+class PauseMenu:
+    def __init__(self, window, camera_sprites):
+        self.window = window
+        self.paused = False
+        self.buttons = []
+        self.camera_sprites = camera_sprites
+
+        self._create_buttons()
+
+    def toggle_pause(self):
+        self.paused = not self.paused
+        if self.paused:
+            for button in self.buttons:
+                self.window.ui_manager.add(button)
+
+        else:
+            for button in self.buttons:
+                self.window.ui_manager.remove(button)
+
+    def resume_game(self, event):
+        self.toggle_pause()
+
+    def show_options(self, event):
+        print("Options event not implemented")
+
+    def go_to_main_menu(self, event):
+        print("Main Menu event not implemented")
+
+    def exit_game(self, event):
+        arcade.exit()
+
+    def _create_buttons(self):
+        button_width = 200
+        button_height = 50
+        start_y = SCREEN_HEIGHT // 2 + 100
+        button_spacing = 20
+
+        button_info = [
+            ("Resume", self.resume_game),
+            ("Options", self.show_options),
+            ("Main Menu", self.go_to_main_menu),
+            ("Exit", self.exit_game),
+        ]
+
+        for i, (text, action) in enumerate(button_info):
+            button = arcade.gui.UIFlatButton(
+                text=text,
+                width=button_width,
+                height=button_height,
+                x=SCREEN_WIDTH // 2 - button_width // 2,
+                y=start_y - i * (button_spacing + button_height),
+            )
+            button.on_click = action
+            self.buttons.append(button)
+
+    def draw(self):
+        if self.paused:
+            arcade.draw_lrbt_rectangle_filled(
+                left=self.camera_sprites.position[0] - SCREEN_WIDTH // 2,
+                right=self.camera_sprites.position[0] + SCREEN_WIDTH // 2,
+                top=self.camera_sprites.position[1] + SCREEN_HEIGHT // 2,
+                bottom=self.camera_sprites.position[1] - SCREEN_HEIGHT // 2,
+                color=(0, 0, 0, 200),
+            )
+            for button in self.buttons:
+                self.window.ui_manager.add(button)
 
 
 class GameView(arcade.View):
@@ -57,6 +126,11 @@ class GameView(arcade.View):
 
         # Setup lights
         self.setup_lights()
+
+        # Set up the ui
+        self.ui_manager = arcade.gui.UIManager()
+        self.ui_manager.enable()
+        self.pause_menu = PauseMenu(self, self.camera_sprites)
 
     def setup_shader(self) -> None:
         window_size = self.window.get_size()
@@ -186,6 +260,11 @@ class GameView(arcade.View):
         # Render the shader
         self.shadertoy.render()
 
+        # set up the ui
+        if self.pause_menu.paused:
+            self.pause_menu.draw()
+            self.ui_manager.draw()
+
     def draw_title(self) -> None:
         text = arcade.Text(
             SCREEN_TITLE,
@@ -207,21 +286,26 @@ class GameView(arcade.View):
             self.player_sprite.change_x = PLAYER_MOVEMENT_SPEED
 
     def on_key_press(self, key: int, _: int) -> None:
-        if key == arcade.key.UP or key == arcade.key.W:
-            if self.physics_engine.can_jump():
-                self.player_sprite.change_y = PLAYER_JUMP_SPEED
-        elif key == arcade.key.LEFT or key == arcade.key.A:
-            self.left_key_down = True
-            self.update_player_speed()
-        elif key == arcade.key.RIGHT or key == arcade.key.D:
-            self.right_key_down = True
-            self.update_player_speed()
-        elif key == arcade.key.E:
-            lights_hit_list = arcade.check_for_collision_with_list(
-                self.player_sprite, self.scene["UnlitLights"]
-            ) + arcade.check_for_collision_with_list(self.player_sprite, self.scene["LitLights"])
-            for light in lights_hit_list:
-                self.toggle_light(light)
+        if key == arcade.key.ESCAPE:
+            self.pause_menu.toggle_pause()
+        elif not self.pause_menu.paused:
+            if key == arcade.key.UP or key == arcade.key.W:
+                if self.physics_engine.can_jump():
+                    self.player_sprite.change_y = PLAYER_JUMP_SPEED
+            elif key == arcade.key.LEFT or key == arcade.key.A:
+                self.left_key_down = True
+                self.update_player_speed()
+            elif key == arcade.key.RIGHT or key == arcade.key.D:
+                self.right_key_down = True
+                self.update_player_speed()
+            elif key == arcade.key.E:
+                lights_hit_list = arcade.check_for_collision_with_list(
+                    self.player_sprite, self.scene["UnlitLights"]
+                ) + arcade.check_for_collision_with_list(
+                    self.player_sprite, self.scene["LitLights"]
+                )
+                for light in lights_hit_list:
+                    self.toggle_light(light)
 
     def on_key_release(self, key: int, _: int) -> None:
         if key == arcade.key.LEFT or key == arcade.key.A:
@@ -248,11 +332,13 @@ class GameView(arcade.View):
         )
 
     def on_update(self, _: float) -> None:
-        self.physics_engine.update()
-        self.center_camera_to_player()
+        if not self.pause_menu.paused:
+            self.physics_engine.update()
+            self.center_camera_to_player()
 
     def on_resize(self, width: int, height: int) -> None:
         super().on_resize(width, height)
         self.camera_sprites.match_screen(and_projection=True)
         self.camera_gui.match_screen(and_projection=True)
         self.shadertoy.resize((width, height))
+        self.ui_manager.on_resize(width, height)
