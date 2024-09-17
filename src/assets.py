@@ -3,12 +3,12 @@ from constants import ASSETS_DIR
 
 
 class RoguelikeInterior:
-    def __init__(self):
+    def __init__(self) -> None:
         self.path = ASSETS_DIR / "roguelike-interior.png"
         self.spritesheet = arcade.load_spritesheet(self.path)
         self.tile_size = 16
         self.spacing = 1
-        self.sprites = {
+        self.sprites: dict[str, arcade.Texture] = {
             "potted-plant-1": self.get_tile(16, 0),
             "potted-plant-2": self.get_tile(17, 0),
             "white-candelabra": self.get_tile(19, 0),
@@ -17,15 +17,14 @@ class RoguelikeInterior:
             "yellow-candelabra-lit": self.get_tile(20, 1),
         }
 
-    def get_sprite(self, name):
+    def get_sprite(self, name: str) -> arcade.Texture:
         return self.sprites[name]
 
-    def get_tile(self, x, y):
+    def get_tile(self, x: int, y: int) -> arcade.Texture:
         return self.spritesheet.get_texture(
             x * self.tile_size + x * self.spacing,
             y * self.tile_size + y * self.spacing,
             self.tile_size,
             self.tile_size,
-            None,
-            "upper_left",
+            origin="upper_left",
         )

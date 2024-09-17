@@ -36,14 +36,14 @@ class Window(arcade.Window):
         self.camera_sprites = arcade.camera.Camera2D()
         self.camera_gui = arcade.camera.Camera2D()
 
-        self.left_key_down = False
-        self.right_key_down = False
+        self.left_key_down: bool = False
+        self.right_key_down: bool = False
 
         self.reset()
         self.set_window_position()
 
         self.light_sprites = set()
-        self.light_toggle_map = {
+        self.light_toggle_map: dict[str, str] = {
             "white-candelabra": "white-candelabra-lit",
             "white-candelabra-lit": "white-candelabra",
             "yellow-candelabra": "yellow-candelabra-lit",
@@ -204,7 +204,7 @@ class Window(arcade.Window):
         elif self.right_key_down and not self.left_key_down:
             self.player_sprite.change_x = PLAYER_MOVEMENT_SPEED
 
-    def on_key_press(self, key: int, modifiers: int) -> None:
+    def on_key_press(self, key: int, _: int) -> None:
         if key == arcade.key.UP or key == arcade.key.W:
             if self.physics_engine.can_jump():
                 self.player_sprite.change_y = PLAYER_JUMP_SPEED
@@ -221,7 +221,7 @@ class Window(arcade.Window):
             for light in lights_hit_list:
                 self.toggle_light(light)
 
-    def on_key_release(self, key: int, modifiers: int) -> None:
+    def on_key_release(self, key: int, _: int) -> None:
         if key == arcade.key.LEFT or key == arcade.key.A:
             self.left_key_down = False
             self.update_player_speed()
@@ -245,7 +245,7 @@ class Window(arcade.Window):
             0.1,
         )
 
-    def on_update(self, delta_time: float) -> None:
+    def on_update(self, _: float) -> None:
         self.physics_engine.update()
         self.center_camera_to_player()
 
