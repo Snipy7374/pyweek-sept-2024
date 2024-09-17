@@ -1,7 +1,7 @@
 from window import Window
 
 
-def main():
+def main() -> None:
     window = Window()
     window.run()
 
