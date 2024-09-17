@@ -10,7 +10,6 @@ def main() -> None:
         constants.SCREEN_HEIGHT,
         constants.SCREEN_TITLE,
         resizable=True,
-        center_window=True,
     )
 
     main_menu = MainMenuView()
