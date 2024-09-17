@@ -93,12 +93,23 @@ class MainCharacter:
             state: self.get_textures(state) for state in MainCharacterState
         }
 
+    @staticmethod
+    def crop_transparent_image(texture: arcade.Texture, flipped: bool = False) -> arcade.Texture:
+        copy = texture.image.copy()
+        copy = copy.crop(copy.getbbox())
+        return arcade.Texture(copy if not flipped else copy.transpose(method=0))
+
     def get_textures(
         self, state: MainCharacterState
     ) -> list[tuple[arcade.Texture, arcade.Texture]]:
         start = sum(self.animation_frames[s] for s in MainCharacterState if s < state)
         end = start + self.animation_frames[state]
-        return [(t, t.flip_left_right()) for t in self.texture_grid[start:end]]
+        _textures: list[tuple[arcade.Texture, arcade.Texture]] = []
+        for t in self.texture_grid[start:end]:
+            _textures.append(
+                (self.crop_transparent_image(t), self.crop_transparent_image(t, flipped=True))
+            )
+        return _textures
 
     def get_texture(self, flipped: bool = False) -> arcade.Texture:
         return self.textures[self.current_state][self.current_frame][flipped]
