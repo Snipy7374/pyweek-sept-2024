@@ -1,6 +1,5 @@
 [project]
 name = "pyweek-sept-2024"
-version = "0.1.0"
 description = ""
 authors = []
 license = "MIT"
@@ -9,6 +8,7 @@ requires-python = ">=3.10,<3.13"
 dependencies = [
     "arcade",
 ]
+dynamic = ["version"]
 
 
 [tool.uv]
