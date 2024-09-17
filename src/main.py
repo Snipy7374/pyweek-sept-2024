@@ -1,7 +1,7 @@
 import arcade
 
-import constants
-from menus import MainMenuView
+from shadow_of_doubt import constants
+from shadow_of_doubt.menus import MainMenuView
 
 
 def main() -> None:
@@ -10,6 +10,7 @@ def main() -> None:
         constants.SCREEN_HEIGHT,
         constants.SCREEN_TITLE,
         resizable=True,
+        center_window=True,
     )
 
     main_menu = MainMenuView()

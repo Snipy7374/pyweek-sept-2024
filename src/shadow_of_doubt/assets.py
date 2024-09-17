@@ -1,5 +1,5 @@
 import arcade
-from constants import ASSETS_DIR
+from shadow_of_doubt.constants import ASSETS_DIR
 
 
 class RoguelikeInterior:
