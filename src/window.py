@@ -17,9 +17,10 @@ from constants import (
 )
 
 
-class Window(arcade.Window):
+class GameView(arcade.View):
     def __init__(self) -> None:
-        super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE, resizable=True)
+        super().__init__()
+        self.window.set_mouse_visible(False)
         arcade.set_background_color(arcade.color.AMAZON)
         arcade.SpriteList.DEFAULT_TEXTURE_FILTER = gl.NEAREST, gl.NEAREST
         self.spritesheet = RoguelikeInterior()
@@ -57,7 +58,7 @@ class Window(arcade.Window):
         self.setup_lights()
 
     def setup_shader(self) -> None:
-        window_size = self.get_size()
+        window_size = self.window.get_size()
         self.shadertoy = Shadertoy.create_from_file(window_size, "assets/shadow_shader.glsl")
 
         self.channel0 = self.shadertoy.ctx.framebuffer(
@@ -111,9 +112,9 @@ class Window(arcade.Window):
         display = pyglet.display.get_display()
         screens = display.get_screens()
         if len(screens) > 1:
-            self.set_location(screens[1].x + 100, screens[1].y + 100)
+            self.window.set_location(screens[1].x + 100, screens[1].y + 100)
         else:
-            self.set_location(screens[0].x, screens[0].y)
+            self.window.set_location(screens[0].x, screens[0].y)
 
     def create_scene(self) -> arcade.Scene:
         layer_options = {
@@ -171,7 +172,7 @@ class Window(arcade.Window):
             left, bottom = self.camera_sprites.bottom_left
             lights.append((light.center_x - left, light.center_y - bottom))
 
-        self.use()
+        self.window.use()
 
         # Pad the lights list with (0, 0) to match MAX_LIGHTS from the shader
         lights = lights[:MAX_LIGHTS]
@@ -233,10 +234,10 @@ class Window(arcade.Window):
         screen_center_x = self.player_sprite.center_x
         screen_center_y = self.player_sprite.center_y
 
-        if screen_center_x - self.width / 2 < 0:
-            screen_center_x = self.width / 2
-        if screen_center_y - self.height / 2 < 0:
-            screen_center_y = self.height / 2
+        if screen_center_x - self.window.width / 2 < 0:
+            screen_center_x = self.window.width / 2
+        if screen_center_y - self.window.height / 2 < 0:
+            screen_center_y = self.window.height / 2
 
         player_centered = screen_center_x, screen_center_y
         self.camera_sprites.position = arcade.math.lerp_2d(

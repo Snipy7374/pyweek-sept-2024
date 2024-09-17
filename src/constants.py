@@ -1,3 +1,4 @@
+import arcade.gui
 from pathlib import Path
 
 
@@ -27,3 +28,13 @@ GRAVITY = 1
 PLAYER_JUMP_SPEED = 20
 
 MAX_LIGHTS = 100
+
+MAIN_MENU_BUTTONS_STYLE = arcade.gui.UIFlatButton.DEFAULT_STYLE
+MAIN_MENU_BUTTONS_STYLE.update(
+    {
+        "normal": arcade.gui.UIFlatButton.UIStyle(
+            font_size=32,
+        ),
+    }
+)
+MAIN_MENU_BUTTONS_STYLE["hover"].font_size = 32
