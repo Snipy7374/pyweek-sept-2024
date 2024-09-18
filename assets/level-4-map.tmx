@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" backgroundcolor="#000000" nextlayerid="5" nextobjectid="1">
+ <tileset firstgid="1" source="roguelike-base.tsx"/>
+ <tileset firstgid="1768" source="roguelike-interior.tsx"/>
+ <layer id="1" name="Platforms" width="30" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFtATnWSGYVPWE8ECAweoWQqCCmfbuGUn2wsIcZA+yXZTaS266J8ZemFuxYUJpiNg0hoypAehhLzY7CNmLKxypYS/InFgWhJkg9jQWTLtAYrEsmGLI7jBjwmTD7CDFv8T6h9S0OxBlJzHpnVYAm73ocUGIT669A4UBBa9dQg==
+  </data>
+ </layer>
+ <layer id="2" name="Gold" width="30" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUDGWQxsTAsJCJOLUZRKobBaNgFBAHRvPUKMAFAAD/AeA=
+  </data>
+ </layer>
+ <layer id="3" name="LitLights" width="30" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFgwX4sw+0C0YBIeA7QHGUMUD2No+myQEB80fDfRTQERAq1waq3BvqAABNIgLy
+  </data>
+ </layer>
+ <layer id="4" name="UnlitLights" width="30" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo4A+IJ9poF0wCkbBKBgFo2AU0AcAABs/AHI=
+  </data>
+ </layer>
+</map>

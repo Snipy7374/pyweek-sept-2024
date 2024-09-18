@@ -1,5 +1,6 @@
 import arcade
 import arcade.gl as gl
+import arcade.gui
 import pyglet
 from arcade.experimental import Shadertoy
 from arcade.types import Color
@@ -21,17 +22,23 @@ from constants import (
     SCREEN_WIDTH,
     TILE_SCALING,
     WALL_FRICTION,
+    DEFAULT_LINE_HEIGHT,
+    DEFAULT_FONT_SIZE
 )
 
 
 class Window(arcade.Window):
     def __init__(self) -> None:
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE, resizable=True)
+        self.ui_manager = arcade.gui.UIManager()
+        self.ui_manager.enable()
+        self.previous_score = 0
         arcade.set_background_color(arcade.color.AMAZON)
         arcade.SpriteList.DEFAULT_TEXTURE_FILTER = gl.NEAREST, gl.NEAREST
         self.spritesheet = RoguelikeInterior()
 
         self.scene = self.create_scene()
+        self.score = 0
         self.player_sprite = Player(position=CHARACTER_POSITION, scale=CHARACTER_SCALING)
         self.physics_engine = arcade.PymunkPhysicsEngine(
             damping=DEFAULT_DAMPING,
@@ -65,6 +72,17 @@ class Window(arcade.Window):
             "yellow-candelabra": "yellow-candelabra-lit",
             "yellow-candelabra-lit": "yellow-candelabra",
         }
+
+        self.score_text = f"Score: {self.score}"
+        start_x = 0
+        start_y = SCREEN_HEIGHT - DEFAULT_LINE_HEIGHT * 1.5
+        self.scoreboard = arcade.Text(
+            self.score_text,
+            start_x, start_y,
+            arcade.color.RED,
+            DEFAULT_FONT_SIZE,
+            font_name="Kenney Pixel Square",
+        )
 
         # Set up the shader
         self.setup_shader()
@@ -131,6 +149,31 @@ class Window(arcade.Window):
         else:
             self.set_location(screens[0].x, screens[0].y)
 
+    def update_score(self):
+        gold_hit_list = arcade.check_for_collision_with_list(
+            self.player_sprite, self.scene["Gold"]
+        )
+        self.previous_score = self.score
+
+        for gold in gold_hit_list:
+            gold.remove_from_sprite_lists()
+            self.score += 100
+            # arcade.play_sound()
+
+        if self.previous_score != self.score:
+            self.score_text = f"Score: {self.score}"
+            start_x = 0
+            start_y = SCREEN_HEIGHT - DEFAULT_LINE_HEIGHT * 1.5
+            self.scoreboard = arcade.Text(
+                self.score_text,
+                start_x, start_y,
+                arcade.color.RED,
+                DEFAULT_FONT_SIZE,
+                font_name="Kenney Pixel Square",
+            )
+            print(self.score_text)
+
+
     def create_scene(self) -> arcade.Scene:
         layer_options = {
             "Platforms": {
@@ -142,9 +185,12 @@ class Window(arcade.Window):
             "LitLights": {
                 "use_spatial_hash": True,
             },
+            "Gold": {
+                "use_spatial_hash": True
+            }
         }
         tile_map = arcade.load_tilemap(
-            "assets/level-1-map.tmx",
+            "assets/level-4-map.tmx",
             scaling=TILE_SCALING,
             layer_options=layer_options,
         )
@@ -163,12 +209,13 @@ class Window(arcade.Window):
     def on_draw(self) -> None:
         self.clear()
 
-        # Draw platforms and the player to channel0
+        # Draw platforms, the player, and the gold to channel0
         self.channel0.use()
         self.channel0.clear()
         self.camera_sprites.use()
         self.scene["Player"].draw()
         self.scene["Platforms"].draw()
+        self.scene["Gold"].draw()
 
         # Draw everything else to channel1
         self.channel1.use()
@@ -244,6 +291,8 @@ class Window(arcade.Window):
         self.player_sprite.update(delta_time)
         self.physics_engine.step()
         self.center_camera_to_player()
+
+        self.update_score()
 
     def on_resize(self, width: int, height: int) -> None:
         super().on_resize(width, height)
