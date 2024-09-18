@@ -24,7 +24,9 @@ class Window(arcade.Window):
         arcade.SpriteList.DEFAULT_TEXTURE_FILTER = gl.NEAREST, gl.NEAREST
         self.spritesheet = RoguelikeInterior()
 
-        self.scene = self.create_scene()
+        self.current_level = 2
+
+        self.scene = self.create_scene(self.current_level)
         self.player_sprite = arcade.Sprite(
             self.spritesheet.get_sprite("potted-plant-1"),
             scale=CHARACTER_SCALING,
@@ -115,7 +117,8 @@ class Window(arcade.Window):
         else:
             self.set_location(screens[0].x, screens[0].y)
 
-    def create_scene(self) -> arcade.Scene:
+    def create_scene(self, level) -> arcade.Scene:
+        level_map = f"assets/level-{level}-map.tmx"
         layer_options = {
             "Platforms": {
                 "use_spatial_hash": True,
@@ -128,7 +131,7 @@ class Window(arcade.Window):
             },
         }
         tile_map = arcade.load_tilemap(
-            "assets/level-1-map.tmx",
+            level_map,
             scaling=TILE_SCALING,
             layer_options=layer_options,
         )
@@ -139,7 +142,7 @@ class Window(arcade.Window):
         return arcade.Scene.from_tilemap(tile_map)
 
     def reset(self) -> None:
-        self.scene = self.create_scene()
+        self.scene = self.create_scene(self.current_level)
         self.player_sprite.position = (128, 128)
         self.scene.add_sprite_list("Player")
         self.scene["Player"].append(self.player_sprite)
