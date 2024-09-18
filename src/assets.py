@@ -96,8 +96,12 @@ class MainCharacter:
     @staticmethod
     def crop_transparent_image(texture: arcade.Texture, flipped: bool = False) -> arcade.Texture:
         copy = texture.image.copy()
-        copy = copy.crop(copy.getbbox())
-        return arcade.Texture(copy if not flipped else copy.transpose(method=0))
+        bbox = copy.getbbox()
+        if not bbox:
+            return texture
+        copy = copy.crop((bbox[0], 0, bbox[2], copy.height))
+        copy = copy.transpose(method=0) if flipped else copy
+        return arcade.Texture(copy)
 
     def get_textures(
         self, state: MainCharacterState
