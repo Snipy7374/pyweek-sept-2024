@@ -110,10 +110,10 @@ class MainMenuView(arcade.View):
         )
         view = OptionsMenu(
             self.manager,
-            "Options",
             ["sus"],
             background,
         )
+        view.setup_from_dict()
         self.manager.add(view, layer=2)
 
     def credits_callback(self, _: arcade.gui.UIFlatButton) -> None:
