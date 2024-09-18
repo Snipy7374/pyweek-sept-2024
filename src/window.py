@@ -4,6 +4,7 @@ import pyglet
 from arcade.types import Color
 from arcade.experimental import Shadertoy
 from assets import RoguelikeInterior
+from shadow_sprite import ShadowSprite
 from constants import (
     SCREEN_WIDTH,
     SCREEN_HEIGHT,
@@ -42,7 +43,7 @@ class Window(arcade.Window):
         self.reset()
         self.set_window_position()
 
-        self.light_sprites = set()
+        self.light_sprites: set[arcade.Sprite] = set()
         self.light_toggle_map: dict[str, str] = {
             "white-candelabra": "white-candelabra-lit",
             "white-candelabra-lit": "white-candelabra",
@@ -50,11 +51,16 @@ class Window(arcade.Window):
             "yellow-candelabra-lit": "yellow-candelabra",
         }
 
-        # Set up the shader
         self.setup_shader()
-
-        # Setup lights
         self.setup_lights()
+
+        self.ground_y = 0
+
+        self.shadow_sprites: arcade.SpriteList = arcade.SpriteList()
+
+        for light in self.scene["LitLights"]:
+            shadow_sprite = ShadowSprite(self.player_sprite, light, self.ground_y)
+            self.shadow_sprites.append(shadow_sprite)
 
     def setup_shader(self) -> None:
         window_size = self.get_size()
@@ -166,6 +172,10 @@ class Window(arcade.Window):
         self.camera_sprites.use()
         self.scene["Player"].draw()
 
+        # Draw shadow sprites to channel2
+        for shadow_sprite in self.shadow_sprites:
+            shadow_sprite.draw_shadow()
+
         lights = []
         for light in self.scene["LitLights"]:
             left, bottom = self.camera_sprites.bottom_left
@@ -245,9 +255,12 @@ class Window(arcade.Window):
             0.1,
         )
 
-    def on_update(self, _: float) -> None:
+    def on_update(self, delta_time: float) -> None:
         self.physics_engine.update()
         self.center_camera_to_player()
+
+        for shadow_sprite in self.shadow_sprites:
+            shadow_sprite.update(delta_time)
 
     def on_resize(self, width: int, height: int) -> None:
         super().on_resize(width, height)

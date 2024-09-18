@@ -8,11 +8,6 @@ float terrain(vec2 samplePoint) {
     return texture(iChannel0, samplePoint).a;
 }
 
-float player(vec2 samplePoint) {
-    vec4 playerColor = texture(iChannel2, samplePoint);
-    return max(playerColor.a, length(playerColor.rgb));
-}
-
 float castRay(vec2 from, vec2 to) {
     float opacitySum = 0.0;
     float totalDistance = distance(from, to);
@@ -21,9 +16,7 @@ float castRay(vec2 from, vec2 to) {
         float t = i / N_float;
         vec2 samplePoint = mix(from, to, t);
         float terrainOpacity = terrain(samplePoint);
-        float playerOpacity = player(samplePoint);
-        float opacity = max(terrainOpacity, playerOpacity * 2.0);
-        opacitySum += opacity / N_float;
+        opacitySum += terrainOpacity / N_float;
     }
     float attenuationCoefficient = 3.0;
     float lightAmount = exp(-attenuationCoefficient * opacitySum);
