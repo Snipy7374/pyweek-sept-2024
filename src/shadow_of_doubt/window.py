@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import arcade
 import arcade.gui
 import arcade.gl as gl
@@ -20,37 +22,38 @@ from shadow_of_doubt.constants import (
 
 
 class PauseMenu:
-    def __init__(self, window, camera_sprites):
-        self.window = window
+    def __init__(self, view: GameView, camera_sprites) -> None:
+        self.view = view
         self.paused = False
         self.buttons = []
         self.camera_sprites = camera_sprites
 
         self._create_buttons()
 
-    def toggle_pause(self):
+    def toggle_pause(self) -> None:
+        self.view.window.set_mouse_visible(True)
         self.paused = not self.paused
         if self.paused:
             for button in self.buttons:
-                self.window.ui_manager.add(button)
+                self.view.ui_manager.add(button)
 
         else:
             for button in self.buttons:
-                self.window.ui_manager.remove(button)
+                self.view.ui_manager.remove(button)
 
-    def resume_game(self, event):
+    def resume_game(self, event) -> None:
         self.toggle_pause()
 
-    def show_options(self, event):
+    def show_options(self, event) -> None:
         print("Options event not implemented")
 
-    def go_to_main_menu(self, event):
+    def go_to_main_menu(self, event) -> None:
         print("Main Menu event not implemented")
 
-    def exit_game(self, event):
+    def exit_game(self, event) -> None:
         arcade.exit()
 
-    def _create_buttons(self):
+    def _create_buttons(self) -> None:
         button_width = 200
         button_height = 50
         start_y = SCREEN_HEIGHT // 2 + 100
@@ -74,7 +77,7 @@ class PauseMenu:
             button.on_click = action
             self.buttons.append(button)
 
-    def draw(self):
+    def draw(self) -> None:
         if self.paused:
             arcade.draw_lrbt_rectangle_filled(
                 left=self.camera_sprites.position[0] - SCREEN_WIDTH // 2,
@@ -84,7 +87,7 @@ class PauseMenu:
                 color=(0, 0, 0, 200),
             )
             for button in self.buttons:
-                self.window.ui_manager.add(button)
+                self.view.ui_manager.add(button)
 
 
 class GameView(arcade.View):

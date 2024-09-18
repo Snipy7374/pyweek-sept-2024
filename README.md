@@ -11,6 +11,7 @@ Hi dear contributors. This project uses the uv packet manager, I will personally
 5. Install pre-commit by running `pre-commit install`
 6. Create a new git branch (don't work on your main) `git branch new_name`
 7. Checkout to the new git branch `git checkout new_name`
-8. Remember to pick an issue from the gh repo. PUSH to main are disallowed, it'll error you. PRs and commits must be atomic.
+8. To run the project execute this command `python src`
+9. Remember to pick an issue from the gh repo. PUSH to main are disallowed, it'll error you. PRs and commits must be atomic.
 
 Now you're ready to go! If you have any problem with the project contact me (Snipy7374)
