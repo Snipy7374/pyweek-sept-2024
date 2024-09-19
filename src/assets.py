@@ -23,6 +23,12 @@ class MainCharacterState(enum.IntEnum):
     LADDER_GRAB = 13
 
 
+class MainCharacterAssets:
+    coin_collect_sound = arcade.load_sound(ASSETS_DIR / "sfx" / "coin.ogg")
+    jump_sound = arcade.load_sound(ASSETS_DIR / "sfx" / "jump.wav")
+    attack_sound = arcade.load_sound(ASSETS_DIR / "sfx" / "attack.wav")
+
+
 class RoguelikeInterior:
     def __init__(self) -> None:
         self.path = ASSETS_DIR / "roguelike-interior.png"
@@ -72,6 +78,7 @@ class MainCharacter:
     }
     current_state = MainCharacterState.IDLE
     current_frame = 0
+    assets = MainCharacterAssets()
 
     def __init__(
         self,
@@ -129,6 +136,10 @@ class MainCharacter:
     def set_state(self, state: MainCharacterState) -> None:
         if self.current_state == state:
             return
+        if state == MainCharacterState.JUMP:
+            self.assets.jump_sound.play()
+        if state == MainCharacterState.COMBO_ATTACK or state == MainCharacterState.DASH_ATTACK:
+            self.assets.attack_sound.play()
         self.current_state = state
         self.current_frame = 0
 

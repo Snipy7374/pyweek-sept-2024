@@ -22,8 +22,6 @@ from constants import (
     SCREEN_WIDTH,
     TILE_SCALING,
     WALL_FRICTION,
-    DEFAULT_LINE_HEIGHT,
-    DEFAULT_FONT_SIZE
 )
 
 
@@ -32,14 +30,14 @@ class Window(arcade.Window):
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE, resizable=True)
         self.ui_manager = arcade.gui.UIManager()
         self.ui_manager.enable()
-        self.previous_score = 0
         arcade.set_background_color(arcade.color.AMAZON)
         arcade.SpriteList.DEFAULT_TEXTURE_FILTER = gl.NEAREST, gl.NEAREST
         self.spritesheet = RoguelikeInterior()
 
         self.scene = self.create_scene()
-        self.score = 0
-        self.player_sprite = Player(position=CHARACTER_POSITION, scale=CHARACTER_SCALING)
+        self.player_sprite = Player(
+            scene=self.scene, position=CHARACTER_POSITION, scale=CHARACTER_SCALING
+        )
         self.physics_engine = arcade.PymunkPhysicsEngine(
             damping=DEFAULT_DAMPING,
             gravity=(0, -GRAVITY),
@@ -72,17 +70,6 @@ class Window(arcade.Window):
             "yellow-candelabra": "yellow-candelabra-lit",
             "yellow-candelabra-lit": "yellow-candelabra",
         }
-
-        self.score_text = f"Score: {self.score}"
-        start_x = 0
-        start_y = SCREEN_HEIGHT - DEFAULT_LINE_HEIGHT * 1.5
-        self.scoreboard = arcade.Text(
-            self.score_text,
-            start_x, start_y,
-            arcade.color.RED,
-            DEFAULT_FONT_SIZE,
-            font_name="Kenney Pixel Square",
-        )
 
         # Set up the shader
         self.setup_shader()
@@ -149,31 +136,6 @@ class Window(arcade.Window):
         else:
             self.set_location(screens[0].x, screens[0].y)
 
-    def update_score(self):
-        gold_hit_list = arcade.check_for_collision_with_list(
-            self.player_sprite, self.scene["Gold"]
-        )
-        self.previous_score = self.score
-
-        for gold in gold_hit_list:
-            gold.remove_from_sprite_lists()
-            self.score += 100
-            # arcade.play_sound()
-
-        if self.previous_score != self.score:
-            self.score_text = f"Score: {self.score}"
-            start_x = 0
-            start_y = SCREEN_HEIGHT - DEFAULT_LINE_HEIGHT * 1.5
-            self.scoreboard = arcade.Text(
-                self.score_text,
-                start_x, start_y,
-                arcade.color.RED,
-                DEFAULT_FONT_SIZE,
-                font_name="Kenney Pixel Square",
-            )
-            print(self.score_text)
-
-
     def create_scene(self) -> arcade.Scene:
         layer_options = {
             "Platforms": {
@@ -185,12 +147,10 @@ class Window(arcade.Window):
             "LitLights": {
                 "use_spatial_hash": True,
             },
-            "Gold": {
-                "use_spatial_hash": True
-            }
+            "Gold": {"use_spatial_hash": True},
         }
         tile_map = arcade.load_tilemap(
-            "assets/level-5-map.tmx",
+            "assets/level-1-map.tmx",
             scaling=TILE_SCALING,
             layer_options=layer_options,
         )
@@ -202,7 +162,7 @@ class Window(arcade.Window):
 
     def reset(self) -> None:
         self.scene = self.create_scene()
-        self.player_sprite.position = CHARACTER_POSITION
+        self.player_sprite.reset(self.scene)
         self.scene.add_sprite_list("Player")
         self.scene["Player"].append(self.player_sprite)
 
@@ -215,13 +175,13 @@ class Window(arcade.Window):
         self.camera_sprites.use()
         self.scene["Player"].draw()
         self.scene["Platforms"].draw()
-        self.scene["Gold"].draw()
 
         # Draw everything else to channel1
         self.channel1.use()
         self.channel1.clear()
         self.camera_sprites.use()
         self.scene.draw()
+        self.player_sprite.score.draw()
 
         # Draw the player to channel2
         self.channel2.use()
@@ -288,11 +248,10 @@ class Window(arcade.Window):
         )
 
     def on_update(self, delta_time: float) -> None:
-        self.player_sprite.update(delta_time)
+        self.scene.update(delta_time)
+        self.scene.update_animation(delta_time)
         self.physics_engine.step()
         self.center_camera_to_player()
-
-        self.update_score()
 
     def on_resize(self, width: int, height: int) -> None:
         super().on_resize(width, height)
