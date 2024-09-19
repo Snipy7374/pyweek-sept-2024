@@ -1,5 +1,6 @@
-import json
+from __future__ import annotations
 
+import json
 import typing
 import collections.abc
 
@@ -7,6 +8,9 @@ import arcade
 import arcade.gui
 
 from shadow_of_doubt import constants
+
+if typing.TYPE_CHECKING:
+    from shadow_of_doubt.gui.views.main_menu import MainMenuView
 
 ComponentT = typing.TypeVar("ComponentT", bound=arcade.gui.UIWidget)
 ComponentCallback = collections.abc.Callable[[arcade.gui.UIEvent], None]
@@ -63,6 +67,7 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
 
     def __init__(
         self,
+        main_view: MainMenuView,
         parent_manager: arcade.gui.UIManager,
         backgound_child: arcade.gui.UIWidget,
     ) -> None:
@@ -71,17 +76,16 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
             y=parent_manager.window.center_y,
             size_hint=(0, 0),
         )
+        self.main_view = main_view
         self.parent_manager = parent_manager
         self.background_child = backgound_child
 
         # Setup frame which will act like the window.
         frame = self.add(
             arcade.gui.UIAnchorLayout(
-                width=800,
-                height=700,
-                size_hint=(0, 0),
-                size_hint_min=(600, 500),
-                size_hint_max=(800, 700),
+                width=900,
+                height=900,
+                size_hint_min=(600, 600),
             )
         )
         frame.with_padding(all=20)
@@ -123,10 +127,11 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
         )
 
         widget_layout = arcade.gui.UIBoxLayout(
-            align="left",
+            align="center",
             space_between=20,
         )
         graphic_toggles = arcade.gui.UIBoxLayout(vertical=False, space_between=40)
+        graphic_toggles2 = arcade.gui.UIBoxLayout(vertical=False, space_between=40)
 
         vsync_toggle = arcade.gui.UITextureToggle(
             on_texture=on_texture, off_texture=off_texture, width=30, height=30
@@ -149,9 +154,23 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
             component_callback=self.antialiasing_toggle_callback,
             event_name="on_change",
         )
+
+        fullscreen_toggle = arcade.gui.UITextureToggle(
+            on_texture=on_texture, off_texture=off_texture, width=30, height=30
+        )
+        self.fullscreen_toggle = OptionEntryContainer(
+            "Fullscreen",
+            option_state_label="Disabled",
+            component=fullscreen_toggle,
+            component_callback=self.fullscreen_callback,
+            event_name="on_change",
+        )
+
         graphic_toggles.add(self.vsync_toggle)
         graphic_toggles.add(self.antialiasing_toggle)
+        graphic_toggles2.add(self.fullscreen_toggle)
         widget_layout.add(graphic_toggles)
+        widget_layout.add(graphic_toggles2)
 
         antialiasing_dropdown = arcade.gui.UIDropdown(
             default="4x",
@@ -169,7 +188,13 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
         widget_layout.add(self.antialiasing_samples_dropdown)
 
         window_size_dropdown = arcade.gui.UIDropdown(
-            default="1920x1080", options=["1920x1080", "1536x864", "1366x768"]
+            default="1920x1080",
+            options=[
+                "1920x1080",
+                "1536x864",
+                "1366x768",
+                "1356x620",  # yeah ik i have a weird ass screen
+            ],
         )
         self.window_size_dropdown = OptionEntryContainer(
             "Screen Resolution",
@@ -195,6 +220,7 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
 
     def vsync_toggle_callback(self, event: arcade.gui.UIOnChangeEvent) -> None:
         self.save_setting("vsync_toggle", event.new_value)
+        self.parent_manager.window.set_vsync(event.new_value)
         self.vsync_toggle.value = event.new_value
 
     def antialiasing_toggle_callback(self, event: arcade.gui.UIOnChangeEvent) -> None:
@@ -202,12 +228,33 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
         self.antialiasing_toggle.value = event.new_value
 
     def antialiasing_dropdown_callback(self, event: arcade.gui.UIOnChangeEvent) -> None:
-        self.save_setting("antialiasing_samples", int(event.new_value[: len(event.new_value) - 1]))
+        self.save_setting(
+            "antialiasing_samples_dropdown", int(event.new_value[: len(event.new_value) - 1])
+        )
         self.antialiasing_samples_dropdown.option_label.text = event.new_value
 
     def window_size_dropdown_callback(self, event: arcade.gui.UIOnChangeEvent) -> None:
-        self.save_setting("window_size", event.new_value)
+        self.save_setting("window_size_dropdown", event.new_value)
+        width, height = map(int, event.new_value.split("x"))
+
+        # skip setting the new window size if we are in fullscreen mode
+        # this errors out
+        if not self.parent_manager.window.fullscreen:
+            self.parent_manager.window.set_size(width, height)
+            self.parent_manager.trigger_render()
         self.window_size_dropdown.option_label.text = event.new_value
+
+    def fullscreen_callback(self, event: arcade.gui.UIOnChangeEvent) -> None:
+        self.save_setting("fullscreen_toggle", event.new_value)
+        width, height = map(int, self.settings["window_size_dropdown"].split("x"))
+        self.parent_manager.window.set_fullscreen(
+            event.new_value,
+            width=width,
+            height=height,
+        )
+        self.main_view.manager.trigger_render()
+        self.main_view.ui_layout.trigger_full_render()
+        self.parent_manager.trigger_render()
 
     def setup_from_dict(self) -> None:
         self.settings: dict[str, typing.Any] = self.load_saved_settings()
@@ -232,3 +279,6 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
         # After this the manager will respond to its events like it previously did.
         self.parent_manager.remove(self)
         self.parent_manager.remove(self.background_child)
+
+        for btn in self.main_view.box:
+            btn.disabled = False

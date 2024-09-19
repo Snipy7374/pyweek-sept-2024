@@ -18,3 +18,5 @@ MAIN_MENU_BUTTONS_STYLE["hover"].font_name = "DungeonFont"
 MAIN_MENU_BUTTONS_STYLE["hover"].font_size = 32
 MAIN_MENU_BUTTONS_STYLE["press"].font_name = "DungeonFont"
 MAIN_MENU_BUTTONS_STYLE["press"].font_size = 32
+MAIN_MENU_BUTTONS_STYLE["disabled"].font_name = "DungeonFont"
+MAIN_MENU_BUTTONS_STYLE["disabled"].font_size = 32

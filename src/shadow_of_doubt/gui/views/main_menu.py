@@ -57,22 +57,27 @@ class MainMenuView(arcade.View):
         self.ui_layout.add(
             game_title,
             anchor_x="center",
-            anchor_y="top",
+            anchor_y="center",
+            align_y=275,
         )
         self.ui_layout.add(
             footer_label,
             anchor_x="center",
             anchor_y="bottom",
+            align_y=10,
         )
         self.ui_layout.add(
             version_label,
             anchor_x="left",
             anchor_y="bottom",
+            align_x=20,
+            align_y=10,
         )
         self.ui_layout.add(
             self.box,
             anchor_x="left",
             anchor_y="center",
+            align_x=40,
         )
         self.manager.add(self.ui_layout, layer=0)
 
@@ -131,7 +136,12 @@ class MainMenuView(arcade.View):
             background,
             layer=1,
         )
+
+        for btn in self.box:
+            btn.disabled = True
+
         view = OptionsMenu(
+            self,
             self.manager,
             background,
         )
