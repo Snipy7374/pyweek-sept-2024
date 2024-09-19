@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" backgroundcolor="#000000" nextlayerid="5" nextobjectid="1">
- <tileset firstgid="1" source="roguelike-interior.tsx"/>
- <tileset firstgid="487" source="roguelike-base.tsx"/>
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" backgroundcolor="#000000" nextlayerid="6" nextobjectid="1">
+ <tileset firstgid="1" source="roguelike-base.tsx"/>
+ <tileset firstgid="1768" source="roguelike-interior.tsx"/>
  <layer id="2" name="Platforms" width="30" height="20">
   <data encoding="base64" compression="zlib">
-   eJzFlEkKACAIRev+V+0QrQQJccivCtImfX4c1uq3s/t55NqfSn6G+VubFIfU6dVlMVE18TyInJ66+Vxl+xw1i+uNz3CtvUJaVC96ribuFr2aI3ld/ay+TW9eTReaWzmfmf5076vEn+JO+QWPvlRA
+   eJzFlEsKACAIRFt1/yO3EiTI8TOpIEFYz8GptfpjD/AkrZqf/AoT9R7hMnW++rr3EDOrz+Ky7kOe0TXWnH/4C3E95yu+8rwrZkT1sn018W/JaiWT1zXP6t8U6RPpYuuN9JW5u/reu32s+VPcqTwpmAJZ
+  </data>
+ </layer>
+ <layer id="5" name="Gold" width="30" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBj6IINpoF0w8CBtNAxGwSgYBSMcjNYFo2AwAQC/uwE9
   </data>
  </layer>
  <layer id="3" name="UnlitLights" width="30" height="20">
   <data encoding="base64" compression="zlib">
-   eJxjYKAfEIViQmroDYi1k5puGwizBiLsqWEmMe4WRePTyi20ANQKo+Hsv8ECRPFgatsxHAE9/UVru8g1fzjHLyGAL+/gy1vEYmzmDCQAALAABO0=
+   eJxjYKAf+MMGwYTU0BsQaycx7qe2ndQ0i5iwp3b4U8M8Qu5Cl8ellhb+owaghrsGq99AYDC7jVQA8ws2TG07hgIgxa20CCtC9tHSbHLNH0rxS22AL//QCg8kAAAvDkmT
   </data>
  </layer>
  <layer id="4" name="LitLights" width="30" height="20">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUjIJRMBKBwUA7YBSMAgbqpcPBlp4B7uAAkQ==
+   eJxjYBgFowABxNkH2gWjYBSMAnqB0fw+CgYDoFY6HGzpGQB0IwB5
   </data>
  </layer>
 </map>
