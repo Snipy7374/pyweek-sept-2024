@@ -2,7 +2,7 @@
 name = "pyweek-sept-2024"
 description = ""
 authors = []
-license = "MIT"
+license = {file = "LICENSE"}
 readme = "README.md"
 requires-python = ">=3.10,<3.13"
 dependencies = [
