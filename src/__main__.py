@@ -9,7 +9,6 @@ def main() -> None:
         constants.SCREEN_WIDTH,
         constants.SCREEN_HEIGHT,
         constants.SCREEN_TITLE,
-        resizable=True,
         center_window=True,
     )
 

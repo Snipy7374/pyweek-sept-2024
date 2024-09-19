@@ -1,3 +1,7 @@
 {
-    "vsync_toggle": false
+  "vsync_toggle": false,
+  "antialiasing_toggle": false,
+  "antialiasing_samples_dropdown": 8,
+  "window_size_dropdown": "1536x864",
+  "window_size": "1536x864"
 }

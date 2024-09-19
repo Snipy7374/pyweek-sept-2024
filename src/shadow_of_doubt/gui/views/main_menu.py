@@ -17,10 +17,11 @@ class MainMenuView(arcade.View):
     def __init__(self) -> None:
         super().__init__()
         self.manager = arcade.gui.UIManager()
+        self.ui_layout = arcade.gui.UIAnchorLayout()
         self.box = arcade.gui.UIBoxLayout(
             x=50,
             y=int(self.window.center_y) - 220,
-            space_between=25,
+            space_between=20,
         )
         # background gif
         # button_texture = arcade.load_texture(constants.ASSETS_DIR / "button_texture.png")
@@ -42,7 +43,9 @@ class MainMenuView(arcade.View):
             x=self.window.center_x - 310,
             y=50,
             bold=True,
-            font_size=14,
+            font_size=12,
+            size_hint=(0, 0),
+            size_hint_max=(1000, 25),
         )
         version_label = arcade.gui.UILabel(
             "v" + __version__,
@@ -51,10 +54,27 @@ class MainMenuView(arcade.View):
             bold=True,
             font_size=14,
         )
-        self.manager.add(game_title, layer=1)
-        self.manager.add(footer_label, layer=1)
-        self.manager.add(version_label, layer=1)
-        self.manager.add(self.box, layer=1)
+        self.ui_layout.add(
+            game_title,
+            anchor_x="center",
+            anchor_y="top",
+        )
+        self.ui_layout.add(
+            footer_label,
+            anchor_x="center",
+            anchor_y="bottom",
+        )
+        self.ui_layout.add(
+            version_label,
+            anchor_x="left",
+            anchor_y="bottom",
+        )
+        self.ui_layout.add(
+            self.box,
+            anchor_x="left",
+            anchor_y="center",
+        )
+        self.manager.add(self.ui_layout, layer=0)
 
     def setup(self) -> None:
         button_texture = arcade.load_texture(constants.ASSETS_DIR / "button_texture.png")
@@ -71,6 +91,9 @@ class MainMenuView(arcade.View):
                 texture=texture,
                 texture_hovered=texture,
                 texture_pressed=texture,
+                size_hint=(1, 1),
+                size_hint_min=(225, 75),
+                size_hint_max=(350, 100),
             )
 
             button.set_handler(
@@ -103,18 +126,17 @@ class MainMenuView(arcade.View):
             width=self.window.width,
             height=self.window.height,
         )
-        background.alpha = 100
+        background.alpha = 150
         self.manager.add(
             background,
             layer=1,
         )
         view = OptionsMenu(
             self.manager,
-            ["sus"],
             background,
         )
         view.setup_from_dict()
-        self.manager.add(view, layer=2)
+        self.manager.add(view, layer=1)
 
     def credits_callback(self, _: arcade.gui.UIFlatButton) -> None:
         print("Credits")
