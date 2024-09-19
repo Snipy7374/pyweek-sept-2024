@@ -75,13 +75,15 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
         self.background_child = backgound_child
 
         # Setup frame which will act like the window.
-        frame = self.add(arcade.gui.UIAnchorLayout(
-            width=800,
-            height=700,
-            size_hint=(0, 0),
-            size_hint_min=(600, 500),
-            size_hint_max=(800, 700),
-        ))
+        frame = self.add(
+            arcade.gui.UIAnchorLayout(
+                width=800,
+                height=700,
+                size_hint=(0, 0),
+                size_hint_min=(600, 500),
+                size_hint_max=(800, 700),
+            )
+        )
         frame.with_padding(all=20)
         button_texture = arcade.load_texture(constants.ASSETS_DIR / "button_texture.png")
         texture = arcade.gui.NinePatchTexture(0, 0, 0, 0, button_texture)
@@ -167,8 +169,7 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
         widget_layout.add(self.antialiasing_samples_dropdown)
 
         window_size_dropdown = arcade.gui.UIDropdown(
-            default="1920x1080",
-            options=["1920x1080", "1536x864", "1366x768"]
+            default="1920x1080", options=["1920x1080", "1536x864", "1366x768"]
         )
         self.window_size_dropdown = OptionEntryContainer(
             "Screen Resolution",
@@ -201,7 +202,7 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
         self.antialiasing_toggle.value = event.new_value
 
     def antialiasing_dropdown_callback(self, event: arcade.gui.UIOnChangeEvent) -> None:
-        self.save_setting("antialiasing_samples", int(event.new_value[:len(event.new_value) - 1]))
+        self.save_setting("antialiasing_samples", int(event.new_value[: len(event.new_value) - 1]))
         self.antialiasing_samples_dropdown.option_label.text = event.new_value
 
     def window_size_dropdown_callback(self, event: arcade.gui.UIOnChangeEvent) -> None:

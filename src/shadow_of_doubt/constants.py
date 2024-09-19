@@ -4,7 +4,9 @@ from pathlib import Path
 SCREEN_WIDTH = 1365
 SCREEN_HEIGHT = 700
 SCREEN_TITLE = "Shadow of Doubt"
-COPYRIGHT_AND_LICENSE_NOTICE = "Copyright © 2024-present, see Credits for more info - Licensed under the MIT license."
+COPYRIGHT_AND_LICENSE_NOTICE = (
+    "Copyright © 2024-present, see Credits for more info - Licensed under the MIT license."
+)
 
 # Path to the game's root directory
 try:
