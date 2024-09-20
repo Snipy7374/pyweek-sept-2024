@@ -24,6 +24,6 @@ The contributors are listed by the ones with the most commits.
 - [Asher](https://github.com/FallenDeity) - Worked on the Main Character and on the maps. Team leader aid.
 - [Stovoy](https://github.com/Stovoy) - Gave the starting game idea. Worked on the light dynamics.
 - [Ununennium](https://github.com/Ununennium817) - Worked on the game maps.
+- [Walkercito](https://github.com/Walkercito) - Aided in the GUIs development.
 - [Abhishek Kashyap](https://github.com/Abhishek10351) - Commited the basic game structure.
 - [Spark](https://github.com/SPARKY67966)- Assets research and feedback.
-- [Walkercito](https://github.com/Walkercito) - Aided in the GUIs development.
