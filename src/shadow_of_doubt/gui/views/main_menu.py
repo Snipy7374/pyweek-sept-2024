@@ -25,14 +25,14 @@ class MainMenuView(arcade.View):
             y=int(self.window.center_y) - 220,
             space_between=20,
         )
+
         # background gif
-        # button_texture = arcade.load_texture(constants.ASSETS_DIR / "button_texture.png")
-        # texture = arcade.gui.NinePatchTexture(0, 0, 0, 0, button_texture)
-        # self.manager.add(arcade.gui.UIImage(
-        #    texture=texture,
-        #    width=self.window.width,
-        #    height=self.window.height
-        # ))
+        button_texture = arcade.load_texture(constants.ASSETS_DIR / "button_texture.png")
+        texture = arcade.gui.NinePatchTexture(0, 0, 0, 0, button_texture)
+        self.manager.add(
+            arcade.gui.UIImage(texture=texture, width=self.window.width, height=self.window.height)
+        )
+
         game_title = arcade.gui.UILabel(
             constants.SCREEN_TITLE,
             x=self.window.center_x - 310,

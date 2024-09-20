@@ -63,8 +63,8 @@ class GameView(arcade.View):
         self.setup_lights()
 
         # Set up the ui
-        self.ui_manager = arcade.gui.UIManager()
-        self.ui_manager.enable()
+        self.manager = arcade.gui.UIManager()
+        self.manager.enable()
         self.pause_menu = pause_menu.PauseMenu(self, self.camera_sprites)
 
     def setup_shader(self) -> None:
@@ -198,7 +198,7 @@ class GameView(arcade.View):
         # set up the ui
         if self.pause_menu.paused:
             self.pause_menu.draw()
-            self.ui_manager.draw()
+            self.manager.draw()
 
     def draw_title(self) -> None:
         text = arcade.Text(
@@ -276,4 +276,4 @@ class GameView(arcade.View):
         self.camera_sprites.match_screen(and_projection=True)
         self.camera_gui.match_screen(and_projection=True)
         self.shadertoy.resize((width, height))
-        self.ui_manager.on_resize(width, height)
+        self.manager.on_resize(width, height)
