@@ -135,6 +135,9 @@ class Enemy(arcade.Sprite):
                 self.physics_engines[0].set_friction(self, 1.0)
                 self.spritesheet.set_state(self.spritesheet.all_states.IDLE)
             return
+        if self.center_y < -100:
+            self.kill()
+            return
 
         on_ground = self.physics_engines[0].is_on_ground(self)
         plater = self.scene.get_sprite_list("Player")[0]

@@ -124,6 +124,9 @@ class Player(arcade.Sprite):
                 self.spritesheet.set_state(MainCharacterState.IDLE)
             else:
                 return
+        if self.center_y < -100:
+            self.dead = True
+            return
         is_on_ground = self.physics_engines[0].is_on_ground(self)
         move_force = PLAYER_MOVE_FORCE_ON_GROUND if is_on_ground else PLAYER_MOVE_FORCE_IN_AIR
         if (
