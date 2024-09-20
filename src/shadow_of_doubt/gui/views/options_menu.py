@@ -291,7 +291,7 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
         )
         self.main_view.manager.trigger_render()
         self.main_view.ui_layout.trigger_full_render()
-        self.parent_manager.trigger_render()
+        self.temp_layout.trigger_full_render()
 
     def setup_from_dict(self) -> None:
         self.settings: dict[str, typing.Any] = self.load_saved_settings()
