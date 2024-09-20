@@ -56,6 +56,6 @@ PLAYER_MAX_VERTICAL_SPEED = 1600
 # Force applied to move player left/right
 PLAYER_MOVE_FORCE_ON_GROUND = 8000
 PLAYER_MOVE_FORCE_IN_AIR = 900
-PLAYER_JUMP_IMPULSE = 1800
+PLAYER_JUMP_IMPULSE = 1900
 
 # --- Constants for player ends here ---

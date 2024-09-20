@@ -3,10 +3,10 @@
  <properties>
   <property name="value" type="int" value="1"/>
  </properties>
- <image source="gem-blue.png" width="64" height="16"/>
+ <image source="../../../../gem-blue.png" width="64" height="16"/>
  <tile id="0">
   <properties>
-   <property name="value" type="int" value="1"/>
+   <property name="value" type="int" value="10"/>
   </properties>
   <animation>
    <frame tileid="0" duration="100"/>
