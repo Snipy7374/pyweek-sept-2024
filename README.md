@@ -15,3 +15,13 @@ Hi dear contributors. This project uses the uv packet manager, I will personally
 9. Remember to pick an issue from the gh repo. PUSH to main are disallowed, it'll error you. PRs and commits must be atomic.
 
 Now you're ready to go! If you have any problem with the project contact me (Snipy7374)
+
+# Credits
+
+- [Snipy7374](https://github.com/Snipy7374) - Team leader, worked on the GUIs.
+- [Asher](https://github.com/FallenDeity) - Worked on the Main Character and on the maps. Team leader aid.
+- [Stovoy](https://github.com/Stovoy) - Gave the starting game idea. Worked on the light dynamics.
+- [Ununennium](https://github.com/Ununennium817) - Worked on the game maps.
+- [Abhishek Kashyap](https://github.com/Abhishek10351) - Commited the basic game structure.
+- [Spark](https://github.com/SPARKY67966)- Assets research and feedback.
+- [Walkercito](https://github.com/Walkercito) - Aided in the GUIs development.
