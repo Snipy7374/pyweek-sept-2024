@@ -1,5 +1,6 @@
 import arcade
 import arcade.gl as gl
+import arcade.gui
 import pyglet
 from arcade.experimental import Shadertoy
 from arcade.types import Color
@@ -27,12 +28,16 @@ from constants import (
 class Window(arcade.Window):
     def __init__(self) -> None:
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE, resizable=True)
+        self.ui_manager = arcade.gui.UIManager()
+        self.ui_manager.enable()
         arcade.set_background_color(arcade.color.AMAZON)
         arcade.SpriteList.DEFAULT_TEXTURE_FILTER = gl.NEAREST, gl.NEAREST
         self.spritesheet = RoguelikeInterior()
 
         self.scene = self.create_scene()
-        self.player_sprite = Player(position=CHARACTER_POSITION, scale=CHARACTER_SCALING)
+        self.player_sprite = Player(
+            scene=self.scene, position=CHARACTER_POSITION, scale=CHARACTER_SCALING
+        )
         self.physics_engine = arcade.PymunkPhysicsEngine(
             damping=DEFAULT_DAMPING,
             gravity=(0, -GRAVITY),
@@ -142,9 +147,10 @@ class Window(arcade.Window):
             "LitLights": {
                 "use_spatial_hash": True,
             },
+            "Gold": {"use_spatial_hash": True},
         }
         tile_map = arcade.load_tilemap(
-            "assets/level-1-map.tmx",
+            "assets/level-5-map.tmx",
             scaling=TILE_SCALING,
             layer_options=layer_options,
         )
@@ -156,14 +162,14 @@ class Window(arcade.Window):
 
     def reset(self) -> None:
         self.scene = self.create_scene()
-        self.player_sprite.position = CHARACTER_POSITION
+        self.player_sprite.reset(self.scene)
         self.scene.add_sprite_list("Player")
         self.scene["Player"].append(self.player_sprite)
 
     def on_draw(self) -> None:
         self.clear()
 
-        # Draw platforms and the player to channel0
+        # Draw platforms, the player, and the gold to channel0
         self.channel0.use()
         self.channel0.clear()
         self.camera_sprites.use()
@@ -175,6 +181,7 @@ class Window(arcade.Window):
         self.channel1.clear()
         self.camera_sprites.use()
         self.scene.draw()
+        self.player_sprite.score.draw()
 
         # Draw the player to channel2
         self.channel2.use()
@@ -241,7 +248,8 @@ class Window(arcade.Window):
         )
 
     def on_update(self, delta_time: float) -> None:
-        self.player_sprite.update(delta_time)
+        self.scene.update(delta_time)
+        self.scene.update_animation(delta_time)
         self.physics_engine.step()
         self.center_camera_to_player()
 
