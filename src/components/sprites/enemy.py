@@ -8,6 +8,12 @@ import arcade
 
 from components.utils.enemy import EnemyCharacter, EnemyTypes
 from components.utils.projectiles import Projectile
+from constants import (
+    ENEMY_PLAYER_DISTANCE_THRESHOLD,
+    ENEMY_ATTACK_DISTANCE_THRESHOLD,
+    ENEMY_ATTACK_PROBABILITY,
+    ENEMY_MOVE_FORCE,
+)
 
 
 class Enemy(arcade.Sprite):
@@ -111,6 +117,7 @@ class Enemy(arcade.Sprite):
     def update(self, delta_time: float = 1 / 60) -> None:
         if self._dead:
             self.spritesheet.set_state(self.spritesheet.all_states.DEATH)
+            self.physics_engines[0].set_friction(self, 10.0)
             if self.spritesheet.is_done():
                 self.kill()
             return
@@ -118,14 +125,60 @@ class Enemy(arcade.Sprite):
             self.spritesheet.set_state(self.spritesheet.all_states.HIT)
             if self.spritesheet.is_done():
                 self._hurt = False
+                self.physics_engines[0].set_friction(self, 1.0)
+                self.spritesheet.set_state(self.spritesheet.all_states.IDLE)
             return
-        self._attacking = self._attacking if self._attacking else random.randint(0, 100) < 5
         if self._attacking:
             self.attack()
             if self.spritesheet.is_done():
                 self._attacking = False
+                self.physics_engines[0].set_friction(self, 1.0)
+                self.spritesheet.set_state(self.spritesheet.all_states.IDLE)
             return
+
         on_ground = self.physics_engines[0].is_on_ground(self)
+        plater = self.scene.get_sprite_list("Player")[0]
+        player_pos = plater.position
+        enemy_pos = self.position
+
+        if abs(player_pos[0] - enemy_pos[0]) < ENEMY_PLAYER_DISTANCE_THRESHOLD:
+            if abs(player_pos[0] - enemy_pos[0]) > ENEMY_PLAYER_DISTANCE_THRESHOLD:
+                self._attacking = False
+                return
+
+            self._facing_right = player_pos[0] > enemy_pos[0]
+
+            if (
+                on_ground
+                and self.spritesheet.projectile_type is None
+                and abs(player_pos[0] - enemy_pos[0]) > ENEMY_ATTACK_DISTANCE_THRESHOLD
+            ):
+                vx = ENEMY_MOVE_FORCE if self._facing_right else -ENEMY_MOVE_FORCE
+                self.physics_engines[0].set_friction(self, 0.0)
+                self.physics_engines[0].apply_force(self, (vx, 0))
+                self.spritesheet.set_state(self.spritesheet.all_states.WALK)
+                return
+
+            if not on_ground:
+                self._attacking = False
+                return
+
+            self._attacking = (
+                random.randint(0, 100) < ENEMY_ATTACK_PROBABILITY
+                or abs(player_pos[0] - enemy_pos[0]) < 30
+            )
+            if self._attacking:
+                return
+
+            if self.spritesheet.projectile_type is None:
+                vx = ENEMY_MOVE_FORCE if self._facing_right else -ENEMY_MOVE_FORCE
+                self.physics_engines[0].set_friction(self, 0.0)
+                self.physics_engines[0].apply_force(self, (vx, 0))
+                self.spritesheet.set_state(self.spritesheet.all_states.WALK)
+                return
+
+            return
+
         if self._walk_around and on_ground:
             self._switch_time -= delta_time
             if self._switch_time <= 0:
