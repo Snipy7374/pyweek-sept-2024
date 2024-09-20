@@ -198,7 +198,8 @@ class GameView(arcade.View):
         # set up the ui
         if self.pause_menu.paused:
             self.pause_menu.draw()
-            self.manager.draw()
+
+        self.manager.draw()
 
     def draw_title(self) -> None:
         text = arcade.Text(

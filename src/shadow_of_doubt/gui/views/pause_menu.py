@@ -4,7 +4,7 @@ import typing
 import arcade
 import arcade.gui
 
-from shadow_of_doubt.gui.views import options_menu, main_menu
+from shadow_of_doubt.gui.views import main_menu
 from shadow_of_doubt import constants
 
 if typing.TYPE_CHECKING:
@@ -34,13 +34,6 @@ class PauseMenu:
     def resume_game(self, _) -> None:
         self.toggle_pause()
 
-    def show_options(self, _) -> None:
-        temp_layout = arcade.gui.UIAnchorLayout()
-        view = options_menu.OptionsMenu(main_view=self.view, temp_manager=temp_layout)
-        view.setup_from_dict()
-        temp_layout.add(view, anchor_x="center", anchor_y="center")
-        self.view.manager.add(temp_layout, layer=1)
-
     def go_to_main_menu(self, _) -> None:
         view = main_menu.MainMenuView()
         view.setup()
@@ -57,7 +50,6 @@ class PauseMenu:
 
         button_info = [
             ("Resume", self.resume_game),
-            ("Options", self.show_options),
             ("Main Menu", self.go_to_main_menu),
             ("Exit", self.exit_game),
         ]
@@ -82,5 +74,3 @@ class PauseMenu:
                 bottom=self.camera_sprites.position[1] - constants.SCREEN_HEIGHT // 2,
                 color=(0, 0, 0, 200),
             )
-            for button in self.buttons:
-                self.view.manager.add(button)

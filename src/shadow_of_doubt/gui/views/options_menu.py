@@ -73,22 +73,14 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
     def __init__(
         self,
         *,
-        main_view: MainMenuView | None = None,
-        parent_manager: arcade.gui.UIManager | None = None,
-        temp_manager: arcade.gui.UIAnchorLayout | None = None,
-        backgound_child: arcade.gui.UIWidget | None = None,
+        main_view: MainMenuView,
+        parent_manager: arcade.gui.UIManager,
+        temp_manager: arcade.gui.UIAnchorLayout,
+        backgound_child: arcade.gui.UIWidget,
     ) -> None:
-        self.window: arcade.Window | None = None
-        if parent_manager:
-            x = parent_manager.window.center_x
-            y = parent_manager.window.center_y
-        else:
-            self.window = arcade.get_window()
-            x = self.window.center_x
-            y = self.window.center_y
         super().__init__(
-            x=x,
-            y=y,
+            x=parent_manager.window.center_x,
+            y=parent_manager.window.center_y,
             size_hint=(0, 0),
         )
         self.main_view = main_view
@@ -207,7 +199,6 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
                 "1920x1080",
                 "1536x864",
                 "1366x768",
-                "1356x620",  # yeah ik i have a weird ass screen
             ],
         )
         self.window_size_dropdown = OptionEntryContainer(
@@ -238,10 +229,7 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
             return
 
         self.save_setting("vsync_toggle", event.new_value)
-        if self.parent_manager:
-            self.parent_manager.window.set_vsync(event.new_value)
-        else:
-            self.window.set_vsync(event.new_value)  # type: ignore
+        self.parent_manager.window.set_vsync(event.new_value)
         self.vsync_toggle.value = event.new_value
 
     def antialiasing_toggle_callback(self, event: arcade.gui.UIOnChangeEvent) -> None:
@@ -273,17 +261,10 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
 
         # skip setting the new window size if we are in fullscreen mode
         # this errors out
-        if self.parent_manager:
-            window = self.parent_manager.window
-        else:
-            window = self.window
-        if not window.fullscreen:  # type: ignore
-            window.set_size(width, height)  # type: ignore
-
-            if self.main_view:
-                self.main_view.manager.trigger_render()
-            if self.temp_layout:
-                self.temp_layout.trigger_full_render()
+        if self.parent_manager.window.fullscreen:
+            self.parent_manager.window.set_size(width, height)
+            self.main_view.manager.trigger_render()
+            self.temp_layout.trigger_full_render()
         self.window_size_dropdown._value = event.new_value  # type: ignore
 
     def fullscreen_callback(self, event: arcade.gui.UIOnChangeEvent) -> None:
@@ -302,12 +283,7 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
         else:
             width, height = arcade.get_display_size()
 
-        if self.parent_manager:
-            window = self.parent_manager.window
-        else:
-            window = self.window
-
-        window.set_fullscreen(  # type: ignore
+        self.parent_manager.window.set_fullscreen(
             event.new_value,
             width=width,
             height=height,
@@ -341,20 +317,10 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
         return data
 
     def on_click_back_button(self, _: arcade.gui.UIOnClickEvent) -> None:
-        if not all(
-            (
-                self.parent_manager,
-                self.temp_layout,
-                self.background_child,
-                self.main_view,
-            )
-        ):
-            self.main_view.manager.remove(self.temp_layout)  # type: ignore
-            return
         # Removes the widget from the manager.
         # After this the manager will respond to its events like it previously did.
-        self.parent_manager.remove(self.temp_layout)  # type: ignore
-        self.parent_manager.remove(self.background_child)  # type: ignore
+        self.parent_manager.remove(self.temp_layout)
+        self.parent_manager.remove(self.background_child)
 
-        for btn in self.main_view.box:  # type: ignore
+        for btn in self.main_view.box:
             btn.disabled = False  # type: ignore

@@ -30,7 +30,12 @@ class MainMenuView(arcade.View):
         button_texture = arcade.load_texture(constants.ASSETS_DIR / "button_texture.png")
         texture = arcade.gui.NinePatchTexture(0, 0, 0, 0, button_texture)
         self.manager.add(
-            arcade.gui.UIImage(texture=texture, width=self.window.width, height=self.window.height)
+            arcade.gui.UIImage(
+                texture=texture,
+                width=self.window.width,
+                height=self.window.height,
+                size_hint=(1, 1),
+            )
         )
 
         game_title = arcade.gui.UILabel(
@@ -132,6 +137,7 @@ class MainMenuView(arcade.View):
             texture=texture,
             width=self.window.width,
             height=self.window.height,
+            size_hint=(1, 1),
         )
         background.alpha = 150
         self.manager.add(
