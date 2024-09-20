@@ -24,6 +24,13 @@ ASSETS_DIR = Path("assets").resolve()
 FONTS_DIR = ASSETS_DIR / "fonts"
 SAVES_DIR = Path("saves").resolve()
 SETTINGS_DIR = SAVES_DIR / "settings"
+DEFAULT_SETTINGS = {
+    "vsync_toggle": True,
+    "antialiasing_toggle": False,
+    "antialiasing_samples_dropdown": 4,
+    "window_size_dropdown": None,
+    "fullscreen_toggle": True,
+}
 
 CHARACTER_SCALING = 4
 TILE_SCALING = 3

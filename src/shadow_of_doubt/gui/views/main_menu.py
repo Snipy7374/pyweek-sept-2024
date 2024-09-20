@@ -138,15 +138,18 @@ class MainMenuView(arcade.View):
         )
 
         for btn in self.box:
-            btn.disabled = True
+            btn.disabled = True  # type: ignore
 
+        temp_layout = arcade.gui.UIAnchorLayout()
         view = OptionsMenu(
-            self,
-            self.manager,
-            background,
+            main_view=self,
+            parent_manager=self.manager,
+            temp_manager=temp_layout,
+            backgound_child=background,
         )
         view.setup_from_dict()
-        self.manager.add(view, layer=1)
+        temp_layout.add(view, anchor_x="center", anchor_y="center")
+        self.manager.add(temp_layout, layer=1)
 
     def credits_callback(self, _: arcade.gui.UIFlatButton) -> None:
         print("Credits")

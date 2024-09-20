@@ -21,10 +21,10 @@ class OptionEntryContainer(arcade.gui.UIBoxLayout, typing.Generic[ComponentT]):
         self,
         label: str,
         *,
-        option_state_label: str,
         component: ComponentT,
         component_callback: ComponentCallback,
         event_name: str,
+        option_state_label: str | None = None,
     ) -> None:
         super().__init__(align="center", space_between=7)
         self.label = arcade.gui.UILabel(
@@ -35,15 +35,20 @@ class OptionEntryContainer(arcade.gui.UIBoxLayout, typing.Generic[ComponentT]):
         self.add(self.label)
 
         self.entry = arcade.gui.UIBoxLayout(vertical=False, space_between=15)
-        self.option_label = arcade.gui.UILabel(
-            text=option_state_label,
-            font_size=14,
-        )
 
         self.component = component
         self.component.__setattr__(event_name, component_callback)
         self.entry.add(component)
-        self.entry.add(self.option_label)
+
+        # for dropdowns we don't provide the state label, instead
+        # we set the component default to the state
+        if not isinstance(component, arcade.gui.UIDropdown):
+            self.option_label = arcade.gui.UILabel(
+                text=option_state_label,  # type: ignore
+                font_size=14,
+            )
+            self.entry.add(self.option_label)
+
         self.add(self.entry)
 
     @property
@@ -51,7 +56,7 @@ class OptionEntryContainer(arcade.gui.UIBoxLayout, typing.Generic[ComponentT]):
         if isinstance(self.component, arcade.gui.UITextureToggle):
             return self.component.value
         elif isinstance(self.component, arcade.gui.UIDropdown):
-            return self.option_label.text
+            return self.value
 
     @value.setter
     def value(self, _v: bool | str) -> None:
@@ -59,7 +64,7 @@ class OptionEntryContainer(arcade.gui.UIBoxLayout, typing.Generic[ComponentT]):
             self.component.value = _v  # type: ignore
             self.option_label.text = "Enabled" if _v else "Disabled"
         elif isinstance(self.component, arcade.gui.UIDropdown):
-            self.option_label.text = _v
+            self.component.value = _v  # type: ignore
 
 
 class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
@@ -67,8 +72,10 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
 
     def __init__(
         self,
+        *,
         main_view: MainMenuView,
         parent_manager: arcade.gui.UIManager,
+        temp_manager: arcade.gui.UIAnchorLayout,
         backgound_child: arcade.gui.UIWidget,
     ) -> None:
         super().__init__(
@@ -78,7 +85,9 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
         )
         self.main_view = main_view
         self.parent_manager = parent_manager
+        self.temp_layout = temp_manager
         self.background_child = backgound_child
+        self.setted_up: bool = False
 
         # Setup frame which will act like the window.
         frame = self.add(
@@ -140,7 +149,7 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
             "V-Sync",
             option_state_label="Disabled",
             component=vsync_toggle,
-            component_callback=self.vsync_toggle_callback,
+            component_callback=self.vsync_toggle_callback,  # type: ignore
             event_name="on_change",
         )
 
@@ -151,7 +160,7 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
             "Antialiasing",
             option_state_label="Enabled",
             component=antialiasing_toggle,
-            component_callback=self.antialiasing_toggle_callback,
+            component_callback=self.antialiasing_toggle_callback,  # type: ignore
             event_name="on_change",
         )
 
@@ -162,7 +171,7 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
             "Fullscreen",
             option_state_label="Disabled",
             component=fullscreen_toggle,
-            component_callback=self.fullscreen_callback,
+            component_callback=self.fullscreen_callback,  # type: ignore
             event_name="on_change",
         )
 
@@ -173,22 +182,19 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
         widget_layout.add(graphic_toggles2)
 
         antialiasing_dropdown = arcade.gui.UIDropdown(
-            default="4x",
             options=["2x", "4x", "8x", "16x"],
             height=20,
             width=150,
         )
         self.antialiasing_samples_dropdown = OptionEntryContainer(
             "Antialiasing samples",
-            option_state_label="4x",
             component=antialiasing_dropdown,
-            component_callback=self.antialiasing_dropdown_callback,
+            component_callback=self.antialiasing_dropdown_callback,  # type: ignore
             event_name="on_change",
         )
         widget_layout.add(self.antialiasing_samples_dropdown)
 
         window_size_dropdown = arcade.gui.UIDropdown(
-            default="1920x1080",
             options=[
                 "1920x1080",
                 "1536x864",
@@ -198,9 +204,8 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
         )
         self.window_size_dropdown = OptionEntryContainer(
             "Screen Resolution",
-            option_state_label="1920x1080",
             component=window_size_dropdown,
-            component_callback=self.window_size_dropdown_callback,
+            component_callback=self.window_size_dropdown_callback,  # type: ignore
             event_name="on_change",
         )
         widget_layout.add(self.window_size_dropdown)
@@ -219,21 +224,39 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
         )
 
     def vsync_toggle_callback(self, event: arcade.gui.UIOnChangeEvent) -> None:
+        # this event was triggered by the loading of the current settings
+        # skipping it
+        if not self.setted_up:
+            return
+
         self.save_setting("vsync_toggle", event.new_value)
         self.parent_manager.window.set_vsync(event.new_value)
         self.vsync_toggle.value = event.new_value
 
     def antialiasing_toggle_callback(self, event: arcade.gui.UIOnChangeEvent) -> None:
+        # this event was triggered by the loading of the current settings
+        # skipping it
+        if not self.setted_up:
+            return
+
         self.save_setting("antialiasing_toggle", event.new_value)
         self.antialiasing_toggle.value = event.new_value
 
     def antialiasing_dropdown_callback(self, event: arcade.gui.UIOnChangeEvent) -> None:
-        self.save_setting(
-            "antialiasing_samples_dropdown", int(event.new_value[: len(event.new_value) - 1])
-        )
-        self.antialiasing_samples_dropdown.option_label.text = event.new_value
+        # this event was triggered by the loading of the current settings
+        # skipping it
+        if not self.setted_up:
+            return
+
+        self.save_setting("antialiasing_samples_dropdown", int(event.new_value[:-1]))
+        self.antialiasing_samples_dropdown._value = event.new_value  # type: ignore
 
     def window_size_dropdown_callback(self, event: arcade.gui.UIOnChangeEvent) -> None:
+        # this event was triggered by the loading of the current settings
+        # skipping it
+        if not self.setted_up:
+            return
+
         self.save_setting("window_size_dropdown", event.new_value)
         width, height = map(int, event.new_value.split("x"))
 
@@ -241,12 +264,26 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
         # this errors out
         if not self.parent_manager.window.fullscreen:
             self.parent_manager.window.set_size(width, height)
-            self.parent_manager.trigger_render()
-        self.window_size_dropdown.option_label.text = event.new_value
+            self.main_view.manager.trigger_render()
+            self.temp_layout.trigger_full_render()
+        self.window_size_dropdown._value = event.new_value  # type: ignore
 
     def fullscreen_callback(self, event: arcade.gui.UIOnChangeEvent) -> None:
+        # this event was triggered by the loading of the current settings
+        # skipping it
+        if not self.setted_up:
+            return
+
         self.save_setting("fullscreen_toggle", event.new_value)
-        width, height = map(int, self.settings["window_size_dropdown"].split("x"))
+
+        # we need to pass the size in case the user disable fullscreen
+        # so the window has the correct size
+        size = self.settings["window_size_dropdown"]
+        if size:
+            width, height = map(int, size.split("x"))
+        else:
+            width, height = arcade.get_display_size()
+
         self.parent_manager.window.set_fullscreen(
             event.new_value,
             width=width,
@@ -263,6 +300,7 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
             if key.endswith(("_toggle", "_dropdown")):
                 attr = self.__getattribute__(key)
                 attr.value = value
+        self.setted_up = True
 
     def save_setting(self, setting: str, value: typing.Any) -> None:
         with open(constants.SETTINGS_DIR / "saved_settings.json", "w") as f:
@@ -277,8 +315,8 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
     def on_click_back_button(self, _: arcade.gui.UIOnClickEvent) -> None:
         # Removes the widget from the manager.
         # After this the manager will respond to its events like it previously did.
-        self.parent_manager.remove(self)
+        self.parent_manager.remove(self.temp_layout)
         self.parent_manager.remove(self.background_child)
 
         for btn in self.main_view.box:
-            btn.disabled = False
+            btn.disabled = False  # type: ignore

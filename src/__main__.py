@@ -1,3 +1,4 @@
+import json
 import arcade
 
 from shadow_of_doubt import constants
@@ -5,10 +6,25 @@ from shadow_of_doubt.gui.views import MainMenuView
 from shadow_of_doubt.gui.utils import load_settings
 
 
+def ensure_settings_file() -> None:
+    if not constants.SETTINGS_DIR.exists():
+        constants.SETTINGS_DIR.mkdir(parents=True)
+
+    path = constants.SETTINGS_DIR / "saved_settings.json"
+    if not path.exists():
+        with open(path, "w") as f:
+            json.dump(constants.DEFAULT_SETTINGS, f, indent=2)
+
+
 def main() -> None:
+    ensure_settings_file()
     settings = load_settings()
     try:
-        width, height = map(int, settings["window_size_dropdown"].split("x"))
+        size = settings["window_size_dropdown"]
+        if size:
+            width, height = map(int, size.split("x"))
+        else:
+            width, height = arcade.get_display_size()
     except (KeyError, TypeError):
         width, height = constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT
     try:
