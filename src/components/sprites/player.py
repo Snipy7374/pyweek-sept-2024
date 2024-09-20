@@ -15,7 +15,9 @@ from constants import (
 class Player(arcade.Sprite):
     _animation_debounce = 0.1
     _score = 0
+    _hurt = False
     _dead = False
+    _knockback = False
     _facing_right = True
     _jump_pressed = False
     _crouch_pressed = False
@@ -100,6 +102,28 @@ class Player(arcade.Sprite):
     def update(self, _: float = 1 / 60) -> None:
         if not self.physics_engines or self.dead:
             return
+        if self._knockback:
+            self.physics_engines[0].set_friction(self, 0.0)
+            move_force = (
+                PLAYER_MOVE_FORCE_ON_GROUND
+                if self.physics_engines[0].is_on_ground(self)
+                else PLAYER_MOVE_FORCE_IN_AIR
+            )
+            force = move_force * 3 if not self._facing_right else -move_force * 3
+            self.physics_engines[0].apply_force(self, (force, force))
+            self._knockback = False
+            return
+        if self._hurt:
+            self.physics_engines[0].set_friction(self, 10.0)
+            self.spritesheet.set_state(MainCharacterState.HURT)
+            if (
+                self.spritesheet.current_frame
+                == self.spritesheet.animation_frames[MainCharacterState.HURT] - 1
+            ):
+                self._hurt = False
+                self.spritesheet.set_state(MainCharacterState.IDLE)
+            else:
+                return
         is_on_ground = self.physics_engines[0].is_on_ground(self)
         move_force = PLAYER_MOVE_FORCE_ON_GROUND if is_on_ground else PLAYER_MOVE_FORCE_IN_AIR
         if (
@@ -233,3 +257,27 @@ class Player(arcade.Sprite):
         self._score_text.text = f"Score: {self._score}"
         self._score_text.position = self.position[0], self.position[1] + 50
         return self._score_text
+
+    @property
+    def attacking(self) -> bool:
+        return self._combo_attack_pressed or self._dash_attack_pressed
+
+    @property
+    def hurt(self) -> bool:
+        return self._hurt
+
+    @hurt.setter
+    def hurt(self, value: bool) -> None:
+        self._hurt = value
+        if self._hurt:
+            self._combo_attack_pressed = False
+            self._dash_attack_pressed = False
+            self._dash_pressed = False
+
+    @property
+    def knockback(self) -> bool:
+        return self._knockback
+
+    @knockback.setter
+    def knockback(self, value: bool) -> None:
+        self._knockback = value

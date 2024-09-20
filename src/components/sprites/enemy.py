@@ -1,10 +1,13 @@
 from __future__ import annotations
 
+import math
+import random
 import typing as t
 
 import arcade
 
 from components.utils.enemy import EnemyCharacter, EnemyTypes
+from components.utils.projectiles import Projectile
 
 
 class Enemy(arcade.Sprite):
@@ -22,6 +25,10 @@ class Enemy(arcade.Sprite):
     _jump_around_velocity = 0
     _jump_time = 0
     # variables for idle animation end here
+
+    _attacking = False
+    _hurt = False
+    _dead = False
 
     def __init__(
         self,
@@ -46,6 +53,13 @@ class Enemy(arcade.Sprite):
         self.position = position
         self.spritesheet = EnemyCharacter.from_type(enemy_type, position)
         self.texture = self.spritesheet.get_texture()
+        self.attack_states = [self.spritesheet.all_states.ATTACK]
+        if hasattr(self.spritesheet.all_states, "ATTACK_2"):
+            self.attack_states.append(self.spritesheet.all_states.ATTACK_2)
+        if hasattr(self.spritesheet.all_states, "SPELL"):
+            self.attack_states.append(self.spritesheet.all_states.SPELL)
+        if hasattr(self.spritesheet.all_states, "SPELL_2"):
+            self.attack_states.append(self.spritesheet.all_states.SPELL_2)
 
     def update_animation(self, delta_time: float) -> None:
         self._animation_debounce -= delta_time
@@ -66,7 +80,51 @@ class Enemy(arcade.Sprite):
         self._facing_right = True
         self._animation_debounce = 0.1
 
+    def attack(self) -> None:
+        if self._attacking and self.spritesheet.current_state in self.attack_states:
+            return
+        self.physics_engines[0].set_friction(self, 1.0)
+        self.physics_engines[0].set_velocity(self, (0, 0))
+        self.spritesheet.set_state(random.choice(self.attack_states))
+        player = self.scene.get_sprite_list("Player")[0]
+        if self.spritesheet.projectile_type is not None:
+            player_pos = player.position
+            enemy_pos = self.position
+
+            if player_pos[0] > enemy_pos[0]:
+                angle = math.atan2(player_pos[1] - enemy_pos[1], player_pos[0] - enemy_pos[0])
+            else:
+                angle = math.atan2(enemy_pos[1] - player_pos[1], enemy_pos[0] - player_pos[0])
+
+            size_x = 48 if player_pos[0] > enemy_pos[0] else -48
+            x = enemy_pos[0] + size_x * math.cos(angle)
+            y = enemy_pos[1] - 16
+
+            flipped = player_pos[0] < enemy_pos[0]
+
+            projectile = Projectile(
+                self.spritesheet.projectile_type, angle, (x, y), scale=3.5, flipped=flipped
+            )
+            self.scene.add_sprite("Projectiles", projectile)
+            projectile.add_to_physics_engine(self.physics_engines[0])
+
     def update(self, delta_time: float = 1 / 60) -> None:
+        if self._dead:
+            self.spritesheet.set_state(self.spritesheet.all_states.DEATH)
+            if self.spritesheet.is_done():
+                self.kill()
+            return
+        if self._hurt:
+            self.spritesheet.set_state(self.spritesheet.all_states.HIT)
+            if self.spritesheet.is_done():
+                self._hurt = False
+            return
+        self._attacking = self._attacking if self._attacking else random.randint(0, 100) < 5
+        if self._attacking:
+            self.attack()
+            if self.spritesheet.is_done():
+                self._attacking = False
+            return
         on_ground = self.physics_engines[0].is_on_ground(self)
         if self._walk_around and on_ground:
             self._switch_time -= delta_time
@@ -84,8 +142,34 @@ class Enemy(arcade.Sprite):
                 self.physics_engines[0].apply_impulse(self, (0, self._jump_around_velocity))
                 self.spritesheet.set_state(self.spritesheet.all_states.JUMP)
             elif on_ground:
-                self.physics_engines[0].set_friction(self, 10.0)
+                self.physics_engines[0].set_friction(self, 1.0)
                 self.spritesheet.set_state(self.spritesheet.all_states.IDLE)
         else:
-            self.physics_engines[0].set_friction(self, 10.0)
+            self.physics_engines[0].set_friction(self, 1.0)
             self.spritesheet.set_state(self.spritesheet.all_states.IDLE)
+
+    @property
+    def attacking(self) -> bool:
+        return self._attacking
+
+    @property
+    def hurt(self) -> bool:
+        return self._hurt
+
+    @hurt.setter
+    def hurt(self, value: bool) -> None:
+        self._hurt = value
+        if self._hurt:
+            self._attacking = False
+
+    @property
+    def dead(self) -> bool:
+        return self._dead
+
+    @dead.setter
+    def dead(self, value: bool) -> None:
+        self._dead = value
+        if self._dead:
+            self._attacking = False
+            self._hurt = False
+            self.physics_engines[0].set_friction(self, 10.0)

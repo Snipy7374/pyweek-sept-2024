@@ -1,3 +1,5 @@
+import typing as t
+
 import arcade
 import arcade.gl as gl
 import arcade.gui
@@ -206,6 +208,17 @@ class Window(arcade.Window):
         self.scene["Enemies"].extend(self.enemy_sprites)
         self.scene.add_sprite_list("Player")
         self.scene["Player"].append(self.player_sprite)
+
+        def player_enemy_collision_handler(player: Player, enemy: Enemy, *_: t.Any) -> None:
+            if player.attacking:
+                # enemy.dead = True
+                enemy.hurt = True
+            if enemy.attacking:
+                player.hurt = True
+
+        self.physics_engine.add_collision_handler(
+            "player", "enemy", post_handler=player_enemy_collision_handler
+        )
 
     def on_draw(self) -> None:
         self.clear()

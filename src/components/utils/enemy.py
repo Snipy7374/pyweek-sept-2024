@@ -8,6 +8,8 @@ import arcade
 
 from constants import ASSETS_DIR
 
+from .projectiles import ProjectileTypes
+
 
 class EnemyTypes(enum.IntEnum):
     ARCHER = 0
@@ -167,6 +169,7 @@ class EnemyCharacter:
     current_state: EnemyStates | None = None
     current_frame: int = 0
     states: typing.Type[AllStates] | None = None
+    projectile_type: ProjectileTypes | None = None
 
     def __init__(
         self,
@@ -222,6 +225,10 @@ class EnemyCharacter:
         self.current_state = state
         self.current_frame = 0
 
+    def is_done(self) -> bool:
+        assert self.current_state is not None, "Current state is not set"
+        return self.current_frame == self.animation_frames[self.current_state] - 1
+
     @property
     def all_states(self) -> typing.Type[AllStates]:
         assert self.states is not None, "States is not set"
@@ -259,6 +266,7 @@ class Archer(EnemyCharacter):
     }
     current_state = ArcherStates.IDLE
     states = ArcherStates  # type: ignore
+    projectile_type = ProjectileTypes.ARROW
 
 
 class Archmage(EnemyCharacter):
@@ -275,6 +283,7 @@ class Archmage(EnemyCharacter):
     }
     current_state = ArchmageStates.IDLE
     states = ArchmageStates  # type: ignore
+    projectile_type = ProjectileTypes.LARGE_FIREBALL
 
 
 class Cavalier(EnemyCharacter):
@@ -303,6 +312,7 @@ class Crossbow(EnemyCharacter):
     }
     current_state = CrossbowStates.IDLE
     states = CrossbowStates  # type: ignore
+    projectile_type = ProjectileTypes.ARROW
 
 
 class Halberd(EnemyCharacter):
@@ -359,6 +369,7 @@ class Mage(EnemyCharacter):
     }
     current_state = MageStates.IDLE
     states = MageStates  # type: ignore
+    projectile_type = ProjectileTypes.SMALL_FIREBALL
 
 
 class Prince(EnemyCharacter):
