@@ -1,3 +1,5 @@
+import webbrowser
+
 import arcade
 import arcade.gui
 
@@ -152,7 +154,7 @@ class MainMenuView(arcade.View):
         self.manager.add(temp_layout, layer=1)
 
     def credits_callback(self, _: arcade.gui.UIFlatButton) -> None:
-        print("Credits")
+        webbrowser.open(constants.CREDITS_SECTION_ULR)
 
     def exit_callback(self, _: arcade.gui.UIFlatButton) -> None:
         self.window.close()
