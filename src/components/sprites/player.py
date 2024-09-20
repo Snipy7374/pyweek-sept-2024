@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 import arcade
-import arcade.geometry
 
-from assets import MainCharacter, MainCharacterState
+from components.utils.player import MainCharacter, MainCharacterState
 from constants import (
+    ASSETS_DIR,
+    CHARACTER_POSITION,
     PLAYER_JUMP_IMPULSE,
     PLAYER_MOVE_FORCE_IN_AIR,
     PLAYER_MOVE_FORCE_ON_GROUND,
@@ -13,6 +14,7 @@ from constants import (
 
 class Player(arcade.Sprite):
     _animation_debounce = 0.1
+    _score = 0
     _dead = False
     _facing_right = True
     _jump_pressed = False
@@ -22,12 +24,21 @@ class Player(arcade.Sprite):
     _combo_attack_pressed = False
     _dash_pressed = False
     _dash_attack_pressed = False
+    _score_text: arcade.Text | None = None
 
-    def __init__(self, position: tuple[int, int], scale: float = 1) -> None:
+    def __init__(self, scene: arcade.Scene, position: tuple[int, int], scale: float = 1) -> None:
         super().__init__(scale=scale)
+        self.scene = scene
         self.position = position
         self.spritesheet = MainCharacter(position=position, scale=scale)
         self.texture = self.spritesheet.get_texture(flipped=not self._facing_right)
+
+    def update_score(self):
+        gold_hit_list = arcade.check_for_collision_with_list(self, self.scene["Gold"])
+        for gold in gold_hit_list:
+            gold.remove_from_sprite_lists()
+            self._score += gold.properties["value"]
+            self.spritesheet.assets.coin_collect_sound.play()
 
     def update_animation(self, delta_time: float) -> None:
         self._animation_debounce -= delta_time
@@ -43,6 +54,23 @@ class Player(arcade.Sprite):
         )
         self._animation_debounce = 0.1
 
+    def reset(self, scene: arcade.Scene) -> None:
+        self.scene = scene
+        self._score = 0
+        self._dead = False
+        self._facing_right = True
+        self._jump_pressed = False
+        self._crouch_pressed = False
+        self._left_pressed = False
+        self._right_pressed = False
+        self._combo_attack_pressed = False
+        self._dash_pressed = False
+        self._dash_attack_pressed = False
+        self.position = CHARACTER_POSITION
+        self.spritesheet.set_state(MainCharacterState.IDLE)
+        self.physics_engines[0].set_friction(self, 10.0)
+        self.physics_engines[0].set_velocity(self, (0, 0))
+
     def on_key_press(self, key: int, _: int) -> None:
         if key == arcade.key.LEFT or key == arcade.key.A:
             self._left_pressed = True
@@ -54,7 +82,6 @@ class Player(arcade.Sprite):
             self._jump_pressed = True
         if key == arcade.key.DOWN or key == arcade.key.S:
             self._crouch_pressed = True
-        # for dashing
         if key == arcade.key.LSHIFT:
             self._dash_pressed = True
         if key == arcade.key.LCTRL:
@@ -70,11 +97,8 @@ class Player(arcade.Sprite):
         if key == arcade.key.DOWN or key == arcade.key.S:
             self._crouch_pressed = False
 
-    def update(self, delta_time: float = 1 / 60) -> None:
-        if not self.physics_engines:
-            return
-        if self.dead:
-            self.update_animation(delta_time)
+    def update(self, _: float = 1 / 60) -> None:
+        if not self.physics_engines or self.dead:
             return
         is_on_ground = self.physics_engines[0].is_on_ground(self)
         move_force = PLAYER_MOVE_FORCE_ON_GROUND if is_on_ground else PLAYER_MOVE_FORCE_IN_AIR
@@ -178,7 +202,7 @@ class Player(arcade.Sprite):
             if is_on_ground:
                 self.spritesheet.set_state(MainCharacterState.IDLE)
 
-        self.update_animation(delta_time)
+        self.update_score()
 
     @property
     def dead(self) -> bool:
@@ -191,3 +215,21 @@ class Player(arcade.Sprite):
             self.spritesheet.set_state(MainCharacterState.DEATH)
             self.physics_engines[0].set_friction(self, 10.0)
             self.physics_engines[0].set_velocity(self, (0, 0))
+
+    @property
+    def score(self) -> arcade.Text:
+        if not self._score_text:
+            arcade.load_font(ASSETS_DIR / "fonts" / "Alagard.ttf")
+            self._score_text = arcade.Text(
+                f"Score: {self._score}",
+                self.position[0],
+                self.position[1] + 50,
+                color=arcade.color.WHITE,
+                font_size=20,
+                anchor_x="center",
+                anchor_y="center",
+                font_name="Alagard",
+            )
+        self._score_text.text = f"Score: {self._score}"
+        self._score_text.position = self.position[0], self.position[1] + 50
+        return self._score_text

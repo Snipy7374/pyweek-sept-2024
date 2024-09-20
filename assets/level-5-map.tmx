@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" backgroundcolor="#000000" nextlayerid="5" nextobjectid="1">
+ <tileset firstgid="1" source="roguelike-base.tsx"/>
+ <tileset firstgid="1768" source="roguelike-interior.tsx"/>
+ <tileset firstgid="2254" source="currency/gem-green.tsx"/>
+ <tileset firstgid="2258" source="currency/coin-gold.tsx"/>
+ <tileset firstgid="2263" source="currency/coin-ruby.tsx"/>
+ <tileset firstgid="2268" source="currency/round-gem-gradient.tsx"/>
+ <layer id="1" name="Gold" width="30" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBh4cImDeDwKRgG9wZ3RdIcBrnNAMDIYzZ8jA5wbjecBB6N5bWgAADjzDos=
+  </data>
+ </layer>
+ <layer id="2" name="LitLights" width="30" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBheQJx9oF1AfbBzGPqJlmA0vEbBcADzR9PxKBjBYDjU5QBI/wJj
+  </data>
+ </layer>
+ <layer id="3" name="UnlitLights" width="30" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBjaQJidgUEEiEXZB9ol+EEcC330oasftXdk2JvJxMCQxUR/excB7Vw8APaSCoaKvfj0fyChjKOmvdwcA2Ov2gDZSw99Q9VeSgGyvVcHeZ1NDQAAvNQTEg==
+  </data>
+ </layer>
+ <layer id="4" name="Platforms" width="30" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBhZ4A0d8UgF71moZ9YGoFkbgXgTATNBdpJq7ysW3PyXLBD+ayQxViCbDYjZWVDtJMbeF0S6TYmVgUEZiFVYEWJ2QL32QOxAxXAlBpQD7asA4ko620sIwNIEMiaUPqgBXrKgxvl7pPQBSivnkeIMxCaHjy4OArA0gYxV0NQMB4Du7+FsL7Z4pqVd2Nik6iWVT4n/KLEXl3n48hg2eVIwLgAALMJbyw==
+  </data>
+ </layer>
+</map>

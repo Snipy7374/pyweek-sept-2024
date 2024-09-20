@@ -1,15 +1,20 @@
 import arcade
 import arcade.gl as gl
+import arcade.gui
 import pyglet
 from arcade.experimental import Shadertoy
 from arcade.types import Color
 
 from assets import RoguelikeInterior
+from components.sprites.enemy import Enemy, EnemyTypes
 from components.sprites.player import Player
 from constants import (
     CHARACTER_POSITION,
     CHARACTER_SCALING,
     DEFAULT_DAMPING,
+    ENEMY_FRICTION,
+    ENEMY_MASS,
+    ENEMY_SCALING,
     GRAVITY,
     MAX_LIGHTS,
     PLAYER_FRICTION,
@@ -27,31 +32,18 @@ from constants import (
 class Window(arcade.Window):
     def __init__(self) -> None:
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE, resizable=True)
+        self.ui_manager = arcade.gui.UIManager()
+        self.ui_manager.enable()
         arcade.set_background_color(arcade.color.AMAZON)
         arcade.SpriteList.DEFAULT_TEXTURE_FILTER = gl.NEAREST, gl.NEAREST
         self.spritesheet = RoguelikeInterior()
 
-        self.scene = self.create_scene()
-        self.player_sprite = Player(position=CHARACTER_POSITION, scale=CHARACTER_SCALING)
+        self.object_lists: dict[str, list[arcade.types.TiledObject]] = {}
         self.physics_engine = arcade.PymunkPhysicsEngine(
             damping=DEFAULT_DAMPING,
             gravity=(0, -GRAVITY),
         )
-        self.physics_engine.add_sprite(
-            self.player_sprite,
-            friction=PLAYER_FRICTION,
-            mass=PLAYER_MASS,
-            moment_of_inertia=arcade.PymunkPhysicsEngine.MOMENT_INF,
-            collision_type="player",
-            max_horizontal_velocity=PLAYER_MAX_HORIZONTAL_SPEED,
-            max_vertical_velocity=PLAYER_MAX_VERTICAL_SPEED,
-        )
-        self.physics_engine.add_sprite_list(
-            self.scene["Platforms"],
-            friction=WALL_FRICTION,
-            collision_type="wall",
-            body_type=arcade.PymunkPhysicsEngine.STATIC,
-        )
+
         self.camera_sprites = arcade.camera.Camera2D()
         self.camera_gui = arcade.camera.Camera2D()
 
@@ -71,6 +63,23 @@ class Window(arcade.Window):
 
         # Setup lights
         self.setup_lights()
+
+    def setup_enemies(self) -> list[arcade.Sprite]:
+        enemies = []
+        for enemy in self.object_lists.get("Enemies", []):
+            if not enemy.name:
+                continue
+            points: arcade.types.PointList = enemy.shape  # type: ignore
+            x, y = points[0][0] - 24, points[0][1]
+            sprite = Enemy(
+                enemy_type=EnemyTypes[enemy.name.upper()],
+                scene=self.scene,
+                position=(int(x), int(y)),
+                scale=ENEMY_SCALING,
+                properties=enemy.properties,
+            )
+            enemies.append(sprite)
+        return enemies
 
     def setup_shader(self) -> None:
         window_size = self.get_size()
@@ -142,9 +151,10 @@ class Window(arcade.Window):
             "LitLights": {
                 "use_spatial_hash": True,
             },
+            "Gold": {"use_spatial_hash": True},
         }
         tile_map = arcade.load_tilemap(
-            "assets/level-1-map.tmx",
+            "assets/level-2-map.tmx",
             scaling=TILE_SCALING,
             layer_options=layer_options,
         )
@@ -152,18 +162,55 @@ class Window(arcade.Window):
         if tile_map.background_color:
             self.background_color = Color.from_iterable(tile_map.background_color)
 
+        self.object_lists = tile_map.object_lists
+
         return arcade.Scene.from_tilemap(tile_map)
 
     def reset(self) -> None:
         self.scene = self.create_scene()
-        self.player_sprite.position = CHARACTER_POSITION
+        self.player_sprite = Player(
+            scene=self.scene, position=CHARACTER_POSITION, scale=CHARACTER_SCALING
+        )
+        self.enemy_sprites = self.setup_enemies()
+        for sprite in self.physics_engine.sprites:
+            self.physics_engine.remove_sprite(sprite)
+        self.physics_engine.add_sprite(
+            self.player_sprite,
+            friction=PLAYER_FRICTION,
+            mass=PLAYER_MASS,
+            moment_of_inertia=arcade.PymunkPhysicsEngine.MOMENT_INF,
+            collision_type="player",
+            max_horizontal_velocity=PLAYER_MAX_HORIZONTAL_SPEED,
+            max_vertical_velocity=PLAYER_MAX_VERTICAL_SPEED,
+        )
+        self.physics_engine.add_sprite_list(
+            self.scene["Platforms"],
+            friction=WALL_FRICTION,
+            collision_type="wall",
+            body_type=arcade.PymunkPhysicsEngine.STATIC,
+        )
+        self.physics_engine.add_sprite_list(
+            self.enemy_sprites,
+            mass=ENEMY_MASS,
+            friction=ENEMY_FRICTION,
+            moment_of_inertia=arcade.PymunkPhysicsEngine.MOMENT_INF,
+            collision_type="enemy",
+            body_type=arcade.PymunkPhysicsEngine.DYNAMIC,
+        )
+        try:
+            self.scene.remove_sprite_list_by_name("Player")
+            self.scene.remove_sprite_list_by_name("Enemies")
+        except KeyError:
+            pass
+        self.scene.add_sprite_list("Enemies")
+        self.scene["Enemies"].extend(self.enemy_sprites)
         self.scene.add_sprite_list("Player")
         self.scene["Player"].append(self.player_sprite)
 
     def on_draw(self) -> None:
         self.clear()
 
-        # Draw platforms and the player to channel0
+        # Draw platforms, the player, and the gold to channel0
         self.channel0.use()
         self.channel0.clear()
         self.camera_sprites.use()
@@ -241,7 +288,8 @@ class Window(arcade.Window):
         )
 
     def on_update(self, delta_time: float) -> None:
-        self.player_sprite.update(delta_time)
+        self.scene.update(delta_time)
+        self.scene.update_animation(delta_time)
         self.physics_engine.step()
         self.center_camera_to_player()
 

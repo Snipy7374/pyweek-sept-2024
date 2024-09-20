@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" backgroundcolor="#000000" nextlayerid="10" nextobjectid="31">
+ <tileset firstgid="1" source="roguelike-base.tsx"/>
+ <tileset firstgid="1768" source="roguelike-interior.tsx"/>
+ <tileset firstgid="2254" source="currency/coin-gold.tsx"/>
+ <tileset firstgid="2259" source="currency/coin-silver.tsx"/>
+ <tileset firstgid="2264" source="currency/gem-blue.tsx"/>
+ <tileset firstgid="2268" source="currency/gem-green.tsx"/>
+ <layer id="2" name="Platforms" width="30" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBi54BIrBPuzINgdLBB+BwuCj6yugwVVDCbuj0McRg+kHwcCwMJipNi9gomBIYQFgqOhdAxSvJ9mw8QgN+6hMG1MY4FgWSCOBeJ+IswD2XseDZMKZKH2xkJpcgA59veyQDC1AXp4kBMmo4B8QEyYUzt+yDGHWDdiEyPG7bE40jYucWR5SsIEl15C9lIaH7j04QtHmF9JsReb3id0wABBC2FN
+  </data>
+ </layer>
+ <objectgroup id="9" name="Enemies" offsetx="-16" offsety="0">
+  <object id="13" template="enemies/archer.tx" x="304" y="224">
+   <properties>
+    <property name="jump_around" type="bool" value="true"/>
+    <property name="jump_around_time" type="float" value="4"/>
+    <property name="jump_around_velocity" type="float" value="500"/>
+   </properties>
+  </object>
+  <object id="18" template="enemies/archmage.tx" x="128" y="208"/>
+  <object id="21" template="enemies/cavalier.tx" x="400" y="288">
+   <properties>
+    <property name="facing_right" type="bool" value="true"/>
+    <property name="walk_around" type="bool" value="true"/>
+    <property name="walk_around_time" type="float" value="1"/>
+    <property name="walk_around_velocity" type="float" value="200"/>
+   </properties>
+  </object>
+  <object id="22" template="enemies/crossbow.tx" x="96" y="96">
+   <properties>
+    <property name="facing_right" type="bool" value="false"/>
+    <property name="walk_around" type="bool" value="true"/>
+    <property name="walk_around_time" type="float" value="1.8"/>
+    <property name="walk_around_velocity" type="float" value="72"/>
+   </properties>
+  </object>
+  <object id="23" template="enemies/halberd.tx" x="192" y="96"/>
+  <object id="24" template="enemies/horse.tx" x="288" y="112">
+   <properties>
+    <property name="jump_around" type="bool" value="true"/>
+    <property name="jump_around_time" type="float" value="10"/>
+    <property name="jump_around_velocity" type="float" value="1000"/>
+   </properties>
+  </object>
+  <object id="25" template="enemies/king.tx" x="80" y="240"/>
+  <object id="26" template="enemies/mage.tx" x="368" y="144">
+   <properties>
+    <property name="facing_right" type="bool" value="true"/>
+    <property name="walk_around" type="bool" value="true"/>
+    <property name="walk_around_time" type="float" value="4.6"/>
+    <property name="walk_around_velocity" type="float" value="50"/>
+   </properties>
+  </object>
+  <object id="27" template="enemies/prince.tx" x="400" y="224"/>
+  <object id="28" template="enemies/shield.tx" x="480" y="192"/>
+  <object id="29" template="enemies/sword.tx" x="224" y="288"/>
+  <object id="30" template="enemies/spear.tx" x="160" y="288">
+   <properties>
+    <property name="facing_right" type="bool" value="false"/>
+    <property name="walk_around" type="bool" value="true"/>
+    <property name="walk_around_time" type="float" value="3"/>
+    <property name="walk_around_velocity" type="float" value="80"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <layer id="8" name="Gold" width="30" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBhe4AbHQLtgFAw3cG4Ipqk7Q9DNo4A64PJo3I+CIQiGYjlLCAAAZbcETA==
+  </data>
+ </layer>
+ <layer id="7" name="UnlitLights" width="30" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBg8YBv7QLtgFIwEMJrOBj+4zzjQLhgFo2AU0BuQWzYP1vICAJoJA/g=
+  </data>
+ </layer>
+ <layer id="6" name="LitLights" width="30" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBj+YAc7gr2THbe6UTAywY4hmibmDVF3j4JRgAuMls9DA5BTZo7E8goAqo8FCA==
+  </data>
+ </layer>
+</map>

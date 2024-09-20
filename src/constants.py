@@ -35,7 +35,6 @@ GRAVITY = 2000
 
 # Damping - Amount of speed lost per second
 DEFAULT_DAMPING = 1.0
-PLAYER_DAMPING = 0.4
 
 # Friction between objects
 PLAYER_FRICTION = 1.0
@@ -52,6 +51,16 @@ PLAYER_MAX_VERTICAL_SPEED = 1600
 # Force applied to move player left/right
 PLAYER_MOVE_FORCE_ON_GROUND = 8000
 PLAYER_MOVE_FORCE_IN_AIR = 900
-PLAYER_JUMP_IMPULSE = 1800
+PLAYER_JUMP_IMPULSE = 1900
 
 # --- Constants for player ends here ---
+
+
+# --- Constants for enemy movement and physics ---
+
+# Enemy scale
+ENEMY_SCALING = 3.5
+ENEMY_FRICTION = 0.5
+ENEMY_MASS = 2.0
+
+# --- Constants for enemy ends here ---
