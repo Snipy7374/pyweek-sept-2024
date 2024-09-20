@@ -7,6 +7,7 @@ import pyglet
 from arcade.types import Color
 from arcade.experimental import Shadertoy
 
+from shadow_of_doubt.gui.views import pause_menu
 from shadow_of_doubt.assets import RoguelikeInterior
 from shadow_of_doubt.constants import (
     SCREEN_WIDTH,
@@ -19,75 +20,6 @@ from shadow_of_doubt.constants import (
     PLAYER_JUMP_SPEED,
     MAX_LIGHTS,
 )
-
-
-class PauseMenu:
-    def __init__(self, view: GameView, camera_sprites) -> None:
-        self.view = view
-        self.paused = False
-        self.buttons = []
-        self.camera_sprites = camera_sprites
-
-        self._create_buttons()
-
-    def toggle_pause(self) -> None:
-        self.view.window.set_mouse_visible(True)
-        self.paused = not self.paused
-        if self.paused:
-            for button in self.buttons:
-                self.view.ui_manager.add(button)
-
-        else:
-            for button in self.buttons:
-                self.view.ui_manager.remove(button)
-
-    def resume_game(self, event) -> None:
-        self.toggle_pause()
-
-    def show_options(self, event) -> None:
-        print("Options event not implemented")
-
-    def go_to_main_menu(self, event) -> None:
-        print("Main Menu event not implemented")
-
-    def exit_game(self, event) -> None:
-        arcade.exit()
-
-    def _create_buttons(self) -> None:
-        button_width = 200
-        button_height = 50
-        start_y = SCREEN_HEIGHT // 2 + 100
-        button_spacing = 20
-
-        button_info = [
-            ("Resume", self.resume_game),
-            ("Options", self.show_options),
-            ("Main Menu", self.go_to_main_menu),
-            ("Exit", self.exit_game),
-        ]
-
-        for i, (text, action) in enumerate(button_info):
-            button = arcade.gui.UIFlatButton(
-                text=text,
-                width=button_width,
-                height=button_height,
-                x=SCREEN_WIDTH // 2 - button_width // 2,
-                y=start_y - i * (button_spacing + button_height),
-            )
-            button.on_click = action
-            self.buttons.append(button)
-
-    def draw(self) -> None:
-        if self.paused:
-            arcade.draw_lrbt_rectangle_filled(
-                left=self.camera_sprites.position[0] - SCREEN_WIDTH // 2,
-                right=self.camera_sprites.position[0] + SCREEN_WIDTH // 2,
-                top=self.camera_sprites.position[1] + SCREEN_HEIGHT // 2,
-                bottom=self.camera_sprites.position[1] - SCREEN_HEIGHT // 2,
-                color=(0, 0, 0, 200),
-            )
-            for button in self.buttons:
-                self.view.ui_manager.add(button)
 
 
 class GameView(arcade.View):
@@ -133,7 +65,7 @@ class GameView(arcade.View):
         # Set up the ui
         self.ui_manager = arcade.gui.UIManager()
         self.ui_manager.enable()
-        self.pause_menu = PauseMenu(self, self.camera_sprites)
+        self.pause_menu = pause_menu.PauseMenu(self, self.camera_sprites)
 
     def setup_shader(self) -> None:
         window_size = self.window.get_size()
