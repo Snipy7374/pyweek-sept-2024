@@ -18,7 +18,8 @@ Now you're ready to go! If you have any problem with the project contact me (Sni
 
 # Credits
 
-The contributors are listed by the ones with the most commits.
+The contributors are roughly listed by the ones with the most commits / additions.
+More up-to date and precise informations can be found here https://github.com/Snipy7374/pyweek-sept-2024/graphs/contributors.
 
 - [Snipy7374](https://github.com/Snipy7374) - Team leader, worked on the GUIs.
 - [Asher](https://github.com/FallenDeity) - Worked on the Main Character and on the maps. Team leader aid.
