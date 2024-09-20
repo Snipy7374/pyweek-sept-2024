@@ -43,8 +43,8 @@ class PauseMenu:
         arcade.exit()
 
     def _create_buttons(self) -> None:
-        button_width = 200
-        button_height = 50
+        button_width = 320
+        button_height = 100
         start_y = constants.SCREEN_HEIGHT // 2 + 100
         button_spacing = 20
 
@@ -54,13 +54,18 @@ class PauseMenu:
             ("Exit", self.exit_game),
         ]
 
+        button_texture = arcade.load_texture(constants.ASSETS_DIR / "button_texture.png")
+        texture = arcade.gui.NinePatchTexture(0, 0, 0, 0, button_texture)
         for i, (text, action) in enumerate(button_info):
-            button = arcade.gui.UIFlatButton(
+            button = arcade.gui.UITextureButton(
                 text=text,
                 width=button_width,
                 height=button_height,
                 x=constants.SCREEN_WIDTH // 2 - button_width // 2,
                 y=start_y - i * (button_spacing + button_height),
+                texture=texture,
+                texture_hovered=texture,
+                texture_pressed=texture,
             )
             button.on_click = action
             self.buttons.append(button)

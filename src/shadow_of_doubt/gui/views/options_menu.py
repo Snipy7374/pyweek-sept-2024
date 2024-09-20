@@ -98,8 +98,8 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
             )
         )
         frame.with_padding(all=20)
-        button_texture = arcade.load_texture(constants.ASSETS_DIR / "button_texture.png")
-        texture = arcade.gui.NinePatchTexture(0, 0, 0, 0, button_texture)
+        menu_texture = arcade.load_texture(constants.ASSETS_DIR / "menu_texture.png")
+        texture = arcade.gui.NinePatchTexture(0, 0, 0, 0, menu_texture)
         frame.with_background(texture=texture)
 
         back_button = arcade.gui.UIFlatButton(text="Back", width=250)
@@ -108,7 +108,7 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
         title_label = arcade.gui.UILabel(
             text="Options Menu",
             align="center",
-            font_name="DungeonFont",
+            font_name="Alagard",
             font_size=32,
             multiline=False,
         )

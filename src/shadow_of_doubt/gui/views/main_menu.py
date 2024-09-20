@@ -42,7 +42,7 @@ class MainMenuView(arcade.View):
             constants.SCREEN_TITLE,
             x=self.window.center_x - 310,
             y=self.window.height - 160,
-            font_name="DungeonFont",
+            font_name="Alagard",
             font_size=72,
         )
         footer_label = arcade.gui.UILabel(
@@ -104,7 +104,7 @@ class MainMenuView(arcade.View):
                 texture_hovered=texture,
                 texture_pressed=texture,
                 size_hint=(1, 1),
-                size_hint_min=(225, 75),
+                size_hint_min=(320, 75),
                 size_hint_max=(350, 100),
             )
 
