@@ -3,7 +3,7 @@
  <properties>
   <property name="value" type="int" value="2"/>
  </properties>
- <image source="../../../../coin-silver.png" width="80" height="16"/>
+ <image source="coin-silver.png" width="80" height="16"/>
  <tile id="0">
   <properties>
    <property name="value" type="int" value="2"/>
