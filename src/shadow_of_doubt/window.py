@@ -9,16 +9,22 @@ from arcade.experimental import Shadertoy
 
 from shadow_of_doubt.gui.views import pause_menu
 from shadow_of_doubt.assets import RoguelikeInterior
+from shadow_of_doubt.components.sprites.player import Player
 from shadow_of_doubt.constants import (
-    SCREEN_WIDTH,
+    CHARACTER_POSITION,
+    CHARACTER_SCALING,
+    DEFAULT_DAMPING,
+    GRAVITY,
+    MAX_LIGHTS,
+    PLAYER_FRICTION,
+    PLAYER_MASS,
+    PLAYER_MAX_HORIZONTAL_SPEED,
+    PLAYER_MAX_VERTICAL_SPEED,
     SCREEN_HEIGHT,
     SCREEN_TITLE,
-    CHARACTER_SCALING,
+    SCREEN_WIDTH,
     TILE_SCALING,
-    PLAYER_MOVEMENT_SPEED,
-    GRAVITY,
-    PLAYER_JUMP_SPEED,
-    MAX_LIGHTS,
+    WALL_FRICTION,
 )
 
 
@@ -31,12 +37,27 @@ class GameView(arcade.View):
         self.spritesheet = RoguelikeInterior()
 
         self.scene = self.create_scene()
-        self.player_sprite = arcade.Sprite(
-            self.spritesheet.get_sprite("potted-plant-1"),
-            scale=CHARACTER_SCALING,
+        self.player_sprite = Player(
+            scene=self.scene, position=CHARACTER_POSITION, scale=CHARACTER_SCALING
         )
-        self.physics_engine = arcade.PhysicsEnginePlatformer(
-            self.player_sprite, gravity_constant=GRAVITY, walls=self.scene["Platforms"]
+        self.physics_engine = arcade.PymunkPhysicsEngine(
+            damping=DEFAULT_DAMPING,
+            gravity=(0, -GRAVITY),
+        )
+        self.physics_engine.add_sprite(
+            self.player_sprite,
+            friction=PLAYER_FRICTION,
+            mass=PLAYER_MASS,
+            moment_of_inertia=arcade.PymunkPhysicsEngine.MOMENT_INF,
+            collision_type="player",
+            max_horizontal_velocity=PLAYER_MAX_HORIZONTAL_SPEED,
+            max_vertical_velocity=PLAYER_MAX_VERTICAL_SPEED,
+        )
+        self.physics_engine.add_sprite_list(
+            self.scene["Platforms"],
+            friction=WALL_FRICTION,
+            collision_type="wall",
+            body_type=arcade.PymunkPhysicsEngine.STATIC,
         )
 
         self.camera_sprites = arcade.camera.Camera2D()
@@ -170,6 +191,7 @@ class GameView(arcade.View):
         self.channel1.clear()
         self.camera_sprites.use()
         self.scene.draw()
+        self.player_sprite.score.draw()
 
         # Draw the player to channel2
         self.channel2.use()
@@ -213,43 +235,19 @@ class GameView(arcade.View):
         )
         text.draw()
 
-    def update_player_speed(self) -> None:
-        self.player_sprite.change_x = 0
-
-        if self.left_key_down and not self.right_key_down:
-            self.player_sprite.change_x = -PLAYER_MOVEMENT_SPEED
-        elif self.right_key_down and not self.left_key_down:
-            self.player_sprite.change_x = PLAYER_MOVEMENT_SPEED
-
     def on_key_press(self, key: int, _: int) -> None:
+        self.player_sprite.on_key_press(key, _)
         if key == arcade.key.ESCAPE:
             self.pause_menu.toggle_pause()
-        elif not self.pause_menu.paused:
-            if key == arcade.key.UP or key == arcade.key.W:
-                if self.physics_engine.can_jump():
-                    self.player_sprite.change_y = PLAYER_JUMP_SPEED
-            elif key == arcade.key.LEFT or key == arcade.key.A:
-                self.left_key_down = True
-                self.update_player_speed()
-            elif key == arcade.key.RIGHT or key == arcade.key.D:
-                self.right_key_down = True
-                self.update_player_speed()
-            elif key == arcade.key.E:
-                lights_hit_list = arcade.check_for_collision_with_list(
-                    self.player_sprite, self.scene["UnlitLights"]
-                ) + arcade.check_for_collision_with_list(
-                    self.player_sprite, self.scene["LitLights"]
-                )
-                for light in lights_hit_list:
-                    self.toggle_light(light)
+        elif key == arcade.key.E:
+            lights_hit_list = arcade.check_for_collision_with_list(
+                self.player_sprite, self.scene["UnlitLights"]
+            ) + arcade.check_for_collision_with_list(self.player_sprite, self.scene["LitLights"])
+            for light in lights_hit_list:
+                self.toggle_light(light)
 
     def on_key_release(self, key: int, _: int) -> None:
-        if key == arcade.key.LEFT or key == arcade.key.A:
-            self.left_key_down = False
-            self.update_player_speed()
-        elif key == arcade.key.RIGHT or key == arcade.key.D:
-            self.right_key_down = False
-            self.update_player_speed()
+        self.player_sprite.on_key_release(key, _)
 
     def center_camera_to_player(self) -> None:
         screen_center_x = self.player_sprite.center_x
@@ -267,9 +265,11 @@ class GameView(arcade.View):
             0.1,
         )
 
-    def on_update(self, _: float) -> None:
+    def on_update(self, delta_time: float) -> None:
         if not self.pause_menu.paused:
-            self.physics_engine.update()
+            self.scene.update(delta_time)
+            self.scene.update_animation(delta_time)
+            self.physics_engine.step()
             self.center_camera_to_player()
 
     def on_resize(self, width: int, height: int) -> None:
