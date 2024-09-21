@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="68" height="32" tilewidth="16" tileheight="16" infinite="0" backgroundcolor="#000000" nextlayerid="6" nextobjectid="18">
+ <tileset firstgid="1" source="roguelike-base.tsx"/>
+ <tileset firstgid="1768" source="currency/round-gem-gradient.tsx"/>
+ <tileset firstgid="1780" source="currency/coin-gold.tsx"/>
+ <tileset firstgid="1785" source="roguelike-interior.tsx"/>
+ <layer id="1" name="Platforms" width="68" height="32">
+  <data encoding="base64" compression="zlib">
+   eJzt1k0OwVAUBeCbVsXParAAbITlYQEYGGCKsg0DP5NOGDlNOpAGr9re14bzJWfUeE9vznupCBEREREREREREZGuY1Vn3boj0kCajs76eQqiGQw9kYFX7H8pg2vF/p5T7DlD5gXs/U6gdDa0tNDdNtJR6nCevTi5Imfk4r5+nrYPCwv9SduLDX63fcpOuV/hLNYf5jFCT8bIJGNfbNwXpr6YhLO4IfcS3C/hvOKxKZyFxl3hY919lIPhnUzPtSyx78pwLopQs/DdkfUMfctP2IUu3r0XS5/fYT8laRf+xQPuVTNM
+  </data>
+ </layer>
+ <objectgroup id="5" name="Enemies"/>
+ <layer id="2" name="LitLights" width="68" height="32">
+  <data encoding="base64" compression="zlib">
+   eJzt0UENACAMBMH+sIKp+sAHhuGLgpJmRsFlLwIAAAAAAOgoR/WCvyw9HluPNqYvAbgOTYIBrQ==
+  </data>
+ </layer>
+ <layer id="3" name="UnlitLights" width="68" height="32">
+  <data encoding="base64" compression="zlib">
+   eJztwQENAAAAwqD3T20ON6AAAAAAAAAAAHg2IgAAAQ==
+  </data>
+ </layer>
+ <layer id="4" name="Gold" width="68" height="32">
+  <data encoding="base64" compression="zlib">
+   eJztwQENAAAAwqD3T20ON6AAAAAAAAAAAHg2IgAAAQ==
+  </data>
+ </layer>
+</map>
