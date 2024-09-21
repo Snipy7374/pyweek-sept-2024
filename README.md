@@ -20,9 +20,9 @@ Now you're ready to go! If you have any problem with the project contact me (Sni
 
 The contributors are sorted based on their contributions (additions). More up to date information can be found here https://github.com/Snipy7374/pyweek-sept-2024/graphs/contributors. And in the commit history.
 
-[Asher](https://github.com/FallenDeity) - Team Leader Aid. Worked on the Main Character, added enemies, health bar and stamina bar and enemy stats. Gave aid where required.
-[Snipy7374](https://github.com/Snipy7374) - Team Leader. Made all the GUIs of the game. Worked on the settings of the game and helped with assets.
-[Ununennium](https://github.com/Ununennium817) - Worked on designing game maps and assets.
-[Spark](https://github.com/SPARKY67966) - Worked on the game assets and designed the game maps.
-[Stovoy](https://github.com/Stovoy) - Made an initial implementation for shader lights. Gave the game idea.
-[Abhishek](https://github.com/Abhishek10351) - Committed the initial structure.
+- [Asher](https://github.com/FallenDeity) - Team Leader Aid. Worked on the Main Character, added enemies, health bar and stamina bar and enemy stats. Gave aid where required.
+- [Snipy7374](https://github.com/Snipy7374) - Team Leader. Made all the GUIs of the game. Worked on the settings of the game and helped with assets.
+- [Ununennium](https://github.com/Ununennium817) - Worked on designing game maps and assets.
+- [Spark](https://github.com/SPARKY67966) - Worked on the game assets and designed the game maps.
+- [Stovoy](https://github.com/Stovoy) - Made an initial implementation for shader lights. Gave the game idea.
+- [Abhishek](https://github.com/Abhishek10351) - Committed the initial structure.
