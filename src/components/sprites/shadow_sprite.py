@@ -4,6 +4,8 @@ from arcade import gl
 
 
 class ShadowSprite(arcade.Sprite):
+    transform: np.ndarray | None = None
+
     def __init__(self, player_sprite, light_sprite, ground_y):
         super().__init__()
         self.width = player_sprite.width
@@ -129,6 +131,9 @@ class ShadowSprite(arcade.Sprite):
         self.transform = translation_matrix @ shear_matrix @ rotation_matrix @ scale_matrix
 
     def draw_shadow(self):
+        if self.transform is None:
+            return
+
         self.ctx.enable(self.ctx.BLEND)
         self.ctx.blend_func = self.ctx.BLEND_DEFAULT
 
