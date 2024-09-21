@@ -86,7 +86,10 @@ class GameView(arcade.View):
         self.pause_menu = PauseMenu(self, self.camera_sprites)
 
     def go_to_main_menu(self) -> None:
-        view = main_menu.MainMenuView(self.current_level)
+        view = main_menu.MainMenuView(
+            self.current_level,
+            self.shader_enabled,
+        )
         view.setup()
         self.window.set_mouse_visible(True)
         self.window.show_view(view)
@@ -150,18 +153,6 @@ class GameView(arcade.View):
 
             for light in to_remove:
                 light.remove_from_sprite_lists()
-
-    def toggle_light(self, light: arcade.Sprite) -> None:
-        texture_name = light.properties["texture_name"]
-        new_texture_name = self.light_toggle_map[texture_name]
-        light.texture = self.spritesheet.get_sprite(new_texture_name)
-        light.properties["texture_name"] = new_texture_name
-        if light in self.scene["UnlitLights"]:
-            self.scene["UnlitLights"].remove(light)
-            self.scene["LitLights"].append(light)
-        else:
-            self.scene["LitLights"].remove(light)
-            self.scene["UnlitLights"].append(light)
 
     def set_window_position(self) -> None:
         display = pyglet.display.get_display()
@@ -377,12 +368,6 @@ class GameView(arcade.View):
     def on_key_press(self, key: int, _: int) -> None:
         if key == arcade.key.ESCAPE:
             self.pause_menu.toggle_pause()
-        elif key == arcade.key.E:
-            lights_hit_list = arcade.check_for_collision_with_list(
-                self.player_sprite, self.scene["UnlitLights"]
-            ) + arcade.check_for_collision_with_list(self.player_sprite, self.scene["LitLights"])
-            for light in lights_hit_list:
-                self.toggle_light(light)
         else:
             self.player_sprite.on_key_press(key, _)
 
