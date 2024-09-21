@@ -45,7 +45,7 @@ class GameView(arcade.View):
         super().__init__()
         self.current_level = current_level
         self.window.set_mouse_visible(False)
-        arcade.set_background_color(arcade.color.AMAZON)
+        arcade.set_background_color(arcade.color.BLACK)
         arcade.SpriteList.DEFAULT_TEXTURE_FILTER = gl.NEAREST, gl.NEAREST
         self.spritesheet = tileset.RoguelikeInterior()
 
@@ -85,6 +85,7 @@ class GameView(arcade.View):
     def go_to_main_menu(self) -> None:
         view = main_menu.MainMenuView(self.current_level)
         view.setup()
+        self.window.set_mouse_visible(True)
         self.window.show_view(view)
 
     def setup_enemies(self) -> list[arcade.Sprite]:
@@ -299,6 +300,10 @@ class GameView(arcade.View):
             self.camera_sprites.use()
             self.scene.draw()
             self.player_sprite.score.draw()
+            if self.pause_menu.paused:
+                self.pause_menu.draw()
+
+            self.manager.draw()
             return
 
         # Draw platforms, the player, and the gold to channel0
@@ -342,6 +347,11 @@ class GameView(arcade.View):
 
         # Render the shader
         self.shadertoy.render()
+
+        if self.pause_menu.paused:
+            self.pause_menu.draw()
+
+        self.manager.draw()
 
     def draw_title(self) -> None:
         text = arcade.Text(
