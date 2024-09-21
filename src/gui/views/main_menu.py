@@ -100,6 +100,9 @@ class MainMenuView(arcade.View):
         )
         self.manager.add(self.ui_layout, layer=0)
 
+        self.music = arcade.load_sound(constants.ASSETS_DIR / "sfx" / "background.wav")
+        self.player = self.music.play(volume=0.5, loop=True)
+
     def setup(self) -> None:
         button_texture = arcade.load_texture(constants.ASSETS_DIR / "button_texture.png")
         texture = arcade.gui.NinePatchTexture(0, 0, 0, 0, button_texture)
@@ -177,6 +180,7 @@ class MainMenuView(arcade.View):
         self.light_layer.draw(ambient_color=(10, 10, 10))
 
     def start_game_callback(self, _: arcade.gui.UIFlatButton) -> None:
+        self.music.stop(self.player)
         view = window.GameView(
             current_level=self.current_level,
             shader_enabled=self.shader_enabled,

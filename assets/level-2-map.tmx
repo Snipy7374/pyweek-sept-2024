@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" backgroundcolor="#000000" nextlayerid="13" nextobjectid="34">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" backgroundcolor="#000000" nextlayerid="12" nextobjectid="34">
  <tileset firstgid="1" source="roguelike-base.tsx"/>
  <tileset firstgid="1768" source="roguelike-interior.tsx"/>
  <tileset firstgid="2254" source="currency/coin-gold.tsx"/>
@@ -8,10 +8,7 @@
  <tileset firstgid="2268" source="currency/gem-green.tsx"/>
  <tileset firstgid="2272" source="currency/gem-yellow.tsx"/>
  <tileset firstgid="2276" source="currency/round-gem-purple.tsx"/>
- <layer id="12" name="Doors" width="30" height="20">
-  <properties>
-   <property name="type" value="spawn"/>
-  </properties>
+ <layer id="11" name="Doors" width="30" height="20">
   <data encoding="base64" compression="zlib">
    eJxjYBgZgINxoF0wCkbBKBgFo2AUjGzANoLqYgBcCgAR
   </data>
@@ -90,9 +87,9 @@
    </properties>
   </object>
  </objectgroup>
- <layer id="8" name="Gold" width="30" height="20">
+ <layer id="6" name="LitLights" width="30" height="20">
   <data encoding="base64" compression="zlib">
-   eJxjYCAenOOgrjp6gieD0E2jYGiAwZieCYE7Q9DNo4A64PJo3I+CQQQeDOF2A6UAAN0PBuw=
+   eJxjYBhZYCf7QLtgFAw2sGOIpol5Q9Tdo2AU4AKj5fPQAOSUmSOxvAIAVbgESQ==
   </data>
  </layer>
  <layer id="7" name="UnlitLights" width="30" height="20">
@@ -100,9 +97,9 @@
    eJxjYBgFo2BkgW3sA+2CUUAI3GccaBeMglEwCugNyC2bB2t5AQAVMgM7
   </data>
  </layer>
- <layer id="6" name="LitLights" width="30" height="20">
+ <layer id="8" name="Gold" width="30" height="20">
   <data encoding="base64" compression="zlib">
-   eJxjYBhZYCf7QLtgFAw2sGOIpol5Q9Tdo2AU4AKj5fPQAOSUmSOxvAIAVbgESQ==
+   eJxjYCAenOOgrjp6gieD0E2jYGiAwZieCYE7Q9DNo4A64PJo3I+CQQQeDOF2A6UAAN0PBuw=
   </data>
  </layer>
 </map>

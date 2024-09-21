@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="13" nextobjectid="40">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="13" nextobjectid="44">
  <tileset firstgid="1" source="roguelike-base.tsx"/>
  <tileset firstgid="1768" source="roguelike-interior.tsx"/>
  <tileset firstgid="2254" source="currency/coin-gold.tsx"/>
@@ -19,20 +19,44 @@
  </layer>
  <layer id="2" name="Platforms" width="30" height="20">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFtAKVQLwJSg83UM3EwFADxLVMA+0SVABzFzEYn9vp6T/ZAQrDsGFkLynxTk56GM5gsOZlaoJRPw5dgJ63yfGfMxSzIbHtkTCMT20AAIW+HWE=
+   eJxjYBgFtAKVQLwJSg8k8GKivpnVQDNrgLgWj9nNSHIKSOxAHGx0AJMD0QpE+gHmLmIwNrej68fnv6EOZGnoN0UcZvcAxcOgcqA4hcWxHIVuISXeSUkPAwFC6ewOYvIyNQG+PE8rMOpHwsCDCH3I/uqikh8bgeZIMeEuM6hRJjtDMRsS2x4Jw/jUBgCOeCSU
   </data>
  </layer>
  <objectgroup id="9" name="Enemies" offsetx="-0.666667" offsety="0.666667">
-  <object id="36" template="enemies/archer.tx" x="212.33" y="124">
+  <object id="36" template="enemies/archer.tx" x="205.83" y="142.5">
    <properties>
     <property name="jump_around" type="bool" value="true"/>
     <property name="jump_around_time" type="float" value="4"/>
     <property name="jump_around_velocity" type="float" value="500"/>
    </properties>
   </object>
-  <object id="37" template="enemies/sword.tx" x="245.33" y="250"/>
-  <object id="38" template="enemies/archmage.tx" x="349.333" y="138"/>
-  <object id="39" template="enemies/cavalier.tx" x="90" y="68">
+  <object id="41" template="enemies/archer.tx" x="366.83" y="46">
+   <properties>
+    <property name="jump_around" type="bool" value="true"/>
+    <property name="jump_around_time" type="float" value="4"/>
+    <property name="jump_around_velocity" type="float" value="500"/>
+   </properties>
+  </object>
+  <object id="37" template="enemies/sword.tx" x="246.33" y="270.5"/>
+  <object id="42" template="enemies/sword.tx" x="382.33" y="206.5"/>
+  <object id="38" template="enemies/archmage.tx" x="348.333" y="142"/>
+  <object id="39" template="enemies/cavalier.tx" x="86" y="77.5">
+   <properties>
+    <property name="facing_right" type="bool" value="true"/>
+    <property name="walk_around" type="bool" value="true"/>
+    <property name="walk_around_time" type="float" value="1"/>
+    <property name="walk_around_velocity" type="float" value="200"/>
+   </properties>
+  </object>
+  <object id="40" template="enemies/cavalier.tx" x="289" y="79">
+   <properties>
+    <property name="facing_right" type="bool" value="true"/>
+    <property name="walk_around" type="bool" value="true"/>
+    <property name="walk_around_time" type="float" value="1"/>
+    <property name="walk_around_velocity" type="float" value="200"/>
+   </properties>
+  </object>
+  <object id="43" template="enemies/cavalier.tx" x="48" y="77.5">
    <properties>
     <property name="facing_right" type="bool" value="true"/>
     <property name="walk_around" type="bool" value="true"/>
@@ -41,19 +65,19 @@
    </properties>
   </object>
  </objectgroup>
- <layer id="8" name="Gold" width="30" height="20">
+ <layer id="6" name="LitLights" width="30" height="20">
   <data encoding="base64" compression="zlib">
-   eJxjYBgF1ALnOIa+vQPlh1FAXXAZGI8fBiAu7wDtvEFje0FpdDjkNWzg8mj+GwVIYCDT+iigHAAAvxkLIw==
+   eJxjYBgFtADz2AfaBaNgFIyCUTAKBgrsIKIO8BmgeiJ9gOxtGmH1IgBumQKv
   </data>
  </layer>
  <layer id="7" name="UnlitLights" width="30" height="20">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUjALqAmkmBoZeIJZigvAVgXQXE0JeAcqWh9K9TAyjAAqkh3lYjIS4Hmpx6M2ESuMCPUjygWT4URKqB5b/W5ggYi1DLLyIBQCpTAXy
+   eJxjYBgFo4D+4D7jQLtgFNALjMb1KBgFo2AkAgBxdAHB
   </data>
  </layer>
- <layer id="6" name="LitLights" width="30" height="20">
+ <layer id="8" name="Gold" width="30" height="20">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFtADz2AfaBaNgFAwOsGM0L4yCEQiISfc+A5Q30gfI3qYRVhYAACbSA24=
+   eJxjYBgZ4AkH7e04Rwc7yLX3AVDNZSLUDZQfRgF1ASiuPwxAXN4B2nmDxvaC0uhgzmuUAGLy6CgYOWAg0/oooBwAALPYDdI=
   </data>
  </layer>
 </map>
