@@ -199,15 +199,13 @@ class Window(arcade.Window):
             collision_type="enemy",
             body_type=arcade.PymunkPhysicsEngine.DYNAMIC,
         )
-        try:
-            self.scene.remove_sprite_list_by_name("Player")
-            self.scene.remove_sprite_list_by_name("Enemies")
-        except KeyError:
-            pass
         self.scene.add_sprite_list("Enemies")
         self.scene["Enemies"].extend(self.enemy_sprites)
         self.scene.add_sprite_list("Player")
         self.scene["Player"].append(self.player_sprite)
+        self.scene.add_sprite_list("Bars")
+        self.scene["Bars"].append(self.player_sprite.health_bar)
+        self.scene["Bars"].append(self.player_sprite.stamina_bar)
 
         def player_enemy_collision_handler(player: Player, enemy: Enemy, *_: t.Any) -> None:
             if player.attacking:

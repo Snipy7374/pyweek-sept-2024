@@ -31,7 +31,7 @@ class ProjectileAssets:
     projectile_width = 16
     projectile_height = 16
     path = ASSETS_DIR / "enemies" / "projectiles.png"
-    textures: dict[ProjectileTypes, arcade.Texture] = {}
+    textures: dict[ProjectileTypes, tuple[arcade.Texture, arcade.Texture]] = {}
 
     def __init__(self) -> None:
         self.spritesheet = arcade.load_spritesheet(self.path)
@@ -41,16 +41,23 @@ class ProjectileAssets:
             sheet_width // self.projectile_width,
             (sheet_width // self.projectile_width) * (sheet_height // self.projectile_height),
         )
-        self.textures[ProjectileTypes.ARROW] = self.texture_grid[0]
-        self.textures[ProjectileTypes.LARGE_FIREBALL] = self.texture_grid[
-            0 + sheet_width // self.projectile_width
-        ]
-        self.textures[ProjectileTypes.SMALL_FIREBALL] = self.texture_grid[
-            1 + sheet_width // self.projectile_width
-        ]
+        self.textures[ProjectileTypes.ARROW] = (
+            self.texture_grid[0],
+            self.texture_grid[0].flip_left_right(),
+        )
+        self.textures[ProjectileTypes.LARGE_FIREBALL] = (
+            self.texture_grid[0 + sheet_width // self.projectile_width],
+            self.texture_grid[0 + sheet_width // self.projectile_width].flip_left_right(),
+        )
+        self.textures[ProjectileTypes.SMALL_FIREBALL] = (
+            self.texture_grid[1 + sheet_width // self.projectile_width],
+            self.texture_grid[1 + sheet_width // self.projectile_width].flip_left_right(),
+        )
 
-    def get_texture(self, projectile_type: ProjectileTypes) -> arcade.Texture:
-        return self.textures[projectile_type]
+    def get_texture(
+        self, projectile_type: ProjectileTypes, flipped: bool = False
+    ) -> arcade.Texture:
+        return self.textures[projectile_type][flipped]
 
 
 PROJECTILE_TEXTURES = ProjectileAssets()
@@ -91,11 +98,7 @@ class Projectile(arcade.Sprite):
         self.angle = math.degrees(angle)
         self.position = position
         self.flipped = flipped
-        self.texture = (
-            PROJECTILE_TEXTURES.get_texture(projectile_type)
-            if not flipped
-            else PROJECTILE_TEXTURES.get_texture(projectile_type).flip_left_right()
-        )
+        self.texture = PROJECTILE_TEXTURES.get_texture(projectile_type, flipped=flipped)
         self._time_alive = 0
         self._max_time_alive = max_time_alive
         self._mass = PROJECTILE_STATS[projectile_type]["mass"]

@@ -3,6 +3,7 @@ from __future__ import annotations
 import arcade
 
 from components.utils.player import MainCharacter, MainCharacterState
+from components.utils.bars import Bar, BarColors, BarIcons
 from constants import (
     ASSETS_DIR,
     CHARACTER_POSITION,
@@ -13,6 +14,7 @@ from constants import (
 
 
 class Player(arcade.Sprite):
+    _hp = 100
     _animation_debounce = 0.1
     _score = 0
     _hurt = False
@@ -27,6 +29,8 @@ class Player(arcade.Sprite):
     _dash_pressed = False
     _dash_attack_pressed = False
     _score_text: arcade.Text | None = None
+    _health_bar = Bar(BarColors.RED, BarIcons.HEALTH, 100, 100, scale=0.06)
+    _stamina_bar = Bar(BarColors.YELLOW, BarIcons.STAMINA, 10, 10, scale=0.06)
 
     def __init__(self, scene: arcade.Scene, position: tuple[int, int], scale: float = 1) -> None:
         super().__init__(scale=scale)
@@ -100,6 +104,8 @@ class Player(arcade.Sprite):
             self._crouch_pressed = False
 
     def update(self, _: float = 1 / 60) -> None:
+        self.scene["Bars"][0].position = self.position[0], self.position[1] + 80
+        self.scene["Bars"][1].position = self.position[0], self.position[1] + 45
         if not self.physics_engines or self.dead:
             return
         if self._knockback:
@@ -121,6 +127,9 @@ class Player(arcade.Sprite):
                 == self.spritesheet.animation_frames[MainCharacterState.HURT] - 1
             ):
                 self._hurt = False
+                self._hp -= 1
+                self._health_bar.value = max(self._hp, 0)
+                self.scene["Bars"][0].texture = self._health_bar.texture
                 self.spritesheet.set_state(MainCharacterState.IDLE)
             else:
                 return
@@ -262,6 +271,20 @@ class Player(arcade.Sprite):
         return self._score_text
 
     @property
+    def health_bar(self):
+        sprite = arcade.Sprite(scale=self._health_bar.scale)
+        sprite.texture = self._health_bar.texture
+        sprite.position = self.position[0], self.position[1] + 80
+        return sprite
+
+    @property
+    def stamina_bar(self):
+        sprite = arcade.Sprite(scale=self._stamina_bar.scale)
+        sprite.texture = self._stamina_bar.texture
+        sprite.position = self.position[0], self.position[1] + 45
+        return sprite
+
+    @property
     def attacking(self) -> bool:
         return self._combo_attack_pressed or self._dash_attack_pressed
 
@@ -276,6 +299,7 @@ class Player(arcade.Sprite):
             self._combo_attack_pressed = False
             self._dash_attack_pressed = False
             self._dash_pressed = False
+            self._crouch_pressed = False
 
     @property
     def knockback(self) -> bool:
