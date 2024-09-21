@@ -9,6 +9,8 @@ from arcade.experimental import Shadertoy
 from arcade.types import Color
 
 from assets import RoguelikeInterior
+
+from shadow_sprite import ShadowSprite
 from components.sprites.enemy import Enemy, EnemyTypes
 from components.sprites.player import Player
 from constants import (
@@ -56,7 +58,7 @@ class Window(arcade.Window):
         self.reset()
         self.set_window_position()
 
-        self.light_sprites = set()
+        self.light_sprites: set[arcade.Sprite] = set()
         self.light_toggle_map: dict[str, str] = {
             "white-candelabra": "white-candelabra-lit",
             "white-candelabra-lit": "white-candelabra",
@@ -64,12 +66,17 @@ class Window(arcade.Window):
             "yellow-candelabra-lit": "yellow-candelabra",
         }
 
-        # Set up the shader
         self.setup_shader()
-
-        # Setup lights
         self.setup_lights()
 
+        self.ground_y = 0
+
+        self.shadow_sprites: arcade.SpriteList = arcade.SpriteList()
+
+        for light in self.scene["LitLights"]:
+            shadow_sprite = ShadowSprite(self.player_sprite, light, self.ground_y)
+            self.shadow_sprites.append(shadow_sprite)
+            
     def setup_enemies(self) -> list[arcade.Sprite]:
         enemies = []
         for enemy in self.object_lists.get("Enemies", []):
@@ -290,6 +297,10 @@ class Window(arcade.Window):
         self.camera_sprites.use()
         self.scene["Player"].draw()
 
+        # Draw shadow sprites to channel2
+        for shadow_sprite in self.shadow_sprites:
+            shadow_sprite.draw_shadow()
+
         lights = []
         for light in self.scene["LitLights"]:
             left, bottom = self.camera_sprites.bottom_left
@@ -352,7 +363,11 @@ class Window(arcade.Window):
         self.scene.update(delta_time)
         self.scene.update_animation(delta_time)
         self.physics_engine.step()
+
         self.center_camera_to_player()
+
+        for shadow_sprite in self.shadow_sprites:
+            shadow_sprite.update(delta_time)
 
     def on_resize(self, width: int, height: int) -> None:
         super().on_resize(width, height)
