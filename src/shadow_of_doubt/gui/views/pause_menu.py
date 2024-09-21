@@ -71,7 +71,7 @@ class PauseMenu:
                 texture_pressed=texture,
             )
             button.on_click = typing.cast(
-                typing.Callable[[arcade.gui.UITextureButton], None], action
+                typing.Callable[[arcade.gui.UIOnClickEvent], None], action
             )
             self.buttons.append(button)
             start_y -= button_height + button_spacing
