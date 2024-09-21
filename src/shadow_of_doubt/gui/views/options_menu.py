@@ -6,6 +6,7 @@ import collections.abc
 
 import arcade
 import arcade.gui
+from PIL import Image
 
 from shadow_of_doubt import constants
 
@@ -14,6 +15,9 @@ if typing.TYPE_CHECKING:
 
 ComponentT = typing.TypeVar("ComponentT", bound=arcade.gui.UIWidget)
 ComponentCallback = collections.abc.Callable[[arcade.gui.UIEvent], None]
+
+OFF_TEXTURE = Image.new("RGBA", (28, 28), (255, 255, 255, 255))
+OFF_TEXTURE.paste((0, 0, 0, 255), (2, 2, 26, 26))
 
 
 class OptionEntryContainer(arcade.gui.UIBoxLayout, typing.Generic[ComponentT]):
@@ -94,22 +98,31 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
             arcade.gui.UIAnchorLayout(
                 width=900,
                 height=900,
-                size_hint_min=(600, 600),
+                size_hint_min=(600, 720),
             )
         )
-        frame.with_padding(all=20)
+        frame.with_padding(left=20, right=20, top=60, bottom=80)
         menu_texture = arcade.load_texture(constants.ASSETS_DIR / "menu_texture.png")
         texture = arcade.gui.NinePatchTexture(0, 0, 0, 0, menu_texture)
         frame.with_background(texture=texture)
 
-        back_button = arcade.gui.UIFlatButton(text="Back", width=250)
+        button_texture = arcade.load_texture(constants.ASSETS_DIR / "button_texture.png")
+        back_button = arcade.gui.UITextureButton(
+            text="Back",
+            texture=button_texture,
+            texture_hovered=button_texture,
+            texture_pressed=button_texture,
+            size_hint=(0, 0),
+            size_hint_min=(320, 75),
+            size_hint_max=(350, 100),
+        )
         back_button.on_click = self.on_click_back_button  # type: ignore
 
         title_label = arcade.gui.UILabel(
             text="Options Menu",
             align="center",
             font_name="Alagard",
-            font_size=32,
+            font_size=36,
             multiline=False,
         )
         # Adding some extra space around the title.
@@ -121,7 +134,8 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
         )
 
         on_texture = arcade.load_texture(constants.ASSETS_DIR / "button_texture.png")
-        off_texture = arcade.load_texture(constants.ASSETS_DIR / "solid_black.png")
+        # off_texture = arcade.load_texture(constants.ASSETS_DIR / "solid_black.png")
+        off_texture = arcade.Texture(OFF_TEXTURE)
 
         title_layout = arcade.gui.UIBoxLayout(align="center", space_between=50)
         title_layout.add(title_label_space)
@@ -212,9 +226,8 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
         frame.add(child=title_layout, anchor_x="center_x", anchor_y="top")
         frame.add(
             child=widget_layout,
-            anchor_x="left",
+            anchor_x="center",
             anchor_y="center",
-            align_x=125,
         )
         frame.add(
             child=back_button_layout,

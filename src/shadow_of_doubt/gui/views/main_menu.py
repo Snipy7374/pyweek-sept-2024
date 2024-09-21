@@ -1,7 +1,9 @@
 import webbrowser
+import typing as t
 
 import arcade
 import arcade.gui
+from arcade.future.light import LightLayer, Light
 
 from shadow_of_doubt import window, constants, __version__
 from shadow_of_doubt.gui import styles
@@ -99,7 +101,7 @@ class MainMenuView(arcade.View):
                 text=label,
                 width=350,
                 height=100,
-                style=styles.MAIN_MENU_BUTTONS_STYLE,
+                style=t.cast(dict[str, arcade.gui.UIStyleBase], styles.MAIN_MENU_BUTTONS_STYLE),
                 texture=texture,
                 texture_hovered=texture,
                 texture_pressed=texture,
@@ -116,6 +118,21 @@ class MainMenuView(arcade.View):
             )
 
         self.box.prepare_layout()
+        self.light_layer = LightLayer(self.window.width, self.window.height)
+        self.light_layer.set_background_color(arcade.csscolor.BLACK)
+
+        # create a large white light in the center of the screen
+        self.light = Light(
+            self.window.center_x,
+            self.window.center_y,
+            500,
+            arcade.csscolor.LIGHT_YELLOW,
+            "soft",
+        )
+        self.light_layer.add(self.light)
+
+    def on_mouse_motion(self, x: int, y: int, dx: int, dy: int) -> bool | None:
+        self.light.position = x, y
 
     def on_hide_view(self) -> None:
         self.manager.disable()
@@ -125,7 +142,9 @@ class MainMenuView(arcade.View):
 
     def on_draw(self) -> None:
         self.clear()
-        self.manager.draw()
+        with self.light_layer:
+            self.manager.draw()
+        self.light_layer.draw(ambient_color=(10, 10, 10))
 
     def start_game_callback(self, _: arcade.gui.UIFlatButton) -> None:
         view = window.GameView()

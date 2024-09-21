@@ -26,7 +26,6 @@ class PauseMenu:
         if self.paused:
             for button in self.buttons:
                 self.view.manager.add(button)
-
         else:
             for button in self.buttons:
                 self.view.manager.remove(button)
@@ -45,37 +44,51 @@ class PauseMenu:
     def _create_buttons(self) -> None:
         button_width = 320
         button_height = 100
-        start_y = constants.SCREEN_HEIGHT // 2 + 100
-        button_spacing = 20
-
-        button_info = [
+        self.button_info = [
             ("Resume", self.resume_game),
             ("Main Menu", self.go_to_main_menu),
             ("Exit", self.exit_game),
         ]
+        start_y = (
+            (self.view.window.height // 2)
+            + int((button_height // 2) * len(self.button_info))
+            - button_height
+        )
+        start_x = (self.view.window.width // 2) - (button_width // 2)
+        button_spacing = 20
 
         button_texture = arcade.load_texture(constants.ASSETS_DIR / "button_texture.png")
         texture = arcade.gui.NinePatchTexture(0, 0, 0, 0, button_texture)
-        for i, (text, action) in enumerate(button_info):
+        for text, action in self.button_info:
             button = arcade.gui.UITextureButton(
                 text=text,
                 width=button_width,
                 height=button_height,
-                x=constants.SCREEN_WIDTH // 2 - button_width // 2,
-                y=start_y - i * (button_spacing + button_height),
+                x=start_x,
+                y=start_y,
                 texture=texture,
                 texture_hovered=texture,
                 texture_pressed=texture,
             )
-            button.on_click = action
+            button.on_click = typing.cast(
+                typing.Callable[[arcade.gui.UITextureButton], None], action
+            )
             self.buttons.append(button)
+            start_y -= button_height + button_spacing
 
     def draw(self) -> None:
         if self.paused:
-            arcade.draw_lrbt_rectangle_filled(
-                left=self.camera_sprites.position[0] - constants.SCREEN_WIDTH // 2,
-                right=self.camera_sprites.position[0] + constants.SCREEN_WIDTH // 2,
-                top=self.camera_sprites.position[1] + constants.SCREEN_HEIGHT // 2,
-                bottom=self.camera_sprites.position[1] - constants.SCREEN_HEIGHT // 2,
-                color=(0, 0, 0, 200),
+            menu_texture = arcade.load_texture(constants.ASSETS_DIR / "menu_texture.png")
+            x = self.view.window.width // 2
+            y = (self.view.window.height // 2) - 20
+            arcade.draw_texture_rect(
+                texture=menu_texture,
+                rect=arcade.Rect.from_kwargs(
+                    x=x,
+                    y=y,
+                    width=480,
+                    height=560,
+                ),
+                pixelated=True,
+                alpha=200,
             )
