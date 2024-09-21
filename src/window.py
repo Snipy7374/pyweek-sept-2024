@@ -1,44 +1,59 @@
+import time
+import typing as t
+
 import arcade
 import arcade.gl as gl
+import arcade.gui
 import pyglet
-from arcade.types import Color
 from arcade.experimental import Shadertoy
+from arcade.types import Color
+
 from assets import RoguelikeInterior
+
 from shadow_sprite import ShadowSprite
+from components.sprites.enemy import Enemy, EnemyTypes
+from components.sprites.player import Player
 from constants import (
-    SCREEN_WIDTH,
+    CHARACTER_SCALING,
+    DEFAULT_DAMPING,
+    ENEMY_FRICTION,
+    ENEMY_MASS,
+    ENEMY_SCALING,
+    GRAVITY,
+    MAX_LIGHTS,
+    PLAYER_FRICTION,
+    PLAYER_MASS,
+    PLAYER_MAX_HORIZONTAL_SPEED,
+    PLAYER_MAX_VERTICAL_SPEED,
     SCREEN_HEIGHT,
     SCREEN_TITLE,
-    CHARACTER_SCALING,
+    SCREEN_WIDTH,
     TILE_SCALING,
-    PLAYER_MOVEMENT_SPEED,
-    GRAVITY,
-    PLAYER_JUMP_SPEED,
-    MAX_LIGHTS,
+    WALL_FRICTION,
 )
+
+DISABLE_SHADER = True
 
 
 class Window(arcade.Window):
+    current_level = 2
+
     def __init__(self) -> None:
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE, resizable=True)
+        self.ui_manager = arcade.gui.UIManager()
+        self.ui_manager.enable()
         arcade.set_background_color(arcade.color.AMAZON)
         arcade.SpriteList.DEFAULT_TEXTURE_FILTER = gl.NEAREST, gl.NEAREST
         self.spritesheet = RoguelikeInterior()
 
-        self.scene = self.create_scene()
-        self.player_sprite = arcade.Sprite(
-            self.spritesheet.get_sprite("potted-plant-1"),
-            scale=CHARACTER_SCALING,
-        )
-        self.physics_engine = arcade.PhysicsEnginePlatformer(
-            self.player_sprite, gravity_constant=GRAVITY, walls=self.scene["Platforms"]
+        self.object_lists: dict[str, list[arcade.types.TiledObject]] = {}
+        self.physics_engine = arcade.PymunkPhysicsEngine(
+            damping=DEFAULT_DAMPING,
+            gravity=(0, -GRAVITY),
         )
 
         self.camera_sprites = arcade.camera.Camera2D()
         self.camera_gui = arcade.camera.Camera2D()
-
-        self.left_key_down: bool = False
-        self.right_key_down: bool = False
 
         self.reset()
         self.set_window_position()
@@ -61,8 +76,27 @@ class Window(arcade.Window):
         for light in self.scene["LitLights"]:
             shadow_sprite = ShadowSprite(self.player_sprite, light, self.ground_y)
             self.shadow_sprites.append(shadow_sprite)
+            
+    def setup_enemies(self) -> list[arcade.Sprite]:
+        enemies = []
+        for enemy in self.object_lists.get("Enemies", []):
+            if not enemy.name:
+                continue
+            points: arcade.types.PointList = enemy.shape  # type: ignore
+            x, y = points[0][0] - 24, points[0][1]
+            sprite = Enemy(
+                enemy_type=EnemyTypes[enemy.name.upper()],
+                scene=self.scene,
+                position=(int(x), int(y)),
+                scale=ENEMY_SCALING,
+                properties=enemy.properties,
+            )
+            enemies.append(sprite)
+        return enemies
 
     def setup_shader(self) -> None:
+        if DISABLE_SHADER:
+            return
         window_size = self.get_size()
         self.shadertoy = Shadertoy.create_from_file(window_size, "assets/shadow_shader.glsl")
 
@@ -132,9 +166,11 @@ class Window(arcade.Window):
             "LitLights": {
                 "use_spatial_hash": True,
             },
+            "Gold": {"use_spatial_hash": True},
+            "Doors": {"use_spatial_hash": True},
         }
         tile_map = arcade.load_tilemap(
-            "assets/level-1-map.tmx",
+            f"assets/level-{self.current_level}-map.tmx",
             scaling=TILE_SCALING,
             layer_options=layer_options,
         )
@@ -142,18 +178,107 @@ class Window(arcade.Window):
         if tile_map.background_color:
             self.background_color = Color.from_iterable(tile_map.background_color)
 
+        self.object_lists = tile_map.object_lists
+
         return arcade.Scene.from_tilemap(tile_map)
 
     def reset(self) -> None:
         self.scene = self.create_scene()
-        self.player_sprite.position = (128, 128)
+        spawn_door = sorted(self.scene["Doors"].sprite_list, key=lambda door: door.position[0])[0]  # type: ignore
+        assert spawn_door, "No spawn door found"
+        spawn_x, spawn_y = spawn_door.position
+        self.player_sprite = Player(
+            scene=self.scene, position=(spawn_x, spawn_y), scale=CHARACTER_SCALING
+        )
+        self.enemy_sprites = self.setup_enemies()
+        p_sprites = self.physics_engine.sprites.copy()
+        for sprite in p_sprites:
+            self.physics_engine.remove_sprite(sprite)
+        self.physics_engine.add_sprite(
+            self.player_sprite,
+            friction=PLAYER_FRICTION,
+            mass=PLAYER_MASS,
+            moment_of_inertia=arcade.PymunkPhysicsEngine.MOMENT_INF,
+            collision_type="player",
+            max_horizontal_velocity=PLAYER_MAX_HORIZONTAL_SPEED,
+            max_vertical_velocity=PLAYER_MAX_VERTICAL_SPEED,
+        )
+        self.physics_engine.add_sprite_list(
+            self.scene["Platforms"],
+            friction=WALL_FRICTION,
+            collision_type="wall",
+            body_type=arcade.PymunkPhysicsEngine.STATIC,
+        )
+        self.physics_engine.add_sprite_list(
+            self.enemy_sprites,
+            mass=ENEMY_MASS,
+            friction=ENEMY_FRICTION,
+            moment_of_inertia=arcade.PymunkPhysicsEngine.MOMENT_INF,
+            collision_type="enemy",
+            body_type=arcade.PymunkPhysicsEngine.DYNAMIC,
+        )
+        self.physics_engine.add_sprite_list(
+            self.scene["Doors"],
+            mass=0,
+            friction=0,
+            collision_type="door",
+            body_type=arcade.PymunkPhysicsEngine.STATIC,
+        )
+        try:
+            self.scene.remove_sprite_list_by_name("Enemies")
+            self.scene.remove_sprite_list_by_name("Player")
+            self.scene.remove_sprite_list_by_name("Bars")
+        except KeyError:
+            pass
+        self.scene.add_sprite_list("Enemies")
+        self.scene["Enemies"].extend(self.enemy_sprites)
         self.scene.add_sprite_list("Player")
         self.scene["Player"].append(self.player_sprite)
+        self.scene.add_sprite_list("Bars")
+        self.scene["Bars"].append(self.player_sprite.health_bar)
+        self.scene["Bars"].append(self.player_sprite.stamina_bar)
+
+        def player_enemy_collision_handler(player: Player, enemy: Enemy, *_: t.Any) -> None:
+            if player.attacking:
+                if enemy._damage_value != 0 or (enemy._last_hit_time and time.monotonic() - enemy._last_hit_time < 0.5):  # type: ignore
+                    return
+                enemy._last_hit_time = time.monotonic()  # type: ignore
+                enemy._damage_value = player.attack_power  # type: ignore
+                enemy.hurt = True
+            if enemy.attacking:
+                enemy_id = id(enemy)
+                if enemy_id in player._hit_map and time.monotonic() - player._hit_map[enemy_id] < 0.5:  # type: ignore
+                    return
+                player._hit_map[enemy_id] = time.monotonic()  # type: ignore
+                player._damage_map[id(enemy)] = enemy.spritesheet.attack_power  # type: ignore
+                player.hurt = True
+
+        self.physics_engine.add_collision_handler(
+            "player", "enemy", post_handler=player_enemy_collision_handler
+        )
+
+        def player_door_collision_handler(player: Player, door: arcade.Sprite, *_: t.Any) -> bool:
+            farthest_door = sorted(self.scene["Doors"].sprite_list, key=lambda door: door.position[0])[-1]  # type: ignore
+            if door.properties["tile_id"] == farthest_door.properties["tile_id"]:
+                self.current_level += 1
+                self.reset()
+            return False
+
+        self.physics_engine.add_collision_handler(
+            "player",
+            "door",
+            pre_handler=player_door_collision_handler,
+        )
 
     def on_draw(self) -> None:
         self.clear()
 
-        # Draw platforms and the player to channel0
+        if DISABLE_SHADER:
+            self.camera_sprites.use()
+            self.scene.draw()
+            return
+
+        # Draw platforms, the player, and the gold to channel0
         self.channel0.use()
         self.channel0.clear()
         self.camera_sprites.use()
@@ -206,25 +331,9 @@ class Window(arcade.Window):
         )
         text.draw()
 
-    def update_player_speed(self) -> None:
-        self.player_sprite.change_x = 0
-
-        if self.left_key_down and not self.right_key_down:
-            self.player_sprite.change_x = -PLAYER_MOVEMENT_SPEED
-        elif self.right_key_down and not self.left_key_down:
-            self.player_sprite.change_x = PLAYER_MOVEMENT_SPEED
-
     def on_key_press(self, key: int, _: int) -> None:
-        if key == arcade.key.UP or key == arcade.key.W:
-            if self.physics_engine.can_jump():
-                self.player_sprite.change_y = PLAYER_JUMP_SPEED
-        elif key == arcade.key.LEFT or key == arcade.key.A:
-            self.left_key_down = True
-            self.update_player_speed()
-        elif key == arcade.key.RIGHT or key == arcade.key.D:
-            self.right_key_down = True
-            self.update_player_speed()
-        elif key == arcade.key.E:
+        self.player_sprite.on_key_press(key, _)
+        if key == arcade.key.E:
             lights_hit_list = arcade.check_for_collision_with_list(
                 self.player_sprite, self.scene["UnlitLights"]
             ) + arcade.check_for_collision_with_list(self.player_sprite, self.scene["LitLights"])
@@ -232,12 +341,7 @@ class Window(arcade.Window):
                 self.toggle_light(light)
 
     def on_key_release(self, key: int, _: int) -> None:
-        if key == arcade.key.LEFT or key == arcade.key.A:
-            self.left_key_down = False
-            self.update_player_speed()
-        elif key == arcade.key.RIGHT or key == arcade.key.D:
-            self.right_key_down = False
-            self.update_player_speed()
+        self.player_sprite.on_key_release(key, _)
 
     def center_camera_to_player(self) -> None:
         screen_center_x = self.player_sprite.center_x
@@ -256,7 +360,10 @@ class Window(arcade.Window):
         )
 
     def on_update(self, delta_time: float) -> None:
-        self.physics_engine.update()
+        self.scene.update(delta_time)
+        self.scene.update_animation(delta_time)
+        self.physics_engine.step()
+
         self.center_camera_to_player()
 
         for shadow_sprite in self.shadow_sprites:
@@ -266,4 +373,5 @@ class Window(arcade.Window):
         super().on_resize(width, height)
         self.camera_sprites.match_screen(and_projection=True)
         self.camera_gui.match_screen(and_projection=True)
-        self.shadertoy.resize((width, height))
+        if not DISABLE_SHADER:
+            self.shadertoy.resize((width, height))

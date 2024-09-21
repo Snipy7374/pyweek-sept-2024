@@ -1,4 +1,5 @@
 import arcade
+
 from constants import ASSETS_DIR
 
 
