@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="68" height="32" tilewidth="16" tileheight="16" infinite="0" backgroundcolor="#000000" nextlayerid="6" nextobjectid="16">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="68" height="32" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="16">
  <tileset firstgid="1" source="roguelike-base.tsx"/>
  <tileset firstgid="1768" source="currency/round-gem-gradient.tsx"/>
  <tileset firstgid="1780" source="currency/coin-gold.tsx"/>
@@ -11,25 +11,27 @@
  <tileset firstgid="2292" source="currency/gem-red.tsx"/>
  <tileset firstgid="2296" source="currency/gem-gray.tsx"/>
  <tileset firstgid="2300" source="currency/gem-green.tsx"/>
+ <tileset firstgid="2304" source="currency/gem-blue.tsx"/>
+ <tileset firstgid="2308" source="currency/round-gem-purple.tsx"/>
  <layer id="1" name="Platforms" width="68" height="32">
   <data encoding="base64" compression="zlib">
-   eJztlu0NgjAQhk9Bg0bdQv84hWOoiaJO5ccO6iQav6ZwCM+IEZseaaHgFfskb0ghgd7DtQDgcDgcDofDYS9TDyDEzLzv8xcf4KqQm0/fe5JwjQtU/Wlp1uhrNvgwja0+job6QYSzjzBWcwPnEsTmc/hDH1noVr6jCjcfYU7vXRUOPkx+H7LCwccSXaxy9qG6brj5mFcBFtViniuDg48gSjN2FPslzd5IkXQPDj4G8HLwPD575YQ5E+sn7XdDFQ4+Tt4nlAcZebihfPT9V8qEir+k/lDFx/2vhqkL++BdEu6Y8MGZNP+n77Whsz6onrCdMvZHlv1Vx0dZeyIO5WOLNe8we8a1F/m9tYGi/8e4IfbDL30M8dkjzFgyh15Fb7zC8Rqz0awnj/pFTPSHro8zji+Ya3Re9t6pcEWnBrGeFu7RbUwn2qsfDI82ig==
+   eJztmEtuwkAMhiPlMeEG5TQ0V6C9GO0tyhI27AsSC8QRKrFqtz1BJ4tIk6mT2PPI2C2/5EWAZOxvbI+DKrNMJTZOovjzkcfzg4ti83iu6Pek1J1HXy2Pt/y3bYHYIR5rHe/TiE3xkNo/yjJ8/1hW/fU3+vpF22vCnKLWyxq57zHWn0Opz5ep9efOmSl/3rUfR22nCuZxU/3rh5r2Pcf8MGMeU4r8gBQzZ1LWy7ngmR8p1LHgzANbN74yWXDmMYdsFqHWD9VTsP789/dbm/chkt+xeFwK+j1XQn//FsajcnhubeTrVP1J47HSz30kWkOoX4jHTn+294xHSv9oZeYMJT8ovVMSD1MYHi5nBlceIfoHNTZJ562tjkfoWUISD6h/uPp/LuD7fXhgZ4wrYRZxyXGKbA4heWBnjNqhn2Hnf6z/QxzsuvLhgZ0xmgj9ndojIA7QelL6B3Z2GPqNZB6uZ4VvbBzPWx+F2Ou/wqPb20+VZV/aFsptv7nxiPk/D9Y46QdepFKs
   </data>
  </layer>
  <objectgroup id="5" name="Enemies"/>
  <layer id="2" name="LitLights" width="68" height="32">
   <data encoding="base64" compression="zlib">
-   eJzt10ENACAMBMHywgr+ZWAAOzyrgDQ0Mwr2d7kIAABIe1YXAMA7dg4AAOhmNfw5Z1QXwJ8u9e4Cqg==
+   eJzt10ENgEAMBMD74QVR+MAGwdShChOlsGRGwaaPdjsGQL1reTsBQL1ptwHwYVvjnToCbuIekLHTaR5Qwk/AH3V2iARpHWJ9OK8OAQBZbkiuBjw=
   </data>
  </layer>
  <layer id="3" name="UnlitLights" width="68" height="32">
   <data encoding="base64" compression="zlib">
-   eJztzjEBACAMA7ANJUhH6g4k7OiTKEgVAMD3Oj0AACDlnvQAAAAA2BiJKwDE
+   eJztzjERADAIBLA//DsoYhlQ0IklUZAE+PUq6bpeAAAAAAAAAMAaAdYBPA==
   </data>
  </layer>
  <layer id="4" name="Gold" width="68" height="32">
   <data encoding="base64" compression="zlib">
-   eJzt1SEOgDAMQNEpsvtfEIfBICYQCARqDhKgJbyXTMw1P0tXCgBft9boCQD+ZUq4dyP/gow9IunRe7NH056TlnocyGrzPjt6PGPUFeDT5mR7vA3X7sD9su0FYuxpixBo
+   eJzt1z8LgCAQh+EbQuz7f8DWwKXhhoaGtMVBsD8IXvI+IDo0xO+0ThGgTn0cTuSI8zT3fpv+gs/rlIs0ymTz98+g7qoH8AJ7BgBsUPogM3ZqgcGkfi982NfLoGdhdW16YL4V9nHXKZFJRhYlMgEAYHz8759Rlwf+6QQabxdy
   </data>
  </layer>
 </map>
