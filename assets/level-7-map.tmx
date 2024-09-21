@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="68" height="32" tilewidth="16" tileheight="16" infinite="0" backgroundcolor="#000000" nextlayerid="6" nextobjectid="16">
+ <tileset firstgid="1" source="roguelike-base.tsx"/>
+ <tileset firstgid="1768" source="currency/round-gem-gradient.tsx"/>
+ <tileset firstgid="1780" source="currency/coin-gold.tsx"/>
+ <tileset firstgid="1785" source="roguelike-interior.tsx"/>
+ <tileset firstgid="2271" source="currency/purple-gem.tsx"/>
+ <tileset firstgid="2278" source="currency/coin-ruby.tsx"/>
+ <tileset firstgid="2283" source="currency/coin-silver.tsx"/>
+ <tileset firstgid="2288" source="currency/gem-yellow.tsx"/>
+ <tileset firstgid="2292" source="currency/gem-red.tsx"/>
+ <tileset firstgid="2296" source="currency/gem-gray.tsx"/>
+ <tileset firstgid="2300" source="currency/gem-green.tsx"/>
+ <layer id="1" name="Platforms" width="68" height="32">
+  <data encoding="base64" compression="zlib">
+   eJztlu0NgjAQhk9Bg0bdQv84hWOoiZ9T+bGDOolGwSkcwjNixKZHWix4xT7JG1JIoPdwLQA4HA6Hw+Fw2MvUA5hh5t7n+dAHiBRy9el7T1KucYGqPyvNGn3NBh+msdXHyVA/iNjio4FzCRLzOf6ZD7F+XbqVz6jCzccsp/euCgcfJr8P38LBxwpdrHP2obpuuPlYVAGW1WKeK4ODjyBOM3EU+yXL3kiRdg8OPgbwdPA4PnrljLkQ6yfrd0MVDj7O3juUBxl5uKF89P1nyoSKv7T+UMXH/a+GqQv74E0S7pjwwZks/6evtaGzPqiesJ0y9sc3+6uOj7L2RBLKxw5r3mMOjGsv8ntrA0X/j3FD7Idf+hjis0eYsWQOvYreeI3jDWarWU8e9YuY6A9dHxcch5goPi9771S4olODWE8L9+g2phPv1XfUNTZA
+  </data>
+ </layer>
+ <objectgroup id="5" name="Enemies"/>
+ <layer id="2" name="LitLights" width="68" height="32">
+  <data encoding="base64" compression="zlib">
+   eJzt10ENACAMBMHywgr+ZWAAOzyrgDQ0Mwr2d7kIAABIe1YXAMA7dg4AAOhmNfw5Z1QXwJ8u9e4Cqg==
+  </data>
+ </layer>
+ <layer id="3" name="UnlitLights" width="68" height="32">
+  <data encoding="base64" compression="zlib">
+   eJztzjEBACAMA7ANJUhH6g4k7OiTKEgVAMD3Oj0AACDlnvQAAAAA2BiJKwDE
+  </data>
+ </layer>
+ <layer id="4" name="Gold" width="68" height="32">
+  <data encoding="base64" compression="zlib">
+   eJzt1SEOgDAMQNEpsvtfEIfBICYQCARqDhKgJbyXTMw1P0tXCgBft9boCQD+ZUq4dyP/gow9IunRe7NH056TlnocyGrzPjt6PGPUFeDT5mR7vA3X7sD9su0FYuxpixBo
+  </data>
+ </layer>
+</map>

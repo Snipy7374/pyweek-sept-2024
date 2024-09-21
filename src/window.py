@@ -156,7 +156,7 @@ class Window(arcade.Window):
             "Gold": {"use_spatial_hash": True},
         }
         tile_map = arcade.load_tilemap(
-            "assets/level-2-map.tmx",
+            "assets/level-6-map.tmx",
             scaling=TILE_SCALING,
             layer_options=layer_options,
         )
