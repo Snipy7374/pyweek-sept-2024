@@ -301,14 +301,11 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
             width=width,
             height=height,
         )
+        self.fullscreen_toggle.value = event.new_value
 
-        if self.main_view and self.temp_layout:
-            self.main_view.manager.trigger_render()
-            try:
-                self.main_view.ui_layout.trigger_full_render()
-            except:  # noqa: E722
-                pass
-            self.temp_layout.trigger_full_render()
+        self.main_view.manager.trigger_render()
+        self.main_view.ui_layout.trigger_full_render()
+        self.temp_layout.trigger_full_render()
 
     def setup_from_dict(self) -> None:
         self.settings: dict[str, typing.Any] = self.load_saved_settings()
