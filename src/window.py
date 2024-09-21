@@ -1,3 +1,4 @@
+import time
 import typing as t
 
 import arcade
@@ -28,6 +29,8 @@ from constants import (
     TILE_SCALING,
     WALL_FRICTION,
 )
+
+DISABLE_SHADER = True
 
 
 class Window(arcade.Window):
@@ -85,6 +88,8 @@ class Window(arcade.Window):
         return enemies
 
     def setup_shader(self) -> None:
+        if DISABLE_SHADER:
+            return
         window_size = self.get_size()
         self.shadertoy = Shadertoy.create_from_file(window_size, "assets/shadow_shader.glsl")
 
@@ -228,9 +233,17 @@ class Window(arcade.Window):
 
         def player_enemy_collision_handler(player: Player, enemy: Enemy, *_: t.Any) -> None:
             if player.attacking:
-                enemy.dead = True
-                # enemy.hurt = True
+                if enemy._damage_value != 0 or (enemy._last_hit_time and time.monotonic() - enemy._last_hit_time < 0.5):  # type: ignore
+                    return
+                enemy._last_hit_time = time.monotonic()  # type: ignore
+                enemy._damage_value = player.attack_power  # type: ignore
+                enemy.hurt = True
             if enemy.attacking:
+                enemy_id = id(enemy)
+                if enemy_id in player._hit_map and time.monotonic() - player._hit_map[enemy_id] < 0.5:  # type: ignore
+                    return
+                player._hit_map[enemy_id] = time.monotonic()  # type: ignore
+                player._damage_map[id(enemy)] = enemy.spritesheet.attack_power  # type: ignore
                 player.hurt = True
 
         self.physics_engine.add_collision_handler(
@@ -252,6 +265,11 @@ class Window(arcade.Window):
 
     def on_draw(self) -> None:
         self.clear()
+
+        if DISABLE_SHADER:
+            self.camera_sprites.use()
+            self.scene.draw()
+            return
 
         # Draw platforms, the player, and the gold to channel0
         self.channel0.use()
@@ -340,4 +358,5 @@ class Window(arcade.Window):
         super().on_resize(width, height)
         self.camera_sprites.match_screen(and_projection=True)
         self.camera_gui.match_screen(and_projection=True)
-        self.shadertoy.resize((width, height))
+        if not DISABLE_SHADER:
+            self.shadertoy.resize((width, height))

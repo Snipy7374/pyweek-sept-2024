@@ -135,7 +135,7 @@ class Bar:
         self.icon_image = icon_image
 
         self._bar_states = [self.construct_bar_image(i) for i in range(self.max_value + 1)]
-        for i, bar_state in enumerate(self._bar_states):
+        for bar_state in self._bar_states:
             self.textures.append(arcade.Texture(bar_state))
 
     def construct_bar_image(self, state: int) -> Image.Image:

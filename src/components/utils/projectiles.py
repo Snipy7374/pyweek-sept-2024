@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import enum
 import math
+import time
 import typing as t
 
 import arcade
@@ -83,6 +84,11 @@ PROJECTILE_STATS = {
 class Projectile(arcade.Sprite):
     _projectile_type: ProjectileTypes
     _max_time_alive: float | None = None
+    _power_map: dict[ProjectileTypes, float] = {
+        ProjectileTypes.ARROW: 7.0,
+        ProjectileTypes.SMALL_FIREBALL: 12.0,
+        ProjectileTypes.LARGE_FIREBALL: 20.0,
+    }
 
     def __init__(
         self,
@@ -141,6 +147,11 @@ class Projectile(arcade.Sprite):
             if player.attacking and player._facing_right == projectile.flipped:  # type: ignore
                 player.knockback = True
                 return
+            projectile_id = id(projectile)
+            if projectile_id in player._hit_map and time.monotonic() - player._hit_map[projectile_id] < 0.5:  # type: ignore
+                return
+            player._hit_map[projectile_id] = time.monotonic()  # type: ignore
+            player._damage_map[projectile_id] = self._power_map[self._projectile_type]  # type: ignore
             player.hurt = True
 
         physics_engine.add_collision_handler(

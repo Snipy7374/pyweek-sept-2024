@@ -163,6 +163,8 @@ class AllStates(EnemyStates):
 
 
 class EnemyCharacter:
+    attack_power: int
+    hp: int
     character_width: int = 32
     character_height: int = 32
     animation_frames: dict[EnemyStates, int] = {}
@@ -267,6 +269,8 @@ class Archer(EnemyCharacter):
     current_state = ArcherStates.IDLE
     states = ArcherStates  # type: ignore
     projectile_type = ProjectileTypes.ARROW
+    hp = 80
+    attack_power = 5
 
 
 class Archmage(EnemyCharacter):
@@ -284,6 +288,8 @@ class Archmage(EnemyCharacter):
     current_state = ArchmageStates.IDLE
     states = ArchmageStates  # type: ignore
     projectile_type = ProjectileTypes.LARGE_FIREBALL
+    hp = 130
+    attack_power = 7
 
 
 class Cavalier(EnemyCharacter):
@@ -298,6 +304,8 @@ class Cavalier(EnemyCharacter):
     }
     current_state = CavalierStates.IDLE
     states = CavalierStates  # type: ignore
+    hp = 100
+    attack_power = 6
 
 
 class Crossbow(EnemyCharacter):
@@ -313,6 +321,8 @@ class Crossbow(EnemyCharacter):
     current_state = CrossbowStates.IDLE
     states = CrossbowStates  # type: ignore
     projectile_type = ProjectileTypes.ARROW
+    hp = 90
+    attack_power = 1
 
 
 class Halberd(EnemyCharacter):
@@ -326,6 +336,8 @@ class Halberd(EnemyCharacter):
     }
     current_state = HalberdStates.IDLE
     states = HalberdStates  # type: ignore
+    hp = 110
+    attack_power = 10
 
 
 class Horse(EnemyCharacter):
@@ -340,6 +352,8 @@ class Horse(EnemyCharacter):
     }
     current_state = HorseStates.IDLE
     states = HorseStates  # type: ignore
+    hp = 120
+    attack_power = 8
 
 
 class King(EnemyCharacter):
@@ -354,6 +368,8 @@ class King(EnemyCharacter):
     }
     current_state = KingStates.IDLE
     states = KingStates  # type: ignore
+    hp = 150
+    attack_power = 12
 
 
 class Mage(EnemyCharacter):
@@ -370,6 +386,8 @@ class Mage(EnemyCharacter):
     current_state = MageStates.IDLE
     states = MageStates  # type: ignore
     projectile_type = ProjectileTypes.SMALL_FIREBALL
+    hp = 120
+    attack_power = 3
 
 
 class Prince(EnemyCharacter):
@@ -383,6 +401,8 @@ class Prince(EnemyCharacter):
     }
     current_state = PrinceStates.IDLE
     states = PrinceStates  # type: ignore
+    hp = 100
+    attack_power = 6
 
 
 class Shield(EnemyCharacter):
@@ -397,6 +417,8 @@ class Shield(EnemyCharacter):
     }
     current_state = ShieldStates.IDLE
     states = ShieldStates  # type: ignore
+    hp = 180
+    attack_power = 9
 
 
 class Spear(EnemyCharacter):
@@ -410,6 +432,8 @@ class Spear(EnemyCharacter):
     }
     current_state = SpearStates.IDLE
     states = SpearStates  # type: ignore
+    hp = 100
+    attack_power = 15
 
 
 class Sword(EnemyCharacter):
@@ -423,3 +447,5 @@ class Sword(EnemyCharacter):
     }
     current_state = SwordStates.IDLE
     states = SwordStates  # type: ignore
+    hp = 90
+    attack_power = 18

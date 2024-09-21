@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import math
+import time
 import random
 import typing as t
 
@@ -35,6 +36,9 @@ class Enemy(arcade.Sprite):
     _attacking = False
     _hurt = False
     _dead = False
+
+    _damage_value = 0
+    _last_hit_time: float | None = None
 
     def __init__(
         self,
@@ -125,6 +129,12 @@ class Enemy(arcade.Sprite):
             self.spritesheet.set_state(self.spritesheet.all_states.HIT)
             if self.spritesheet.is_done():
                 self._hurt = False
+                self.spritesheet.hp -= self._damage_value
+                if self.spritesheet.hp <= 0:
+                    self._dead = True
+                    return
+                self._damage_value = 0
+                self._last_hit_time = time.monotonic()
                 self.physics_engines[0].set_friction(self, 1.0)
                 self.spritesheet.set_state(self.spritesheet.all_states.IDLE)
             return
