@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="13" nextobjectid="44">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="14" nextobjectid="44">
  <tileset firstgid="1" source="roguelike-base.tsx"/>
  <tileset firstgid="1768" source="roguelike-interior.tsx"/>
  <tileset firstgid="2254" source="currency/coin-gold.tsx"/>
@@ -19,7 +19,12 @@
  </layer>
  <layer id="2" name="Platforms" width="30" height="20">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFtAKVQLwJSg8k8GKivpnVQDNrgLgWj9nNSHIKSOxAHGx0AJMD0QpE+gHmLmIwNrej68fnv6EOZGnoN0UcZvcAxcOgcqA4hcWxHIVuISXeSUkPAwFC6ewOYvIyNQG+PE8rMOpHwsCDCH3I/uqikh8bgeZIMeEuM6hRJjtDMRsS2x4Jw/jUBgCOeCSU
+   eJxjYBgFtAKVQLwJSg8k8GKivpnVQDNrgLgWj9nNSHIKNHADNgBzFzEYm9vR9ePz3ygYPICUeCclPYwEQExeHupg1I9DF1CjTHaGYjYktj0ShvGpDQBEsR6B
+  </data>
+ </layer>
+ <layer id="13" name="Background" width="30" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo4C+IJAJOxuXOhCtgEfdKCAPyNIwTBVxmN0DFA+DyoHiFBbHcqPxCwehwzws8OX54QKGoh89iHAzsr+6qOTHRqA5Uky4y4yhDABTJwYU
   </data>
  </layer>
  <objectgroup id="9" name="Enemies" offsetx="-0.666667" offsety="0.666667">
