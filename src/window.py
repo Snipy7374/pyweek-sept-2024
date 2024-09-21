@@ -44,7 +44,7 @@ class GameView(arcade.View):
     def __init__(
         self,
         current_level: int,
-        shader_disabled: bool = True,
+        shader_enabled: bool,
     ) -> None:
         super().__init__()
         self.current_level = current_level
@@ -72,11 +72,10 @@ class GameView(arcade.View):
             "yellow-candelabra": "yellow-candelabra-lit",
             "yellow-candelabra-lit": "yellow-candelabra",
         }
-        self.shader_disabled: bool = shader_disabled
+        self.shader_enabled: bool = shader_enabled
         self.setup_shader()
         self.setup_lights()
-        if not self.shader_disabled:
-            self.shader_disabled = False
+        if self.shader_enabled:
             self.shadow_sprites: arcade.SpriteList = arcade.SpriteList()
             for light in self.scene["LitLights"]:
                 shadow_sprite = ShadowSprite(self.player_sprite, light, ground_y=0)
@@ -110,7 +109,7 @@ class GameView(arcade.View):
         return enemies
 
     def setup_shader(self) -> None:
-        if self.shader_disabled:
+        if not self.shader_enabled:
             return
         window_size = self.window.get_size()
         self.shadertoy = Shadertoy.create_from_file(window_size, "assets/shadow_shader.glsl")
@@ -129,7 +128,7 @@ class GameView(arcade.View):
         self.shadertoy.channel_2 = self.channel2.color_attachments[0]
 
     def setup_lights(self) -> None:
-        if self.shader_disabled:
+        if self.shader_enabled:
             return
         for layer_name in (
             "UnlitLights",
@@ -300,7 +299,7 @@ class GameView(arcade.View):
     def on_draw(self) -> None:
         self.clear()
 
-        if self.shader_disabled:
+        if not self.shader_enabled:
             self.camera_sprites.use()
             self.scene.draw()
             score_text = self.player_sprite.score
@@ -418,7 +417,7 @@ class GameView(arcade.View):
 
         self.center_camera_to_player()
 
-        if not self.shader_disabled:
+        if self.shader_enabled:
             for shadow_sprite in self.shadow_sprites:
                 shadow_sprite.update(delta_time)
 
@@ -426,6 +425,6 @@ class GameView(arcade.View):
         super().on_resize(width, height)
         self.camera_sprites.match_screen(and_projection=True)
         self.camera_gui.match_screen(and_projection=True)
-        if not self.shader_disabled:
+        if self.shader_enabled:
             self.shadertoy.resize((width, height))
         self.manager.on_resize(width, height)

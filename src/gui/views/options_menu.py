@@ -324,7 +324,7 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
             return
 
         self.save_setting("shader_toggle", event.new_value)
-        self.main_view.shader_disabled = False
+        self.main_view.shader_enabled = event.new_value
         self.shader_toggle.value = event.new_value
 
     def setup_from_dict(self) -> None:

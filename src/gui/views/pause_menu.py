@@ -31,7 +31,10 @@ class PauseMenu:
         self.toggle_pause()
 
     def go_to_main_menu(self, _) -> None:
-        view = main_menu.MainMenuView(self.view.current_level)
+        view = main_menu.MainMenuView(
+            self.view.current_level,
+            self.view.shader_enabled,
+        )
         view.setup()
         self.view.window.show_view(view)
 

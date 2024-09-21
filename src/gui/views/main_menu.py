@@ -22,9 +22,13 @@ class MainMenuView(arcade.View):
         "Exit",
     )
 
-    def __init__(self, current_level: int) -> None:
+    def __init__(
+        self,
+        current_level: int,
+        shader_enabled: bool,
+    ) -> None:
         super().__init__()
-        self.shader_disabled = True
+        self.shader_enabled = shader_enabled
         self.current_level = current_level
         self.manager = arcade.gui.UIManager()
         self.ui_layout = arcade.gui.UIAnchorLayout()
@@ -173,10 +177,9 @@ class MainMenuView(arcade.View):
         self.light_layer.draw(ambient_color=(10, 10, 10))
 
     def start_game_callback(self, _: arcade.gui.UIFlatButton) -> None:
-        print(self.shader_disabled)
         view = window.GameView(
             current_level=self.current_level,
-            shader_disabled=self.shader_disabled,
+            shader_enabled=self.shader_enabled,
         )
         view.current_level = self.current_level
         self.window.show_view(view)
