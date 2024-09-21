@@ -24,9 +24,10 @@ class MainCharacterState(enum.IntEnum):
 
 
 class MainCharacterAssets:
-    coin_collect_sound = arcade.load_sound(ASSETS_DIR / "sfx" / "coin.ogg")
+    coin_collect_sound = arcade.load_sound(ASSETS_DIR / "sfx" / "coin.mp3")
     jump_sound = arcade.load_sound(ASSETS_DIR / "sfx" / "jump.wav")
     attack_sound = arcade.load_sound(ASSETS_DIR / "sfx" / "attack.wav")
+    hurt_sound = arcade.load_sound(ASSETS_DIR / "sfx" / "hurt.mp3")
 
 
 class MainCharacter:
@@ -112,5 +113,7 @@ class MainCharacter:
             self.assets.jump_sound.play()
         if state == MainCharacterState.COMBO_ATTACK or state == MainCharacterState.DASH_ATTACK:
             self.assets.attack_sound.play()
+        if state == MainCharacterState.HURT:
+            self.assets.hurt_sound.play()
         self.current_state = state
         self.current_frame = 0
