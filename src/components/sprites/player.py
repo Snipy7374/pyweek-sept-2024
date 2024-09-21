@@ -10,6 +10,7 @@ from constants import (
     PLAYER_JUMP_IMPULSE,
     PLAYER_MOVE_FORCE_IN_AIR,
     PLAYER_MOVE_FORCE_ON_GROUND,
+    PLAYER_SMALL_JUMP_IMPULSE,
 )
 
 
@@ -19,6 +20,7 @@ class Player(arcade.Sprite):
     _score = 0
     _hurt = False
     _dead = False
+    _small_jump = False
     _knockback = False
     _facing_right = True
     _jump_pressed = False
@@ -78,6 +80,8 @@ class Player(arcade.Sprite):
         self.physics_engines[0].set_velocity(self, (0, 0))
 
     def on_key_press(self, key: int, _: int) -> None:
+        if key == arcade.key.J:
+            self._small_jump = not self._small_jump
         if key == arcade.key.LEFT or key == arcade.key.A:
             self._left_pressed = True
         elif key == arcade.key.RIGHT or key == arcade.key.D:
@@ -189,7 +193,10 @@ class Player(arcade.Sprite):
             and not self._combo_attack_pressed
             and not self._dash_attack_pressed
         ):
-            self.physics_engines[0].apply_impulse(self, (0, PLAYER_JUMP_IMPULSE))
+            self.physics_engines[0].apply_impulse(
+                self,
+                (0, PLAYER_JUMP_IMPULSE if not self._small_jump else PLAYER_SMALL_JUMP_IMPULSE),
+            )
             self.spritesheet.set_state(MainCharacterState.JUMP)
 
         if self._combo_attack_pressed and not self._dash_attack_pressed:

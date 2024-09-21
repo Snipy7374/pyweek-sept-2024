@@ -11,7 +11,6 @@ from assets import RoguelikeInterior
 from components.sprites.enemy import Enemy, EnemyTypes
 from components.sprites.player import Player
 from constants import (
-    CHARACTER_POSITION,
     CHARACTER_SCALING,
     DEFAULT_DAMPING,
     ENEMY_FRICTION,
@@ -32,6 +31,8 @@ from constants import (
 
 
 class Window(arcade.Window):
+    current_level = 2
+
     def __init__(self) -> None:
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE, resizable=True)
         self.ui_manager = arcade.gui.UIManager()
@@ -154,9 +155,10 @@ class Window(arcade.Window):
                 "use_spatial_hash": True,
             },
             "Gold": {"use_spatial_hash": True},
+            "Doors": {"use_spatial_hash": True},
         }
         tile_map = arcade.load_tilemap(
-            "assets/level-8-map.tmx",
+            f"assets/level-{self.current_level}-map.tmx",
             scaling=TILE_SCALING,
             layer_options=layer_options,
         )
@@ -170,11 +172,15 @@ class Window(arcade.Window):
 
     def reset(self) -> None:
         self.scene = self.create_scene()
+        spawn_door = sorted(self.scene["Doors"].sprite_list, key=lambda door: door.position[0])[0]  # type: ignore
+        assert spawn_door, "No spawn door found"
+        spawn_x, spawn_y = spawn_door.position
         self.player_sprite = Player(
-            scene=self.scene, position=CHARACTER_POSITION, scale=CHARACTER_SCALING
+            scene=self.scene, position=(spawn_x, spawn_y), scale=CHARACTER_SCALING
         )
         self.enemy_sprites = self.setup_enemies()
-        for sprite in self.physics_engine.sprites:
+        p_sprites = self.physics_engine.sprites.copy()
+        for sprite in p_sprites:
             self.physics_engine.remove_sprite(sprite)
         self.physics_engine.add_sprite(
             self.player_sprite,
@@ -199,6 +205,19 @@ class Window(arcade.Window):
             collision_type="enemy",
             body_type=arcade.PymunkPhysicsEngine.DYNAMIC,
         )
+        self.physics_engine.add_sprite_list(
+            self.scene["Doors"],
+            mass=0,
+            friction=0,
+            collision_type="door",
+            body_type=arcade.PymunkPhysicsEngine.STATIC,
+        )
+        try:
+            self.scene.remove_sprite_list_by_name("Enemies")
+            self.scene.remove_sprite_list_by_name("Player")
+            self.scene.remove_sprite_list_by_name("Bars")
+        except KeyError:
+            pass
         self.scene.add_sprite_list("Enemies")
         self.scene["Enemies"].extend(self.enemy_sprites)
         self.scene.add_sprite_list("Player")
@@ -209,13 +228,26 @@ class Window(arcade.Window):
 
         def player_enemy_collision_handler(player: Player, enemy: Enemy, *_: t.Any) -> None:
             if player.attacking:
-                # enemy.dead = True
-                enemy.hurt = True
+                enemy.dead = True
+                # enemy.hurt = True
             if enemy.attacking:
                 player.hurt = True
 
         self.physics_engine.add_collision_handler(
             "player", "enemy", post_handler=player_enemy_collision_handler
+        )
+
+        def player_door_collision_handler(player: Player, door: arcade.Sprite, *_: t.Any) -> bool:
+            farthest_door = sorted(self.scene["Doors"].sprite_list, key=lambda door: door.position[0])[-1]  # type: ignore
+            if door.properties["tile_id"] == farthest_door.properties["tile_id"]:
+                self.current_level += 1
+                self.reset()
+            return False
+
+        self.physics_engine.add_collision_handler(
+            "player",
+            "door",
+            pre_handler=player_door_collision_handler,
         )
 
     def on_draw(self) -> None:
