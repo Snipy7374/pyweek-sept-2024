@@ -189,9 +189,21 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
             event_name="on_change",
         )
 
+        shader_toggle = arcade.gui.UITextureToggle(
+            on_texture=on_texture, off_texture=off_texture, width=30, height=30
+        )
+        self.shader_toggle = OptionEntryContainer(
+            "Shaders",
+            option_state_label="Disabled",
+            component=shader_toggle,
+            component_callback=self.shader_toggle_callback,  # type: ignore
+            event_name="on_change",
+        )
+
         graphic_toggles.add(self.vsync_toggle)
         graphic_toggles.add(self.antialiasing_toggle)
         graphic_toggles2.add(self.fullscreen_toggle)
+        graphic_toggles2.add(self.shader_toggle)
         widget_layout.add(graphic_toggles)
         widget_layout.add(graphic_toggles2)
 
@@ -306,6 +318,14 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
         self.main_view.manager.trigger_render()
         self.main_view.ui_layout.trigger_full_render()
         self.temp_layout.trigger_full_render()
+
+    def shader_toggle_callback(self, event: arcade.gui.UIOnChangeEvent) -> None:
+        if not self.setted_up:
+            return
+
+        self.save_setting("shader_toggle", event.new_value)
+        self.main_view.shader_disabled = False
+        self.shader_toggle.value = event.new_value
 
     def setup_from_dict(self) -> None:
         self.settings: dict[str, typing.Any] = self.load_saved_settings()
