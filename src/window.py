@@ -37,7 +37,7 @@ from constants import (
 )
 
 
-DISABLE_SHADER = True
+DISABLE_SHADER = False
 
 
 class GameView(arcade.View):
@@ -299,7 +299,10 @@ class GameView(arcade.View):
         if DISABLE_SHADER:
             self.camera_sprites.use()
             self.scene.draw()
-            self.player_sprite.score.draw()
+            score_text = self.player_sprite.score
+            cx, cy = self.camera_sprites.top_right
+            score_text.position = (cx - 150, cy - 50)
+            score_text.draw()
             if self.pause_menu.paused:
                 self.pause_menu.draw()
 
@@ -318,7 +321,10 @@ class GameView(arcade.View):
         self.channel1.clear()
         self.camera_sprites.use()
         self.scene.draw()
-        self.player_sprite.score.draw()
+        score_text = self.player_sprite.score
+        cx, cy = self.camera_sprites.top_right
+        score_text.position = (cx - 150, cy - 50)
+        score_text.draw()
 
         # Draw the player to channel2
         self.channel2.use()
