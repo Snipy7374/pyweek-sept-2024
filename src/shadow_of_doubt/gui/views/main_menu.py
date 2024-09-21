@@ -131,6 +131,26 @@ class MainMenuView(arcade.View):
         )
         self.light_layer.add(self.light)
 
+        # add the light pointing to the menu
+        light = Light(
+            240,
+            self.window.height // 2,
+            600,
+            arcade.csscolor.WHITE,
+            "soft",
+        )
+        self.light_layer.add(light)
+
+        # light to see the title
+        light = Light(
+            self.window.center_x,
+            self.window.height - 200,
+            400,
+            arcade.csscolor.MISTY_ROSE,
+            "soft",
+        )
+        self.light_layer.add(light)
+
     def on_mouse_motion(self, x: int, y: int, dx: int, dy: int) -> bool | None:
         self.light.position = x, y
 
