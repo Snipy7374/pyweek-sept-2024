@@ -15,7 +15,6 @@ class PauseMenu:
     def __init__(self, view: GameView, camera_sprites) -> None:
         self.view = view
         self.paused = False
-        self.buttons = []
         self.camera_sprites = camera_sprites
 
         self._create_buttons()
@@ -24,11 +23,9 @@ class PauseMenu:
         self.view.window.set_mouse_visible(True)
         self.paused = not self.paused
         if self.paused:
-            for button in self.buttons:
-                self.view.manager.add(button)
+            self.view.manager.add(self.anchor_layout)
         else:
-            for button in self.buttons:
-                self.view.manager.remove(button)
+            self.view.manager.remove(self.anchor_layout)
 
     def resume_game(self, _) -> None:
         self.toggle_pause()
@@ -49,13 +46,21 @@ class PauseMenu:
             ("Main Menu", self.go_to_main_menu),
             ("Exit", self.exit_game),
         ]
-        start_y = (
-            (self.view.window.height // 2)
-            + int((button_height // 2) * len(self.button_info))
-            - button_height
+        self.anchor_layout = arcade.gui.UIAnchorLayout()
+        menu_texture = arcade.load_texture(constants.ASSETS_DIR / "menu_texture.png")
+        menu_texture = arcade.gui.NinePatchTexture(0, 0, 0, 0, texture=menu_texture)
+        background_pause_menu = arcade.gui.UIImage(
+            texture=menu_texture,
+            width=480,
+            height=560,
         )
-        start_x = (self.view.window.width // 2) - (button_width // 2)
-        button_spacing = 20
+        self.anchor_layout.add(
+            background_pause_menu,
+            anchor_x="center",
+            anchor_y="center",
+        )
+
+        button_container = arcade.gui.UIBoxLayout(space_between=20)
 
         button_texture = arcade.load_texture(constants.ASSETS_DIR / "button_texture.png")
         texture = arcade.gui.NinePatchTexture(0, 0, 0, 0, button_texture)
@@ -64,29 +69,24 @@ class PauseMenu:
                 text=text,
                 width=button_width,
                 height=button_height,
-                x=start_x,
-                y=start_y,
                 texture=texture,
                 texture_hovered=texture,
                 texture_pressed=texture,
             )
             button.on_click = action  # type: ignore
-            self.buttons.append(button)
-            start_y -= button_height + button_spacing
+            button_container.add(button)
+        self.anchor_layout.add(
+            button_container,
+            anchor_x="center",
+            anchor_y="center",
+        )
 
     def draw(self) -> None:
         if self.paused:
-            menu_texture = arcade.load_texture(constants.ASSETS_DIR / "menu_texture.png")
-            x = self.view.window.width // 2
-            y = (self.view.window.height // 2) - 20
-            arcade.draw_texture_rect(
-                texture=menu_texture,
-                rect=arcade.Rect.from_kwargs(
-                    x=x,
-                    y=y,
-                    width=480,
-                    height=560,
-                ),
-                pixelated=True,
-                alpha=200,
+            arcade.draw_lrbt_rectangle_filled(
+                left=self.camera_sprites.position[0] - constants.SCREEN_WIDTH // 2,
+                right=self.camera_sprites.position[0] + constants.SCREEN_WIDTH // 2,
+                top=self.camera_sprites.position[1] + constants.SCREEN_HEIGHT // 2,
+                bottom=self.camera_sprites.position[1] - constants.SCREEN_HEIGHT // 2,
+                color=(0, 0, 0, 200),
             )
