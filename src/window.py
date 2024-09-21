@@ -41,7 +41,11 @@ DISABLE_SHADER = False
 
 
 class GameView(arcade.View):
-    def __init__(self, current_level: int) -> None:
+    def __init__(
+        self,
+        current_level: int,
+        shader_enabled: bool,
+    ) -> None:
         super().__init__()
         self.current_level = current_level
         self.window.set_mouse_visible(False)
@@ -68,11 +72,10 @@ class GameView(arcade.View):
             "yellow-candelabra": "yellow-candelabra-lit",
             "yellow-candelabra-lit": "yellow-candelabra",
         }
-
+        self.shader_enabled: bool = shader_enabled
         self.setup_shader()
         self.setup_lights()
-
-        if not DISABLE_SHADER:
+        if self.shader_enabled:
             self.shadow_sprites: arcade.SpriteList = arcade.SpriteList()
             for light in self.scene["LitLights"]:
                 shadow_sprite = ShadowSprite(self.player_sprite, light, ground_y=0)
@@ -83,7 +86,10 @@ class GameView(arcade.View):
         self.pause_menu = PauseMenu(self, self.camera_sprites)
 
     def go_to_main_menu(self) -> None:
-        view = main_menu.MainMenuView(self.current_level)
+        view = main_menu.MainMenuView(
+            self.current_level,
+            self.shader_enabled,
+        )
         view.setup()
         self.window.set_mouse_visible(True)
         self.window.show_view(view)
@@ -106,7 +112,7 @@ class GameView(arcade.View):
         return enemies
 
     def setup_shader(self) -> None:
-        if DISABLE_SHADER:
+        if not self.shader_enabled:
             return
         window_size = self.window.get_size()
         self.shadertoy = Shadertoy.create_from_file(window_size, "assets/shadow_shader.glsl")
@@ -125,7 +131,7 @@ class GameView(arcade.View):
         self.shadertoy.channel_2 = self.channel2.color_attachments[0]
 
     def setup_lights(self) -> None:
-        if DISABLE_SHADER:
+        if self.shader_enabled:
             return
         for layer_name in (
             "UnlitLights",
@@ -147,18 +153,6 @@ class GameView(arcade.View):
 
             for light in to_remove:
                 light.remove_from_sprite_lists()
-
-    def toggle_light(self, light: arcade.Sprite) -> None:
-        texture_name = light.properties["texture_name"]
-        new_texture_name = self.light_toggle_map[texture_name]
-        light.texture = self.spritesheet.get_sprite(new_texture_name)
-        light.properties["texture_name"] = new_texture_name
-        if light in self.scene["UnlitLights"]:
-            self.scene["UnlitLights"].remove(light)
-            self.scene["LitLights"].append(light)
-        else:
-            self.scene["LitLights"].remove(light)
-            self.scene["UnlitLights"].append(light)
 
     def set_window_position(self) -> None:
         display = pyglet.display.get_display()
@@ -296,7 +290,7 @@ class GameView(arcade.View):
     def on_draw(self) -> None:
         self.clear()
 
-        if DISABLE_SHADER:
+        if not self.shader_enabled:
             self.camera_sprites.use()
             self.scene.draw()
             score_text = self.player_sprite.score
@@ -374,12 +368,6 @@ class GameView(arcade.View):
     def on_key_press(self, key: int, _: int) -> None:
         if key == arcade.key.ESCAPE:
             self.pause_menu.toggle_pause()
-        elif key == arcade.key.E:
-            lights_hit_list = arcade.check_for_collision_with_list(
-                self.player_sprite, self.scene["UnlitLights"]
-            ) + arcade.check_for_collision_with_list(self.player_sprite, self.scene["LitLights"])
-            for light in lights_hit_list:
-                self.toggle_light(light)
         else:
             self.player_sprite.on_key_press(key, _)
 
@@ -414,7 +402,7 @@ class GameView(arcade.View):
 
         self.center_camera_to_player()
 
-        if not DISABLE_SHADER:
+        if self.shader_enabled:
             for shadow_sprite in self.shadow_sprites:
                 shadow_sprite.update(delta_time)
 
@@ -422,6 +410,6 @@ class GameView(arcade.View):
         super().on_resize(width, height)
         self.camera_sprites.match_screen(and_projection=True)
         self.camera_gui.match_screen(and_projection=True)
-        if not DISABLE_SHADER:
+        if self.shader_enabled:
             self.shadertoy.resize((width, height))
         self.manager.on_resize(width, height)

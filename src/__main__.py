@@ -42,7 +42,10 @@ def main() -> None:
         fullscreen=settings.get("fullscreen_toggle") or False,
     )
 
-    main_menu = MainMenuView(settings.get("current_level", 1))
+    main_menu = MainMenuView(
+        settings.get("current_level", 1),
+        settings.get("shader_toggle", False),
+    )
     window.show_view(main_menu)
     main_menu.setup()
     window.run()

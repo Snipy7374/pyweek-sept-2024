@@ -33,6 +33,7 @@ DEFAULT_SETTINGS = {
     "window_size_dropdown": None,
     "fullscreen_toggle": True,
     "current_level": 1,
+    "shader_toggle": False,
 }
 
 TILE_SCALING = 3
