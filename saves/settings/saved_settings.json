@@ -3,5 +3,6 @@
   "antialiasing_toggle": false,
   "antialiasing_samples_dropdown": 4,
   "window_size_dropdown": null,
-  "fullscreen_toggle": false
+  "fullscreen_toggle": false,
+  "current_level": 2
 }

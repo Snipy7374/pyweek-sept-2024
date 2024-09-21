@@ -398,3 +398,13 @@ class Player(arcade.Sprite):
     @property
     def attack_power(self) -> int:
         return random.randint(MIN_ATTACK_VALUE, MAX_ATTACK_VALUE)
+
+    @property
+    def is_dead(self) -> bool:
+        if (
+            self._dead
+            and self.spritesheet.current_frame
+            == self.spritesheet.animation_frames[MainCharacterState.DEATH] - 1
+        ):
+            return True
+        return False

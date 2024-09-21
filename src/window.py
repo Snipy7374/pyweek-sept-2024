@@ -1,4 +1,5 @@
 import time
+import json
 import typing as t
 
 import arcade
@@ -8,12 +9,14 @@ import pyglet
 from arcade.experimental import Shadertoy
 from arcade.types import Color
 
-from assets import RoguelikeInterior
-
+import tileset
+from gui.views import main_menu
+from gui.views.pause_menu import PauseMenu
 from components.sprites.shadow_sprite import ShadowSprite
 from components.sprites.enemy import Enemy, EnemyTypes
 from components.sprites.player import Player
 from constants import (
+    SETTINGS_DIR,
     CHARACTER_POSITION,
     CHARACTER_SCALING,
     DEFAULT_DAMPING,
@@ -34,19 +37,17 @@ from constants import (
 )
 
 
-DISABLE_SHADER = False
+DISABLE_SHADER = True
 
 
-class Window(arcade.Window):
-    current_level = 1
-
-    def __init__(self) -> None:
-        super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE, resizable=True)
-        self.ui_manager = arcade.gui.UIManager()
-        self.ui_manager.enable()
+class GameView(arcade.View):
+    def __init__(self, current_level: int) -> None:
+        super().__init__()
+        self.current_level = current_level
+        self.window.set_mouse_visible(False)
         arcade.set_background_color(arcade.color.AMAZON)
         arcade.SpriteList.DEFAULT_TEXTURE_FILTER = gl.NEAREST, gl.NEAREST
-        self.spritesheet = RoguelikeInterior()
+        self.spritesheet = tileset.RoguelikeInterior()
 
         self.object_lists: dict[str, list[arcade.types.TiledObject]] = {}
         self.physics_engine = arcade.PymunkPhysicsEngine(
@@ -77,6 +78,15 @@ class Window(arcade.Window):
                 shadow_sprite = ShadowSprite(self.player_sprite, light, ground_y=0)
                 self.shadow_sprites.append(shadow_sprite)
 
+        self.manager = arcade.gui.UIManager()
+        self.manager.enable()
+        self.pause_menu = PauseMenu(self, self.camera_sprites)
+
+    def go_to_main_menu(self) -> None:
+        view = main_menu.MainMenuView(self.current_level)
+        view.setup()
+        self.window.show_view(view)
+
     def setup_enemies(self) -> list[arcade.Sprite]:
         enemies = []
         for enemy in self.object_lists.get("Enemies", []):
@@ -97,7 +107,7 @@ class Window(arcade.Window):
     def setup_shader(self) -> None:
         if DISABLE_SHADER:
             return
-        window_size = self.get_size()
+        window_size = self.window.get_size()
         self.shadertoy = Shadertoy.create_from_file(window_size, "assets/shadow_shader.glsl")
 
         self.channel0 = self.shadertoy.ctx.framebuffer(
@@ -114,6 +124,8 @@ class Window(arcade.Window):
         self.shadertoy.channel_2 = self.channel2.color_attachments[0]
 
     def setup_lights(self) -> None:
+        if DISABLE_SHADER:
+            return
         for layer_name in (
             "UnlitLights",
             "LitLights",
@@ -151,9 +163,9 @@ class Window(arcade.Window):
         display = pyglet.display.get_display()
         screens = display.get_screens()
         if len(screens) > 1:
-            self.set_location(screens[1].x + 100, screens[1].y + 100)
+            self.window.set_location(screens[1].x + 100, screens[1].y + 100)
         else:
-            self.set_location(screens[0].x, screens[0].y)
+            self.window.set_location(screens[0].x, screens[0].y)
 
     def create_scene(self) -> arcade.Scene:
         layer_options = {
@@ -263,6 +275,7 @@ class Window(arcade.Window):
             farthest_door = sorted(self.scene["Doors"].sprite_list, key=lambda door: door.position[0])[-1]  # type: ignore
             if door.properties["tile_id"] == farthest_door.properties["tile_id"]:
                 self.current_level += 1
+                self.update_level()
                 self.reset()
             return False
 
@@ -271,6 +284,13 @@ class Window(arcade.Window):
             "door",
             pre_handler=player_door_collision_handler,
         )
+
+    def update_level(self) -> None:
+        with open(SETTINGS_DIR / "saved_settings.json", "r") as f:
+            settings = json.load(f)
+        settings["current_level"] = self.current_level
+        with open(SETTINGS_DIR / "saved_settings.json", "w") as f:
+            json.dump(settings, f, indent=2)
 
     def on_draw(self) -> None:
         self.clear()
@@ -310,7 +330,7 @@ class Window(arcade.Window):
             left, bottom = self.camera_sprites.bottom_left
             lights.append((light.center_x - left, light.center_y - bottom))
 
-        self.use()
+        self.window.use()
 
         # Pad the lights list with (0, 0) to match MAX_LIGHTS from the shader
         lights = lights[:MAX_LIGHTS]
@@ -336,13 +356,16 @@ class Window(arcade.Window):
         text.draw()
 
     def on_key_press(self, key: int, _: int) -> None:
-        self.player_sprite.on_key_press(key, _)
-        if key == arcade.key.E:
+        if key == arcade.key.ESCAPE:
+            self.pause_menu.toggle_pause()
+        elif key == arcade.key.E:
             lights_hit_list = arcade.check_for_collision_with_list(
                 self.player_sprite, self.scene["UnlitLights"]
             ) + arcade.check_for_collision_with_list(self.player_sprite, self.scene["LitLights"])
             for light in lights_hit_list:
                 self.toggle_light(light)
+        else:
+            self.player_sprite.on_key_press(key, _)
 
     def on_key_release(self, key: int, _: int) -> None:
         self.player_sprite.on_key_release(key, _)
@@ -351,10 +374,10 @@ class Window(arcade.Window):
         screen_center_x = self.player_sprite.center_x
         screen_center_y = self.player_sprite.center_y
 
-        if screen_center_x - self.width / 2 < 0:
-            screen_center_x = self.width / 2
-        if screen_center_y - self.height / 2 < 0:
-            screen_center_y = self.height / 2
+        if screen_center_x - self.window.width / 2 < 0:
+            screen_center_x = self.window.width / 2
+        if screen_center_y - self.window.height / 2 < 0:
+            screen_center_y = self.window.height / 2
 
         player_centered = screen_center_x, screen_center_y
         self.camera_sprites.position = arcade.math.lerp_2d(
@@ -364,14 +387,20 @@ class Window(arcade.Window):
         )
 
     def on_update(self, delta_time: float) -> None:
+        if self.pause_menu.paused:
+            return
+        if self.player_sprite.is_dead:
+            self.go_to_main_menu()
+            return
         self.scene.update(delta_time)
         self.scene.update_animation(delta_time)
         self.physics_engine.step()
 
         self.center_camera_to_player()
 
-        for shadow_sprite in self.shadow_sprites:
-            shadow_sprite.update(delta_time)
+        if not DISABLE_SHADER:
+            for shadow_sprite in self.shadow_sprites:
+                shadow_sprite.update(delta_time)
 
     def on_resize(self, width: int, height: int) -> None:
         super().on_resize(width, height)
@@ -379,3 +408,4 @@ class Window(arcade.Window):
         self.camera_gui.match_screen(and_projection=True)
         if not DISABLE_SHADER:
             self.shadertoy.resize((width, height))
+        self.manager.on_resize(width, height)

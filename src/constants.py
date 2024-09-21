@@ -3,6 +3,12 @@ from pathlib import Path
 SCREEN_WIDTH = 1920
 SCREEN_HEIGHT = 1080
 SCREEN_TITLE = "Shadow of Doubt"
+COPYRIGHT_AND_LICENSE_NOTICE = (
+    "Copyright © 2024-present, see Credits for more info - Licensed under the MIT license."
+)
+CREDITS_SECTION_ULR = (
+    "https://github.com/Snipy7374/pyweek-sept-2024/tree/main?tab=readme-ov-file#credits"
+)
 
 # Path to the game's root directory
 try:
@@ -17,7 +23,17 @@ except FileNotFoundError as e:
 # if the user is in the wrong dir they will already get
 # the error from above
 ASSETS_DIR = Path("assets").resolve()
-
+FONTS_DIR = ASSETS_DIR / "fonts"
+SAVES_DIR = Path("saves").resolve()
+SETTINGS_DIR = SAVES_DIR / "settings"
+DEFAULT_SETTINGS = {
+    "vsync_toggle": True,
+    "antialiasing_toggle": False,
+    "antialiasing_samples_dropdown": 4,
+    "window_size_dropdown": None,
+    "fullscreen_toggle": True,
+    "current_level": 1,
+}
 
 TILE_SCALING = 3
 
