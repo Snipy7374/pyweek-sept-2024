@@ -39,7 +39,7 @@ class Player(arcade.Sprite):
         for gold in gold_hit_list:
             gold.remove_from_sprite_lists()
             self._score += gold.properties["value"]
-            # self.spritesheet.assets.coin_collect_sound.play()
+            self.spritesheet.assets.coin_collect_sound.play()
 
     def update_animation(self, delta_time: float) -> None:
         self._animation_debounce -= delta_time
