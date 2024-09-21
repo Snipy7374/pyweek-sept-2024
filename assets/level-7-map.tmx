@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="68" height="32" tilewidth="16" tileheight="16" infinite="0" backgroundcolor="#000000" nextlayerid="6" nextobjectid="16">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="68" height="32" tilewidth="16" tileheight="16" infinite="0" backgroundcolor="#000000" nextlayerid="7" nextobjectid="16">
  <tileset firstgid="1" source="roguelike-base.tsx"/>
  <tileset firstgid="1768" source="currency/round-gem-gradient.tsx"/>
  <tileset firstgid="1780" source="currency/coin-gold.tsx"/>
@@ -11,25 +11,98 @@
  <tileset firstgid="2292" source="currency/gem-red.tsx"/>
  <tileset firstgid="2296" source="currency/gem-gray.tsx"/>
  <tileset firstgid="2300" source="currency/gem-green.tsx"/>
- <layer id="1" name="Platforms" width="68" height="32">
+ <layer id="6" name="Doors" width="68" height="32">
   <data encoding="base64" compression="zlib">
-   eJztlu0NgjAQhk9Bg0bdQv84hWOoiaJO5ccO6iQav6ZwCM+IEZseaaHgFfskb0ghgd7DtQDgcDgcDofDYS9TDyDEzLzv8xcf4KqQm0/fe5JwjQtU/Wlp1uhrNvgwja0+job6QYSzjzBWcwPnEsTmc/hDH1noVr6jCjcfYU7vXRUOPkx+H7LCwccSXaxy9qG6brj5mFcBFtViniuDg48gSjN2FPslzd5IkXQPDj4G8HLwPD575YQ5E+sn7XdDFQ4+Tt4nlAcZebihfPT9V8qEir+k/lDFx/2vhqkL++BdEu6Y8MGZNP+n77Whsz6onrCdMvZHlv1Vx0dZeyIO5WOLNe8we8a1F/m9tYGi/8e4IfbDL30M8dkjzFgyh15Fb7zC8Rqz0awnj/pFTPSHro8zji+Ya3Re9t6pcEWnBrGeFu7RbUwn2qsfDI82ig==
+   eJzt1yERAAAIADEwHP0TkwANYkvw9iMAAAAA7nVeFwAAAMB/5Z9ZDMz+ABE=
   </data>
  </layer>
- <objectgroup id="5" name="Enemies"/>
+ <layer id="1" name="Platforms" width="68" height="32">
+  <data encoding="base64" compression="zlib">
+   eJztmNFNwzAQQN0mRgWxBvzw2wzAGIBEQxkA/hGsgWAJYAYGAJU1GAK7qcX5cJxzfIkj4SednPSj8b2ez06FyBhuZeoZTIvswyb7sMk+bLIPm//m4wblq/NfSvt+StyNPB+cP7ePVSFEreKqsD9fl7R48MznsmzGx5JvvjD/Ssb7aMu/LxQfqwAfeH1ghq6PWLh9dMHVPz6Z6gEztg8RUB81yHlfzWEB5vGRyMeh9PvoWh9/YO4fbRzNmmfpcXtNZGr1UQ/0u1OZQv/g3B9iSeED3z8pF88D+6CuG4qPbY3v4j3Sjev8AX2s50Jcz+OeEQPJByOu+liIJg7AiOsF9sdYfN+RwgfuH6eicaBHXSsbFV+O9VPB/YLJDWYK9bEpfsPlwYVx02dP9dHm46Rsghvu95cQKLXlqw8qpep/UsUe6oPfjgg5n6aAwweVardHjfn/R5/zqVkbIeujrSY6yfVhg2pjEB8Re0+Ij941AUnYTym0+XhROb+qeOM+KzKuF9MbdCyZvCZZL0z91OydXC40o/tAhPgw+cMzGKcLDdXHmXr2uYoLR586noXdWwT64M4fc8/w/b19gPdmfHZ0XQ/tIgbYy0ICOjDxA6TsUwg=
+  </data>
+ </layer>
+ <objectgroup id="9" name="Enemies" offsetx="-16" offsety="0">
+  <object id="13" template="enemies/archer.tx" x="814.667" y="350.667">
+   <properties>
+    <property name="jump_around" type="bool" value="true"/>
+    <property name="jump_around_time" type="float" value="4"/>
+    <property name="jump_around_velocity" type="float" value="500"/>
+   </properties>
+  </object>
+  <object id="31" template="enemies/archer.tx" x="373.167" y="189.5">
+   <properties>
+    <property name="jump_around" type="bool" value="true"/>
+    <property name="jump_around_time" type="float" value="4"/>
+    <property name="jump_around_velocity" type="float" value="500"/>
+   </properties>
+  </object>
+  <object id="18" template="enemies/archmage.tx" x="520" y="110"/>
+  <object id="21" template="enemies/cavalier.tx" x="874" y="479.333">
+   <properties>
+    <property name="facing_right" type="bool" value="true"/>
+    <property name="walk_around" type="bool" value="true"/>
+    <property name="walk_around_time" type="float" value="1"/>
+    <property name="walk_around_velocity" type="float" value="200"/>
+   </properties>
+  </object>
+  <object id="22" template="enemies/crossbow.tx" x="831.333" y="175.333">
+   <properties>
+    <property name="facing_right" type="bool" value="false"/>
+    <property name="walk_around" type="bool" value="true"/>
+    <property name="walk_around_time" type="float" value="1.8"/>
+    <property name="walk_around_velocity" type="float" value="72"/>
+   </properties>
+  </object>
+  <object id="32" template="enemies/crossbow.tx" x="449.667" y="111">
+   <properties>
+    <property name="facing_right" type="bool" value="false"/>
+    <property name="walk_around" type="bool" value="true"/>
+    <property name="walk_around_time" type="float" value="1.8"/>
+    <property name="walk_around_velocity" type="float" value="72"/>
+   </properties>
+  </object>
+  <object id="23" template="enemies/halberd.tx" x="1044" y="478.167"/>
+  <object id="24" template="enemies/horse.tx" x="960" y="319.333">
+   <properties>
+    <property name="jump_around" type="bool" value="true"/>
+    <property name="jump_around_time" type="float" value="10"/>
+    <property name="jump_around_velocity" type="float" value="1000"/>
+   </properties>
+  </object>
+  <object id="25" template="enemies/king.tx" x="807.333" y="478.667"/>
+  <object id="26" template="enemies/mage.tx" x="606" y="351.333">
+   <properties>
+    <property name="facing_right" type="bool" value="true"/>
+    <property name="walk_around" type="bool" value="true"/>
+    <property name="walk_around_time" type="float" value="4.6"/>
+    <property name="walk_around_velocity" type="float" value="50"/>
+   </properties>
+  </object>
+  <object id="27" template="enemies/prince.tx" x="450.667" y="318"/>
+  <object id="28" template="enemies/shield.tx" x="941.333" y="478" visible="1"/>
+  <object id="29" template="enemies/sword.tx" x="224" y="288"/>
+  <object id="30" template="enemies/spear.tx" x="22.6667" y="222.667">
+   <properties>
+    <property name="facing_right" type="bool" value="false"/>
+    <property name="walk_around" type="bool" value="true"/>
+    <property name="walk_around_time" type="float" value="3"/>
+    <property name="walk_around_velocity" type="float" value="80"/>
+   </properties>
+  </object>
+ </objectgroup>
  <layer id="2" name="LitLights" width="68" height="32">
   <data encoding="base64" compression="zlib">
-   eJzt10ENACAMBMHywgr+ZWAAOzyrgDQ0Mwr2d7kIAABIe1YXAMA7dg4AAOhmNfw5Z1QXwJ8u9e4Cqg==
+   eJzt2UEJACAQBEB9WcX29jCBYBkr6EMOdCbBvm5ZLiWAM61EJwBumzk6AZG6Ow/Aw/QcAADwmmrn8IHhb7FlAaFUBD0=
   </data>
  </layer>
  <layer id="3" name="UnlitLights" width="68" height="32">
   <data encoding="base64" compression="zlib">
-   eJztzjEBACAMA7ANJUhH6g4k7OiTKEgVAMD3Oj0AACDlnvQAAAAA2BiJKwDE
+   eJzt18EJACAMA0B1Ekd3MXdxhoIo1bt3oHkFWgoA8KpZY/kRzAMA8I7ebjeAv0X/tyy3gJzsBLCTTYFzFu8hBRo=
   </data>
  </layer>
  <layer id="4" name="Gold" width="68" height="32">
   <data encoding="base64" compression="zlib">
-   eJzt1SEOgDAMQNEpsvtfEIfBICYQCARqDhKgJbyXTMw1P0tXCgBft9boCQD+ZUq4dyP/gow9IunRe7NH056TlnocyGrzPjt6PGPUFeDT5mR7vA3X7sD9su0FYuxpixBo
+   eJzt2LEKgDAMRdFO0v//QTcRXBw6ODiIOCm0IjZpoveAg4vRkJeCIQAAvFuifI2pUGMQqp86mecCtZXygW+S2ntvaJwFORr98HQmWJyPljT7keh9UzVyOiplfY7Hhec87eMS69+xMp8n9ENGn+nrng/rGQGs854h7+//F9b+R13n5u4eQH3W9gLa2ADTthz0
   </data>
  </layer>
 </map>

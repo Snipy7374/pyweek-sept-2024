@@ -330,19 +330,19 @@ class Player(arcade.Sprite):
     @property
     def score(self) -> arcade.Text:
         if not self._score_text:
+            window = arcade.get_window()
             arcade.load_font(ASSETS_DIR / "fonts" / "Alagard.ttf")
             self._score_text = arcade.Text(
                 f"Score: {self._score}",
-                self.position[0],
-                self.position[1] + 50,
+                x=window.width - 150,
+                y=window.height - 40,
                 color=arcade.color.WHITE,
-                font_size=20,
+                font_size=32,
                 anchor_x="center",
                 anchor_y="center",
                 font_name="Alagard",
             )
         self._score_text.text = f"Score: {self._score}"
-        self._score_text.position = self.position[0], self.position[1] + 50
         return self._score_text
 
     @property

@@ -10,10 +10,11 @@ from arcade.types import Color
 
 from assets import RoguelikeInterior
 
-from shadow_sprite import ShadowSprite
+from components.sprites.shadow_sprite import ShadowSprite
 from components.sprites.enemy import Enemy, EnemyTypes
 from components.sprites.player import Player
 from constants import (
+    CHARACTER_POSITION,
     CHARACTER_SCALING,
     DEFAULT_DAMPING,
     ENEMY_FRICTION,
@@ -32,11 +33,12 @@ from constants import (
     WALL_FRICTION,
 )
 
-DISABLE_SHADER = True
+
+DISABLE_SHADER = False
 
 
 class Window(arcade.Window):
-    current_level = 2
+    current_level = 1
 
     def __init__(self) -> None:
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE, resizable=True)
@@ -69,14 +71,12 @@ class Window(arcade.Window):
         self.setup_shader()
         self.setup_lights()
 
-        self.ground_y = 0
+        if not DISABLE_SHADER:
+            self.shadow_sprites: arcade.SpriteList = arcade.SpriteList()
+            for light in self.scene["LitLights"]:
+                shadow_sprite = ShadowSprite(self.player_sprite, light, ground_y=0)
+                self.shadow_sprites.append(shadow_sprite)
 
-        self.shadow_sprites: arcade.SpriteList = arcade.SpriteList()
-
-        for light in self.scene["LitLights"]:
-            shadow_sprite = ShadowSprite(self.player_sprite, light, self.ground_y)
-            self.shadow_sprites.append(shadow_sprite)
-            
     def setup_enemies(self) -> list[arcade.Sprite]:
         enemies = []
         for enemy in self.object_lists.get("Enemies", []):
@@ -184,9 +184,11 @@ class Window(arcade.Window):
 
     def reset(self) -> None:
         self.scene = self.create_scene()
-        spawn_door = sorted(self.scene["Doors"].sprite_list, key=lambda door: door.position[0])[0]  # type: ignore
-        assert spawn_door, "No spawn door found"
-        spawn_x, spawn_y = spawn_door.position
+        try:
+            spawn_door = sorted(self.scene["Doors"].sprite_list, key=lambda door: door.position[0])[0]  # type: ignore
+            spawn_x, spawn_y = spawn_door.position
+        except Exception:
+            spawn_x, spawn_y = CHARACTER_POSITION
         self.player_sprite = Player(
             scene=self.scene, position=(spawn_x, spawn_y), scale=CHARACTER_SCALING
         )
@@ -276,6 +278,7 @@ class Window(arcade.Window):
         if DISABLE_SHADER:
             self.camera_sprites.use()
             self.scene.draw()
+            self.player_sprite.score.draw()
             return
 
         # Draw platforms, the player, and the gold to channel0
@@ -290,6 +293,7 @@ class Window(arcade.Window):
         self.channel1.clear()
         self.camera_sprites.use()
         self.scene.draw()
+        self.player_sprite.score.draw()
 
         # Draw the player to channel2
         self.channel2.use()

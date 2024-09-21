@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" backgroundcolor="#000000" nextlayerid="6" nextobjectid="4">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" backgroundcolor="#000000" nextlayerid="5" nextobjectid="4">
  <tileset firstgid="1" source="roguelike-base.tsx"/>
  <tileset firstgid="1768" source="roguelike-interior.tsx"/>
  <tileset firstgid="2254" source="currency/coin-gold.tsx"/>
@@ -10,14 +10,9 @@
  <tileset firstgid="2279" source="currency/coin-silver.tsx"/>
  <tileset firstgid="2284" source="currency/gem-blue.tsx"/>
  <tileset firstgid="2288" source="currency/round-gem-purple.tsx"/>
- <layer id="5" name="Doors" width="30" height="20">
-  <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUjILBDTgYB9oFo2AUjAJqA7Zhnq8BOfYAEQ==
-  </data>
- </layer>
  <layer id="1" name="Platforms" width="30" height="20">
   <data encoding="base64" compression="zlib">
-   eJzLZWUYEPCHZXjZG86GwKTY68wEkTtMI3dhsxdmJwwTshvZb7j8BwKCTPjtRZFjxbQbWT8xAOQPdAwyE8bGZy8Io/sLn9/wAZh5JjjyEsxeXPK4ACE3wexFB8hhQaqdxABc9lIbbGPGbi/Mf4TSrQCJ6QkbgIWjKTTd/GfBbTe29EgNALL7P5LdyAAmjiuerzOiCbBCMRl2E2snrvxUx0p83FEToIcfyO5KOtV76HZTK01QA2QC3ZJFR/fA8vMioJ2LgfgGetqEAlEi3USsunqgvcpAu1SAWBWI1YBYnZE8MXQ2LjmYXgCRXkkn
+   eJzLZWUYEPCHZXjZG86GwKTY68wEkTtMI3dhsxdmJwwTshvZb7j8BwKCTPjtRZFjxbQbWT8xAOQPdAwyE8bGZy8Io/sLn9/wAZh5JjjyEsxeXPK4ACE3wexFB8hhQaqdxABc9lIbbGNGsDkYEfbC/Eco3QqQmJ6wAVg4mkLTzX8W3HZjS4/UACC7/yPZjQxg4rji+TojmgArFJNhN7F24spPdazExx01AXr4geyupFO9h243tdIENUAm0C1ZUPdwoacTGgBYfl4EtHMxEN9gxG6vKJFhRKy6eqC9ykB7VIBYFYjVgFidkTwxdDYuOZheANQ7SUY=
   </data>
  </layer>
  <layer id="4" name="Gold" width="30" height="20">
