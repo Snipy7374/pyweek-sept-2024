@@ -180,6 +180,7 @@ class GameView(arcade.View):
             f"assets/level-{self.current_level}-map.tmx",
             scaling=TILE_SCALING,
             layer_options=layer_options,
+            lazy=True,
         )
 
         if tile_map.background_color:

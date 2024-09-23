@@ -39,7 +39,9 @@ class MainMenuView(arcade.View):
         )
 
         # background gif
-        button_texture = arcade.load_texture(constants.ASSETS_DIR / "button_texture.png")
+        button_texture = arcade.load_texture(
+            constants.ASSETS_DIR / "button_texture.png", hash="button_texture"
+        )
         texture = arcade.gui.NinePatchTexture(0, 0, 0, 0, button_texture)
         self.manager.add(
             arcade.gui.UIImage(
@@ -104,7 +106,9 @@ class MainMenuView(arcade.View):
         self.player = self.music.play(volume=0.5, loop=True)
 
     def setup(self) -> None:
-        button_texture = arcade.load_texture(constants.ASSETS_DIR / "button_texture.png")
+        button_texture = arcade.load_texture(
+            constants.ASSETS_DIR / "button_texture.png", hash="button_texture"
+        )
         texture = arcade.gui.NinePatchTexture(0, 0, 0, 0, button_texture)
         for i, label in enumerate(self.BUTTONS):
             i += 1
@@ -189,7 +193,7 @@ class MainMenuView(arcade.View):
         self.window.show_view(view)
 
     def options_callback(self, _: arcade.gui.UIFlatButton) -> None:
-        texture = arcade.load_texture(constants.ASSETS_DIR / "solid_black.png")
+        texture = arcade.load_texture(constants.ASSETS_DIR / "solid_black.png", hash="solid_black")
         background = arcade.gui.UIImage(
             texture=texture,
             width=self.window.width,

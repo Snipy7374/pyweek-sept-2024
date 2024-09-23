@@ -50,7 +50,9 @@ class PauseMenu:
             ("Exit", self.exit_game),
         ]
         self.anchor_layout = arcade.gui.UIAnchorLayout()
-        menu_texture = arcade.load_texture(constants.ASSETS_DIR / "menu_texture.png")
+        menu_texture = arcade.load_texture(
+            constants.ASSETS_DIR / "menu_texture.png", hash="menu_texture"
+        )
         menu_texture = arcade.gui.NinePatchTexture(0, 0, 0, 0, texture=menu_texture)
         background_pause_menu = arcade.gui.UIImage(
             texture=menu_texture,
@@ -65,7 +67,9 @@ class PauseMenu:
 
         button_container = arcade.gui.UIBoxLayout(space_between=20)
 
-        button_texture = arcade.load_texture(constants.ASSETS_DIR / "button_texture.png")
+        button_texture = arcade.load_texture(
+            constants.ASSETS_DIR / "button_texture.png", hash="button_texture"
+        )
         texture = arcade.gui.NinePatchTexture(0, 0, 0, 0, button_texture)
         for text, action in self.button_info:
             button = arcade.gui.UITextureButton(

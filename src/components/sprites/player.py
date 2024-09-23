@@ -347,14 +347,14 @@ class Player(arcade.Sprite):
 
     @property
     def health_bar(self):
-        sprite = arcade.Sprite(scale=self._health_bar.scale)
+        sprite = arcade.Sprite()
         sprite.texture = self._health_bar.texture
         sprite.position = self.position[0], self.position[1] + 80
         return sprite
 
     @property
     def stamina_bar(self):
-        sprite = arcade.Sprite(scale=self._stamina_bar.scale)
+        sprite = arcade.Sprite()
         sprite.texture = self._stamina_bar.texture
         sprite.position = self.position[0], self.position[1] + 45
         return sprite

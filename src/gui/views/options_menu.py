@@ -102,11 +102,15 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
             )
         )
         frame.with_padding(left=20, right=20, top=60, bottom=80)
-        menu_texture = arcade.load_texture(constants.ASSETS_DIR / "menu_texture.png")
+        menu_texture = arcade.load_texture(
+            constants.ASSETS_DIR / "menu_texture.png", hash="menu_texture"
+        )
         texture = arcade.gui.NinePatchTexture(0, 0, 0, 0, menu_texture)
         frame.with_background(texture=texture)
 
-        button_texture = arcade.load_texture(constants.ASSETS_DIR / "button_texture.png")
+        button_texture = arcade.load_texture(
+            constants.ASSETS_DIR / "button_texture.png", hash="button_texture"
+        )
         back_button = arcade.gui.UITextureButton(
             text="Back",
             texture=button_texture,
@@ -133,9 +137,11 @@ class OptionsMenu(arcade.gui.UIMouseFilterMixin, arcade.gui.UIAnchorLayout):
             size_hint_max=(0, 30),
         )
 
-        on_texture = arcade.load_texture(constants.ASSETS_DIR / "button_texture.png")
+        on_texture = arcade.load_texture(
+            constants.ASSETS_DIR / "button_texture.png", hash="button_texture"
+        )
         # off_texture = arcade.load_texture(constants.ASSETS_DIR / "solid_black.png")
-        off_texture = arcade.Texture(OFF_TEXTURE)
+        off_texture = arcade.Texture(OFF_TEXTURE, hash="off_texture")
 
         title_layout = arcade.gui.UIBoxLayout(align="center", space_between=50)
         title_layout.add(title_label_space)

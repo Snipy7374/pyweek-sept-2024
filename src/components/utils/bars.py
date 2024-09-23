@@ -135,8 +135,8 @@ class Bar:
         self.icon_image = icon_image
 
         self._bar_states = [self.construct_bar_image(i) for i in range(self.max_value + 1)]
-        for bar_state in self._bar_states:
-            self.textures.append(arcade.Texture(bar_state))
+        for i, bar_state in enumerate(self._bar_states):
+            self.textures.append(arcade.Texture(bar_state, hash=f"{self.color}_{self.icon}_{i}"))
 
     def construct_bar_image(self, state: int) -> Image.Image:
         bar_width = (
@@ -167,6 +167,9 @@ class Bar:
         )
         bar_image.paste(fill_image, (icon_holder_width - bx + 10, by), fill_image)
         bar_image.paste(self.icon_image, (0, 0), self.icon_image)
+        bar_image = bar_image.resize(
+            (int(bar_image.width * self.scale), int(bar_image.height * self.scale))
+        )
         return bar_image
 
     @property
