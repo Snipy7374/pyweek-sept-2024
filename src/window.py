@@ -41,6 +41,13 @@ DISABLE_SHADER = False
 
 
 class GameView(arcade.View):
+    _instance: t.Optional["GameView"] = None
+
+    def __new__(cls, *args, **kwargs) -> "GameView":
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+
     def __init__(
         self,
         current_level: int,

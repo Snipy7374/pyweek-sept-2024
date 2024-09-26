@@ -15,12 +15,19 @@ __version__ = "0.1.0"
 
 
 class MainMenuView(arcade.View):
+    _instance: t.Optional["MainMenuView"] = None
+
     BUTTONS: tuple[str, ...] = (
         "Start Game",
         "Options",
         "Credits",
         "Exit",
     )
+
+    def __new__(cls, *args, **kwargs) -> "MainMenuView":
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
 
     def __init__(
         self,
