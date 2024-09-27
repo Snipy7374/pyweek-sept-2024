@@ -10,29 +10,39 @@
  <tileset firstgid="2279" source="currency/coin-silver.tsx"/>
  <tileset firstgid="2284" source="currency/gem-blue.tsx"/>
  <tileset firstgid="2288" source="currency/round-gem-purple.tsx"/>
- <layer id="5" name="Doors" width="30" height="20">
-  <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUjILBDTgYB9oFo2AUjAJqA7Zhnq8BOfYAEQ==
-  </data>
- </layer>
+ <objectgroup id="13" name="Doors">
+  <object id="37" name="spawn" x="64.0299" y="287.988" width="16" height="16">
+   <properties>
+    <property name="type" value="spawn"/>
+   </properties>
+  </object>
+  <object id="38" name="next" x="448.021" y="144.019" width="16.0152" height="15.9452" rotation="0.157309">
+   <properties>
+    <property name="type" value="next"/>
+   </properties>
+  </object>
+ </objectgroup>
  <layer id="1" name="Platforms" width="30" height="20">
   <data encoding="base64" compression="zlib">
-   eJzLZWUYEPCHZXjZG86GwKTY68wEkTtMI3dhsxdmJwwTshvZb7j8R4y9KHKslPsb5A90DDITxsZnLwij+4tYv2EzF4RNcOQlmL245HEBQm6C2YsOkMOCVDuJAbjspTbYxozdXpj/aJVnkAEsHE2h6eY/C267saVHagCQ3f+R7EYGMHGi45kVismwm1g7ceWnOlb6xh0MoIcfyO5KOtV76HZTK00MRYCen+kF6oH2KjMyMKgAsSoQqwGxOiN5YuhsXHIwvQALMUTw
+   eJzLZWUYEPCHZXjZG86GwKTY68wEkTtMI3dhsxdmJwwTshvZb7j8R4y9KHKslPsb5A90DDITxsZnLwij+4tYv2EzF4RNcOQlmL245HEBQm6C2YsOkMOCVDuJAbjspTbYxozdXpj/aJVnkAEsHE2h6eY/C267D7FgpkdqAJDd/5HsRrfzPynxzArFZNgNA/8J2IktP4HMqWOlb9wh2/0fLe4q6VTvodtNrTQxFAF6fqYXqAfaq8zIwKACxKpArAbE6ozkiaGzccnB9AIA6F1Fbg==
   </data>
  </layer>
- <layer id="6" name="Background" width="30" height="20" visible="0">
+ <layer id="6" name="Background" width="30" height="20">
   <data encoding="base64" compression="zlib">
    eJxjYBgFo4A6QJBpYPWPglGADARG0xPDdcaBdsEoGKwgE5g/sgYgjywC2rkYiG/gSJuiRLqJWHUDCQCPjQQ4
   </data>
  </layer>
+ <layer id="2" name="LitLights" width="30" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBh+QJx9oF2AHfgMkLvSKbB3PgV6mwZpPIyCUTAKBm85CQNpg9x9o2AUEAIA3bsCmg==
+  </data>
+ </layer>
+ <layer id="3" name="UnlitLights" width="30" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo4B+YAH7QLtgFIyCUTAKBg7sHi0DGfKZMNnIYrjEcanBJjcYAACpXgTy
+  </data>
+ </layer>
  <objectgroup id="9" name="Enemies" offsetx="-16" offsety="0">
-  <object id="31" template="enemies/archer.tx" x="307" y="50">
-   <properties>
-    <property name="jump_around" type="bool" value="true"/>
-    <property name="jump_around_time" type="float" value="4"/>
-    <property name="jump_around_velocity" type="float" value="500"/>
-   </properties>
-  </object>
   <object id="2" template="enemies/archer.tx" x="205" y="80.5">
    <properties>
     <property name="jump_around" type="bool" value="true"/>
@@ -65,18 +75,8 @@
     <property name="walk_around_velocity" type="float" value="72"/>
    </properties>
   </object>
-  <object id="23" template="enemies/halberd.tx" x="124.5" y="31"/>
-  <object id="3" template="enemies/halberd.tx" x="288" y="194"/>
   <object id="1" template="enemies/king.tx" x="44" y="143"/>
-  <object id="26" template="enemies/mage.tx" x="358.5" y="97">
-   <properties>
-    <property name="facing_right" type="bool" value="true"/>
-    <property name="walk_around" type="bool" value="true"/>
-    <property name="walk_around_time" type="float" value="4.6"/>
-    <property name="walk_around_velocity" type="float" value="50"/>
-   </properties>
-  </object>
-  <object id="27" template="enemies/prince.tx" x="368.5" y="191"/>
+  <object id="27" template="enemies/prince.tx" x="351.5" y="175"/>
   <object id="30" template="enemies/spear.tx" x="135.5" y="287">
    <properties>
     <property name="facing_right" type="bool" value="false"/>
@@ -86,19 +86,9 @@
    </properties>
   </object>
  </objectgroup>
- <layer id="2" name="LitLights" width="30" height="20">
-  <data encoding="base64" compression="zlib">
-   eJxjYBh+QJx9oF2AHfgMkLvSKbB3PgV6mwZpPIyCUTAKBm85CQNpg9x9o2AUEAIA3bsCmg==
-  </data>
- </layer>
- <layer id="3" name="UnlitLights" width="30" height="20">
-  <data encoding="base64" compression="zlib">
-   eJxjYBgFo4B+YAH7QLtgFIyCUTAKBg7sHi0DGfKZMNnIYrjEcanBJjcYAACpXgTy
-  </data>
- </layer>
  <layer id="4" name="Gold" width="30" height="20">
   <data encoding="base64" compression="zlib">
-   eJxjYMAEbziwCA4ScG4Qu20U0A/cIDIdjKYX4sHlQRhWsPj7MAjdNgoGB7gzmjZGwSAFANmyBw4=
+   eJxjYMAEbziwCA4ScG4Qu20U0A/cIDIdjKYX4sFlHGH1YQDDcDT+RgEhcGc0jYyCQQoAWaEHDg==
   </data>
  </layer>
 </map>

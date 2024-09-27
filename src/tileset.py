@@ -29,3 +29,18 @@ class RoguelikeInterior:
             self.tile_size,
             origin="upper_left",
         )
+
+class RoguelikeBase:
+    def __init__(self) -> None:
+        self.path = ASSETS_DIR / "roguelike-base.png"
+        self.spritesheet = arcade.load_spritesheet(self.path)
+        self.tile_size = 16
+        self.spacing = 1
+
+    def get_tile(self, x: int, y: int) -> arcade.Texture:
+        return self.spritesheet.get_texture(
+            x,
+            y,
+            self.tile_size,
+            self.tile_size,
+        )

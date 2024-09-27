@@ -12,20 +12,22 @@
  <tileset firstgid="2292" source="currency/coin-ruby.tsx"/>
  <tileset firstgid="2297" source="currency/gem-gray.tsx"/>
  <tileset firstgid="2301" source="currency/round-gem-gradient.tsx"/>
- <layer id="13" name="Doors" width="30" height="20">
-  <data encoding="base64" compression="zlib">
-   <chunk x="16" y="0" width="16" height="16">
-   eJxjYKAv4GCks4WjYBSMApwAACQPAAo=
-  </chunk>
-   <chunk x="-16" y="16" width="16" height="16">
-   eJxjYBgFwwGwMQ60C0bBUAQAE4cACA==
-  </chunk>
-  </data>
- </layer>
+ <objectgroup id="13" name="Doors">
+  <object id="37" name="spawn" x="-224.036" y="367.933" width="16" height="16">
+   <properties>
+    <property name="type" value="spawn"/>
+   </properties>
+  </object>
+  <object id="38" name="next" x="447.849" y="16.1236" width="16" height="16" rotation="359.527">
+   <properties>
+    <property name="type" value="next"/>
+   </properties>
+  </object>
+ </objectgroup>
  <layer id="2" name="Platforms" width="30" height="20">
   <data encoding="base64" compression="zlib">
    <chunk x="0" y="0" width="16" height="16">
-   eJxjYBgFpIJQNgaGMCAOZ6Ou2sEAlFgZGJSJwCqsA+3SUUANAAAF5APh
+   eJxjYBgFpIJQNgaGMCAOZ6OuWmqCOlby9CkB9SkTgVXINH8UDC4AACBmBGQ=
   </chunk>
    <chunk x="16" y="0" width="16" height="16">
    eJxjYCAexDND6ERmwmpD2RgYwoA4nA0hNgOqbxYR+rGBi0B9l4D4Mhb92OwbBQMPtrKg8rej8ZVYGRiUgViFFbv+d2jqP7BgVwcD6kBzNIjEmjjsHEkAANeKDJQ=
@@ -43,10 +45,10 @@
    eJxjYBgFlIKZLLjlLuKRI8YsPlbSzUAHg8kMEB4MIJcEd5xnYmC4gIYvMtHObefpYAcMAADMkAzC
   </chunk>
    <chunk x="-16" y="16" width="16" height="16">
-   eJxjYBgFpIBQNgaGMCAOZxtolxAHcLk3DMq/x4ob32clbD6x+nC5gxw7ceknVu9Qi0NaAgCktRkW
+   eJxjYBgFpIBVrAwMa1gH2hXEg1A2BoYwIA5nQxVfDfXDPVbc+D4R/iRWHy53kGMnLv3E6sXllpEIACbQGbY=
   </chunk>
    <chunk x="0" y="16" width="16" height="16">
-   eJxjYKAvWMjKwLAIiBez4lc3Dyg/H4gXoKm7BeTfBuI7SOKzgew5QDwXSew6kH0DiG+i6RdmY2AQAWJRNoTYFaCaq0B8DUmtAFBeEIiF2BgIAl6gGj4g5idCLToII0PPKBhcoJyFgaECD65kGWgX4gYAGPgTEQ==
+   eJxjYKAvWMjKwLAIiBez4lc3Dyg/H4gXoKm7BeTfBuI7SOKzgew5QDwXSew6kH0DiG+i6RdmY2AQAWJRNoTYFaCaq0B8DUmtAFBeEIiF2BjwglVAPbxANXxAzE9A7SgYnqCchYGhAg+uZBloF+IGABRIE2Q=
   </chunk>
    <chunk x="16" y="16" width="16" height="16">
    eJxjYBjewJ+NgSEAiAPZqKNuMICh5NZRMLgBAGzaAwc=
@@ -62,6 +64,37 @@
   </chunk>
    <chunk x="80" y="16" width="16" height="16">
    eJxjYGBgOM/EwHABiC8C8SgYWeAsMwKfYx5o14wCegMAN5oFuA==
+  </chunk>
+  </data>
+ </layer>
+ <layer id="7" name="UnlitLights" width="30" height="20">
+  <data encoding="base64" compression="zlib"/>
+ </layer>
+ <layer id="6" name="LitLights" width="30" height="20">
+  <data encoding="base64" compression="zlib">
+   <chunk x="0" y="0" width="16" height="16">
+   eJxjYBgFIw3sYB9oF4yCwQIAivwAwA==
+  </chunk>
+   <chunk x="16" y="0" width="16" height="16">
+   eJxjYBgYsJN9gCweBaNgFMABAKoXAME=
+  </chunk>
+   <chunk x="32" y="0" width="16" height="16">
+   eJxjYBgFo4B4sIN9oF0wCqgJAF44AMA=
+  </chunk>
+   <chunk x="80" y="0" width="16" height="16">
+   eJxjYBgFo2AUDHWwg508fQAtwQDA
+  </chunk>
+   <chunk x="0" y="16" width="16" height="16">
+   eJxjYKAd2MFOQ8NpCOYNUXePglFAKgAAnaYBZQ==
+  </chunk>
+   <chunk x="32" y="16" width="16" height="16">
+   eJxjYBgFILCDfaBdMApGAf0BADsfAMA=
+  </chunk>
+   <chunk x="48" y="16" width="16" height="16">
+   eJxjYBi5YAf7QLtgFIyCgQUARBMAwA==
+  </chunk>
+   <chunk x="64" y="16" width="16" height="16">
+   eJxjYBgFIw3sYB9oF4yCwQIAivwAwA==
   </chunk>
   </data>
  </layer>
@@ -87,7 +120,7 @@
     <property name="jump_around_velocity" type="float" value="500"/>
    </properties>
   </object>
-  <object id="18" template="enemies/archmage.tx" x="129.333" y="109.333"/>
+  <object id="18" template="enemies/archmage.tx" x="129.333" y="111.666"/>
   <object id="21" template="enemies/cavalier.tx" x="119" y="446.333">
    <properties>
     <property name="facing_right" type="bool" value="true"/>
@@ -104,7 +137,7 @@
     <property name="walk_around_velocity" type="float" value="200"/>
    </properties>
   </object>
-  <object id="38" template="enemies/cavalier.tx" x="608.333" y="291.333">
+  <object id="38" template="enemies/cavalier.tx" x="607.833" y="289.833">
    <properties>
     <property name="facing_right" type="bool" value="true"/>
     <property name="walk_around" type="bool" value="true"/>
@@ -137,10 +170,8 @@
    </properties>
   </object>
   <object id="25" template="enemies/king.tx" x="321.5" y="306"/>
-  <object id="34" template="enemies/king.tx" x="1042.83" y="300.667"/>
-  <object id="40" template="enemies/king.tx" x="972.833" y="78.6667"/>
+  <object id="34" template="enemies/king.tx" x="1118.83" y="336"/>
   <object id="39" template="enemies/king.tx" x="68.8333" y="446.667"/>
-  <object id="36" template="enemies/king.tx" x="1390.83" y="204.667"/>
   <object id="26" template="enemies/mage.tx" x="366" y="158">
    <properties>
     <property name="facing_right" type="bool" value="true"/>
@@ -149,8 +180,6 @@
     <property name="walk_around_velocity" type="float" value="50"/>
    </properties>
   </object>
-  <object id="27" template="enemies/prince.tx" x="1121.33" y="334.667"/>
-  <object id="28" template="enemies/shield.tx" x="671.667" y="252" visible="1"/>
   <object id="29" template="enemies/sword.tx" x="181.333" y="111.333"/>
   <object id="30" template="enemies/spear.tx" x="815.667" y="127">
    <properties>
@@ -167,7 +196,7 @@
    eJxjYBh54BwHAlNT7SgYBcQAStMSNdMiAH75BrE=
   </chunk>
    <chunk x="16" y="0" width="16" height="16">
-   eJxjYMAOznEgMDXBExzm0co+WoG/Q8SdlIIvHPj5o2BoAwAv7Aju
+   eJxjYMAOznEgMDJ4woFdPaUAl32DFfwdIu6kFHzhwM8fBUMbAABq7Aju
   </chunk>
    <chunk x="32" y="0" width="16" height="16">
    eJxjYBgFxIJzHBA8UPpHwSigNgAAB5cDWQ==
@@ -192,37 +221,6 @@
   </chunk>
    <chunk x="80" y="16" width="16" height="16">
    eJxjYBgFQxl84BhoF4yCoQwAMhYA+Q==
-  </chunk>
-  </data>
- </layer>
- <layer id="7" name="UnlitLights" width="30" height="20">
-  <data encoding="base64" compression="zlib"/>
- </layer>
- <layer id="6" name="LitLights" width="30" height="20">
-  <data encoding="base64" compression="zlib">
-   <chunk x="0" y="0" width="16" height="16">
-   eJxjYBgFIw3sYB9oF4yCwQIAivwAwA==
-  </chunk>
-   <chunk x="16" y="0" width="16" height="16">
-   eJxjYBgYsJN9gCweBaNgFMABAKoXAME=
-  </chunk>
-   <chunk x="32" y="0" width="16" height="16">
-   eJxjYBgFo4B4sIN9oF0wCqgJAF44AMA=
-  </chunk>
-   <chunk x="80" y="0" width="16" height="16">
-   eJxjYBgFo2AUDHWwg508fQAtwQDA
-  </chunk>
-   <chunk x="0" y="16" width="16" height="16">
-   eJxjYKAd2MFOQ8NpCOYNUXePglFAKgAAnaYBZQ==
-  </chunk>
-   <chunk x="32" y="16" width="16" height="16">
-   eJxjYBgFILCDfaBdMApGAf0BADsfAMA=
-  </chunk>
-   <chunk x="48" y="16" width="16" height="16">
-   eJxjYBi5YAf7QLtgFIyCgQUARBMAwA==
-  </chunk>
-   <chunk x="64" y="16" width="16" height="16">
-   eJxjYBgFIw3sYB9oF4yCwQIAivwAwA==
   </chunk>
   </data>
  </layer>

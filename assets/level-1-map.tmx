@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="14" nextobjectid="44">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="15" nextobjectid="50">
  <tileset firstgid="1" source="roguelike-base.tsx"/>
  <tileset firstgid="1768" source="roguelike-interior.tsx"/>
  <tileset firstgid="2254" source="currency/coin-gold.tsx"/>
@@ -9,22 +9,36 @@
  <tileset firstgid="2272" source="currency/gem-yellow.tsx"/>
  <tileset firstgid="2276" source="currency/round-gem-purple.tsx"/>
  <tileset firstgid="2288" source="currency/coin-ruby.tsx"/>
- <layer id="12" name="Doors" width="30" height="20" locked="1">
-  <properties>
-   <property name="type" value="spawn"/>
-  </properties>
-  <data encoding="base64" compression="zlib">
-   eJxjYBgZgINxoF0wCkbBKBgFo2AUjGzANoLqYgBcCgAR
-  </data>
- </layer>
+ <objectgroup id="14" name="Doors">
+  <object id="46" name="spawn" x="16.0088" y="287.978" width="16" height="16">
+   <properties>
+    <property name="type" value="spawn"/>
+   </properties>
+  </object>
+  <object id="49" name="next" x="447.8" y="16.0431" width="16" height="16" rotation="359.527">
+   <properties>
+    <property name="type" value="next"/>
+   </properties>
+  </object>
+ </objectgroup>
  <layer id="2" name="Platforms" width="30" height="20">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFtAKVQLwJSg8k8GKivpnVQDNrgLgWj9nNSHIKNHADNgBzFzEYm9vR9ePz3ygYPICUeCclPYwEQExeHupg1I9DF1CjTHaGYjYktj0ShvGpDQBEsR6B
+   eJxjYBgFtAKVQLwJSg83UM3EwFADxLVMA+0SVMAJdA8XkZgbi9th/qqhof+qB2G4DXWAHm/k4JEaJ4M1L1MTjPpx6AJqlMnOUMyGxLZHwjA+tQEAricZMg==
   </data>
  </layer>
  <layer id="13" name="Background" width="30" height="20">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo4C+IJAJOxuXOhCtgEfdKCAPyNIwTBVxmN0DFA+DyoHiFBbHcqPxCwehwzws8OX54QKGoh89iHAzsr+6qOTHRqA5Uky4y4yhDABTJwYU
+   eJxjYBgFwx14MQ2Mvc1I9iogsQNxsNEBTA5EKwyQH4YzkKVhmCriMLsHKB4GlQPFKSyO5UbjFw5Ch3lY4MvzwwUMRT96EOFmZH91UcmPjUBzpJhwlxlDGQAAHl4HBw==
+  </data>
+ </layer>
+ <layer id="6" name="LitLights" width="30" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFtADz2AfaBaNgFIyCUTAKBgrsIKIO8BmgeiJ9gOxtGmH1IgBumQKv
+  </data>
+ </layer>
+ <layer id="7" name="UnlitLights" width="30" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo4D+4D7jQLtgFNALjMb1KBgFo2AkAgBxdAHB
   </data>
  </layer>
  <objectgroup id="9" name="Enemies" offsetx="-0.666667" offsety="0.666667">
@@ -42,8 +56,7 @@
     <property name="jump_around_velocity" type="float" value="500"/>
    </properties>
   </object>
-  <object id="37" template="enemies/sword.tx" x="246.33" y="270.5"/>
-  <object id="42" template="enemies/sword.tx" x="382.33" y="206.5"/>
+  <object id="37" template="enemies/sword.tx" x="320.997" y="237.167"/>
   <object id="38" template="enemies/archmage.tx" x="348.333" y="142"/>
   <object id="39" template="enemies/cavalier.tx" x="86" y="77.5">
    <properties>
@@ -61,28 +74,10 @@
     <property name="walk_around_velocity" type="float" value="200"/>
    </properties>
   </object>
-  <object id="43" template="enemies/cavalier.tx" x="48" y="77.5">
-   <properties>
-    <property name="facing_right" type="bool" value="true"/>
-    <property name="walk_around" type="bool" value="true"/>
-    <property name="walk_around_time" type="float" value="1"/>
-    <property name="walk_around_velocity" type="float" value="200"/>
-   </properties>
-  </object>
  </objectgroup>
- <layer id="6" name="LitLights" width="30" height="20">
-  <data encoding="base64" compression="zlib">
-   eJxjYBgFtADz2AfaBaNgFIyCUTAKBgrsIKIO8BmgeiJ9gOxtGmH1IgBumQKv
-  </data>
- </layer>
- <layer id="7" name="UnlitLights" width="30" height="20">
-  <data encoding="base64" compression="zlib">
-   eJxjYBgFo4D+4D7jQLtgFNALjMb1KBgFo2AkAgBxdAHB
-  </data>
- </layer>
  <layer id="8" name="Gold" width="30" height="20">
   <data encoding="base64" compression="zlib">
-   eJxjYBgZ4AkH7e04Rwc7yLX3AVDNZSLUDZQfRgF1ASiuPwxAXN4B2nmDxvaC0uhgzmuUAGLy6CgYOWAg0/oooBwAALPYDdI=
+   eJxjYBj+4AkHfew5Ryd7yLH3AVDNZSLUDZQfRgF1ASiuPwxAXN4B2nmDxvaC0uhgzmuUAGLy6CgYOWAg0/oooBwAALeIDdI=
   </data>
  </layer>
 </map>

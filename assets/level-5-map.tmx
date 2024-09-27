@@ -6,14 +6,32 @@
  <tileset firstgid="2258" source="currency/coin-gold.tsx"/>
  <tileset firstgid="2263" source="currency/coin-ruby.tsx"/>
  <tileset firstgid="2268" source="currency/round-gem-gradient.tsx"/>
- <layer id="5" name="Doors" width="30" height="20">
-  <data encoding="base64" compression="zlib">
-   eJxjYBh5gINxoF0wCkbBKBgFo2AUjDzANoLqXwBbngAR
-  </data>
- </layer>
+ <tileset firstgid="2280" source="currency/round-gem-purple.tsx"/>
+ <objectgroup id="13" name="Doors">
+  <object id="37" name="spawn" x="15.9006" y="287.989" width="16" height="16">
+   <properties>
+    <property name="type" value="spawn"/>
+   </properties>
+  </object>
+  <object id="38" name="next" x="15.8769" y="32.071" width="16" height="16" rotation="359.527">
+   <properties>
+    <property name="type" value="next"/>
+   </properties>
+  </object>
+ </objectgroup>
  <layer id="4" name="Platforms" width="30" height="20">
   <data encoding="base64" compression="zlib">
-   eJxzZBgY4EgDM2vwYErtrSHAJwQc0TAu/aSaiw/gs4Oa9qCD9yw0NByPnaTa+4oFN38DkL0RiDchibEC2WxAzM6Caicx9r6gU5hkMjEwZDHRxy5ksAho52I62QuLG2S8iQ7h+5IFNc5B+DXUXlDaOc+KUAtik8NHFwcBJSBfGQ2roKkZDgDd38PZXmzxTEu7sLFJ1UsqnxL/UWIvLvPw5TFs8qRgXAAAOYZIFw==
+   eJxzZBgY4EgDM2vwYErtrSHAJwQc0TAu/aSaiw/gMusvCwTTCrynodn47CTV3lcsuPkbgOyNQLwJSYwVyGYDYnYWVDuJsfcFncIkk4mBIYuJPnYhg0VAOxfTyV5Y3CDjTXQI35csqHEOwq+h9oLSznlWhFoQmxw+ujgIKAH5ymhYBU3NcADo/h7O9mKLZ1rahY1Nql5S+ZT4jxJ7cZmHL49hkycF4wIA7gtJIQ==
+  </data>
+ </layer>
+ <layer id="2" name="LitLights" width="30" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYKAd2MFOQ8NHwYgBpKajnaPpbhTgAEOpTJo/hNw6CkYBtYH4MEj/AItgA8I=
+  </data>
+ </layer>
+ <layer id="3" name="UnlitLights" width="30" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIJRMNjBB/aBsZebY2DsVRsge0fBKKAWAABY3QE5
   </data>
  </layer>
  <objectgroup id="9" name="Enemies" offsetx="-16" offsety="0">
@@ -24,8 +42,8 @@
     <property name="jump_around_velocity" type="float" value="500"/>
    </properties>
   </object>
-  <object id="18" template="enemies/archmage.tx" x="428.5" y="156.5"/>
-  <object id="22" template="enemies/crossbow.tx" x="342.5" y="157.5">
+  <object id="18" template="enemies/archmage.tx" x="428.25" y="159.25"/>
+  <object id="22" template="enemies/crossbow.tx" x="342.75" y="159.5">
    <properties>
     <property name="facing_right" type="bool" value="false"/>
     <property name="walk_around" type="bool" value="true"/>
@@ -34,7 +52,7 @@
    </properties>
   </object>
   <object id="23" template="enemies/halberd.tx" x="401.5" y="80"/>
-  <object id="1" template="enemies/king.tx" x="213.5" y="158.5"/>
+  <object id="1" template="enemies/king.tx" x="213.75" y="159.25"/>
   <object id="1" template="enemies/king.tx" x="71.5" y="31"/>
   <object id="27" template="enemies/prince.tx" x="337.5" y="286.5"/>
   <object id="30" template="enemies/spear.tx" x="215" y="286.5">
@@ -46,19 +64,9 @@
    </properties>
   </object>
  </objectgroup>
- <layer id="2" name="LitLights" width="30" height="20">
-  <data encoding="base64" compression="zlib">
-   eJxjYKAd2MFOQ8NHwYgBpKajnaPpbhTgAEOpTJo/hNw6CkYBtYH4MEj/AItgA8I=
-  </data>
- </layer>
- <layer id="3" name="UnlitLights" width="30" height="20">
-  <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUjIJRMNjBB/aBsZebY2DsVRsge0fBKKAWAABY3QE5
-  </data>
- </layer>
  <layer id="1" name="Gold" width="30" height="20">
   <data encoding="base64" compression="zlib">
-   eJxjYCAdXOfAL3+JAzumph2UgDs0NHsUDG5AajocBdgBKH+Sm0cJxcFoHA1ucG40fgYcjOaRoQEAApANuw==
+   eJxjYCAdXOfAL3+JAzumph2Ughc0Nn8UDE5AajocBdgBKH+Sm0cJxcFoHA1ucG40fgYcjOaRoQEAY+ANxw==
   </data>
  </layer>
 </map>

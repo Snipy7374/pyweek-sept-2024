@@ -4,14 +4,32 @@
  <tileset firstgid="1768" source="currency/round-gem-gradient.tsx"/>
  <tileset firstgid="1780" source="currency/coin-gold.tsx"/>
  <tileset firstgid="1785" source="roguelike-interior.tsx"/>
- <layer id="6" name="Doors" width="68" height="32">
-  <data encoding="base64" compression="zlib">
-   eJzt2aERADAIADEwXPefuBNgMAiSCd5/BABTL7cLAAAAAAAAuKT8KRofM20AEQ==
-  </data>
- </layer>
+ <tileset firstgid="2271" source="currency/round-gem-purple.tsx"/>
+ <objectgroup id="13" name="Doors">
+  <object id="37" name="spawn" x="15.9803" y="479.973" width="16" height="16">
+   <properties>
+    <property name="type" value="spawn"/>
+   </properties>
+  </object>
+  <object id="38" name="next" x="1039.87" y="64.1164" width="16" height="16" rotation="359.527">
+   <properties>
+    <property name="type" value="next"/>
+   </properties>
+  </object>
+ </objectgroup>
  <layer id="1" name="Platforms" width="68" height="32" locked="1">
   <data encoding="base64" compression="zlib">
    eJztl8lOwzAQhq3WaYFKeROQWAoHkCgUzjwBIKEKcePGjXtfCDj0wHZALAXxHiynIoEAMaM6imvi2K6y2G0+aZTFzsTzezJ2CCkoKBgnqJf3COREje2DyvvL2myOERHHx8eBbVHtYqw6MdYUevI+fiRatrj7h4I/8XqPhqbiW6PPsIixJJYP4GfBwNcm9PXBNiTPBHNd9wZ1dgU/AV1lc4O+MUeuHdHlCseZYt1ZAt+/1C1bTEgP2+t5noyqNgeKtaZgkH1Bn1HNC10+4/aGnnxdwefQtqjchyltGvp9lvg8NpyvI4P++N7IfQvbn7RoeB61hs3AvWnhfhWut2n/WDUcC1qbO8o0CeDXlDSpc1oER5M1fQX6Lov9PcEfh89rziy4vjGMVayXSdEUcsRk/xvnc92S+hTkY89A7yaboyS0KEiPyRIhU2C1Ut4j0WcXcmrHobzqGX47uqRVz+I4gThOwc4c+ee0kVmYtzmwec/+vHgpE/IK9laObh82HzoW589dhZB7zh4q6b4PtbjMQI8s6oUqX1R02F7jy4L8eKf/LUtQC75WJEWX9v9L0J4UMana0+Ic3nuR0Xehyy2MZcKBb8gUzINHjVxYhdgb7J+2wc7XHNqHFajpataFceEPLQCI8g==
+  </data>
+ </layer>
+ <layer id="2" name="LitLights" width="68" height="32">
+  <data encoding="base64" compression="zlib">
+   eJzt1jENACAMBEA2rGAKH/hACDaQBWtXFgi5U/D5Js2nBADwhpFvJwDg1PTDAQCeVO20oOkj6Pr4RnFLALYFQP4DMg==
+  </data>
+ </layer>
+ <layer id="3" name="UnlitLights" width="68" height="32">
+  <data encoding="base64" compression="zlib">
+   eJzt1EENADAIA0DmX+OClZkYIYQ7Ae2naQQAAADMlacm9xbldnexi20B/OFPAQCY4AFeywRZ
   </data>
  </layer>
  <objectgroup id="9" name="Enemies" offsetx="-16" offsety="0">
@@ -29,7 +47,6 @@
     <property name="jump_around_velocity" type="float" value="500"/>
    </properties>
   </object>
-  <object id="18" template="enemies/archmage.tx" x="360" y="303.333"/>
   <object id="21" template="enemies/cavalier.tx" x="589.333" y="207.333">
    <properties>
     <property name="facing_right" type="bool" value="true"/>
@@ -62,14 +79,6 @@
     <property name="walk_around_velocity" type="float" value="72"/>
    </properties>
   </object>
-  <object id="32" template="enemies/crossbow.tx" x="434.333" y="238.333">
-   <properties>
-    <property name="facing_right" type="bool" value="false"/>
-    <property name="walk_around" type="bool" value="true"/>
-    <property name="walk_around_time" type="float" value="1.8"/>
-    <property name="walk_around_velocity" type="float" value="72"/>
-   </properties>
-  </object>
   <object id="23" template="enemies/halberd.tx" x="828.667" y="413.5"/>
   <object id="24" template="enemies/horse.tx" x="209.333" y="127.03">
    <properties>
@@ -84,13 +93,10 @@
   <object id="30" template="enemies/prince.tx" x="266.121" y="127.152"/>
   <object id="18" template="enemies/prince.tx" x="803.879" y="126.97"/>
   <object id="19" template="enemies/prince.tx" x="291.333" y="445.333"/>
-  <object id="22" template="enemies/prince.tx" x="354" y="222"/>
   <object id="20" template="enemies/prince.tx" x="604.667" y="126.788"/>
   <object id="28" template="enemies/prince.tx" x="556.061" y="126.242"/>
   <object id="25" template="enemies/prince.tx" x="378.667" y="126.242"/>
   <object id="28" template="enemies/shield.tx" x="413.333" y="396" visible="1"/>
-  <object id="21" template="enemies/shield.tx" x="750" y="430.667" visible="1"/>
-  <object id="29" template="enemies/sword.tx" x="994" y="255.333"/>
   <object id="30" template="enemies/spear.tx" x="456.848" y="126.061">
    <properties>
     <property name="facing_right" type="bool" value="false"/>
@@ -123,28 +129,10 @@
     <property name="walk_around_velocity" type="float" value="80"/>
    </properties>
   </object>
-  <object id="23" template="enemies/spear.tx" x="512.667" y="370">
-   <properties>
-    <property name="facing_right" type="bool" value="false"/>
-    <property name="walk_around" type="bool" value="true"/>
-    <property name="walk_around_time" type="float" value="3"/>
-    <property name="walk_around_velocity" type="float" value="80"/>
-   </properties>
-  </object>
  </objectgroup>
- <layer id="2" name="LitLights" width="68" height="32">
-  <data encoding="base64" compression="zlib">
-   eJzt1jENACAMBEA2rGAKH/hACDaQBWtXFgi5U/D5Js2nBADwhpFvJwDg1PTDAQCeVO20oOkj6Pr4RnFLALYFQP4DMg==
-  </data>
- </layer>
- <layer id="3" name="UnlitLights" width="68" height="32">
-  <data encoding="base64" compression="zlib">
-   eJzt1EENADAIA0DmX+OClZkYIYQ7Ae2naQQAAADMlacm9xbldnexi20B/OFPAQCY4AFeywRZ
-  </data>
- </layer>
  <layer id="4" name="Gold" width="68" height="32">
   <data encoding="base64" compression="zlib">
-   eJzt1ckNwCAMBEBe6b/MFJACaIEHBB8zBSCvF8ljAKd8z+0J6ljZ5e59r7z36hjYyN2oT8f1Zek4y5zk4U/FpZu6OnfbOXsX3TqOmPfPmSLmBwDIagITYxCP
+   eJzt1ckRgCAQBEBelvknaBIGYAj6ANyjOwCY3aGKMYBV7uPvBHV82eXsfb+dd51z7wPwb9Sn4/qydJwlJ3l4U3Hppq7O3XaevYtuHUecd2emiPMDAGT1AE3KEIg=
   </data>
  </layer>
 </map>

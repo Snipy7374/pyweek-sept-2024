@@ -59,6 +59,7 @@ class GameView(arcade.View):
         arcade.set_background_color(arcade.color.BLACK)
         arcade.SpriteList.DEFAULT_TEXTURE_FILTER = gl.NEAREST, gl.NEAREST
         self.spritesheet = tileset.RoguelikeInterior()
+        self.base_spritesheet = tileset.RoguelikeBase()
 
         self.object_lists: dict[str, list[arcade.types.TiledObject]] = {}
         self.physics_engine = arcade.PymunkPhysicsEngine(
@@ -117,6 +118,26 @@ class GameView(arcade.View):
             )
             enemies.append(sprite)
         return enemies
+    
+    def setup_doors(self) -> arcade.SpriteList:
+        door_sprites = arcade.SpriteList()
+        door_textures = {
+            'spawn': {'x':561,'y':68},
+            'next': {'x':595,'y':68}
+        }
+        for door in self.object_lists.get('Doors',[]):
+            if door.name not in ['spawn','next']:
+                continue
+            x, y = door.shape[0][0] + 26 , door.shape[0][1] - 24 # type: ignore
+            door_texture_x , door_texture_y = door_textures[door.name]['x'],door_textures[door.name]['y']
+            door_texture = self.base_spritesheet.get_tile(door_texture_x,door_texture_y)
+            sprite = arcade.Sprite(door_texture)
+            sprite.position = (int(x), int(y))
+            sprite.scale = TILE_SCALING
+            sprite.properties = door.properties # type: ignore
+            door_sprites.append(sprite)
+        self.scene.add_sprite_list('Doors',sprite_list=door_sprites)
+        return door_sprites
 
     def setup_shader(self) -> None:
         if not self.shader_enabled:
@@ -181,7 +202,6 @@ class GameView(arcade.View):
                 "use_spatial_hash": True,
             },
             "Gold": {"use_spatial_hash": True},
-            "Doors": {"use_spatial_hash": True},
         }
         tile_map = arcade.load_tilemap(
             f"assets/level-{self.current_level}-map.tmx",
@@ -200,14 +220,15 @@ class GameView(arcade.View):
     def reset(self) -> None:
         self.scene = self.create_scene()
         try:
-            spawn_door = sorted(self.scene["Doors"].sprite_list, key=lambda door: door.position[0])[0]  # type: ignore
-            spawn_x, spawn_y = spawn_door.position
+            spawn_door = [door for door in self.object_lists.get('Doors',[]) if door.name == 'spawn'][0]
+            spawn_x, spawn_y = spawn_door.shape[0][0], spawn_door.shape[0][1] # type: ignore
         except Exception:
             spawn_x, spawn_y = CHARACTER_POSITION
         self.player_sprite = Player(
-            scene=self.scene, position=(spawn_x, spawn_y), scale=CHARACTER_SCALING
+            scene=self.scene, position=(spawn_x, spawn_y), scale=CHARACTER_SCALING # type: ignore
         )
         self.enemy_sprites = self.setup_enemies()
+        self.door_sprites = self.setup_doors()
         p_sprites = self.physics_engine.sprites.copy()
         for sprite in p_sprites:
             self.physics_engine.remove_sprite(sprite)
@@ -235,7 +256,7 @@ class GameView(arcade.View):
             body_type=arcade.PymunkPhysicsEngine.DYNAMIC,
         )
         self.physics_engine.add_sprite_list(
-            self.scene["Doors"],
+            self.door_sprites,
             mass=0,
             friction=0,
             collision_type="door",
@@ -275,8 +296,7 @@ class GameView(arcade.View):
         )
 
         def player_door_collision_handler(player: Player, door: arcade.Sprite, *_: t.Any) -> bool:
-            farthest_door = sorted(self.scene["Doors"].sprite_list, key=lambda door: door.position[0])[-1]  # type: ignore
-            if door.properties["tile_id"] == farthest_door.properties["tile_id"]:
+            if door.properties['type'] == 'next':
                 self.current_level += 1
                 self.update_level()
                 self.reset()
@@ -310,7 +330,7 @@ class GameView(arcade.View):
 
             self.manager.draw()
             return
-
+        
         # Draw platforms, the player, and the gold to channel0
         self.channel0.use()
         self.channel0.clear()
